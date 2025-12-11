@@ -22,7 +22,11 @@ class EstagiarioFactory extends Factory
     {
         return [
             'nm_estagiarios' => fake()->name(),
+<<<<<<< HEAD
             'nr_matricula' => fake('pt_BR')->cpf(true),
+=======
+            'nr_matricula' => fake('pt_BR')->unique()->cpf(true),
+>>>>>>> db14817 (tela inicial funcional)
             'nm_setor' => fake()->word(),
             'nr_telefone' => fake()->unique()->numerify('###########'),
             'nm_email' => fake()->unique()->safeEmail(),
