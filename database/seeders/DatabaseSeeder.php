@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Estagiario;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        Estagiario::factory(10)
-                ->hasTurno(1)
-                ->hasRegistroPonto(5)
-                ->create();
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
     }
 }
