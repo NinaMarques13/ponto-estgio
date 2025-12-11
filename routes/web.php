@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\EstagiariosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\Admin\LoginController;
@@ -8,6 +7,7 @@ use App\Http\Controllers\Admin\LoginController;
 Route::get('/', function () {
     return view('welcome');
 });
+<<<<<<< HEAD
 Route::get('views/pages/inicio', function () {
     return view('pages.inicio.inicio');
 });
@@ -41,3 +41,5 @@ Route::get('views/adm', function () {
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 Route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('estagiarios.store');
 >>>>>>> db14817 (tela inicial funcional)
+=======
+>>>>>>> a8334e6 (Revert "Merge branch 'feature/tela-inicial' into 'master'")
