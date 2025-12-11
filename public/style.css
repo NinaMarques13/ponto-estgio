@@ -108,6 +108,13 @@ body {
 .registro-opcoes {
     font-size: 0.9rem;
     color: #6c757d; /* Cor do texto "Primeiro registro do dia" */
+    display: flex;
+}
+.text-intro{
+    color: var(--cor-primaria);
+    font-weight: bold;
+    text-decoration: none; /* Remove sublinhado padrão */
+    padding: 0 0.2rem;
 }
 .registro-link {
     color: var(--cor-primaria);
