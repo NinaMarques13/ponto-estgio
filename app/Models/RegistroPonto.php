@@ -10,7 +10,8 @@ class RegistroPonto extends Model
     use HasFactory;
 
     protected $table = 'registro_ponto'; // Importante pois o Laravel procuraria 'registro_pontos'
-
+    
+    public $timestamps = false;
     protected $fillable = [
         'estagiario_id',
         'ds_motivo',

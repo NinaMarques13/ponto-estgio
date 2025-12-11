@@ -22,7 +22,7 @@ class EstagiarioFactory extends Factory
     {
         return [
             'nm_estagiarios' => fake()->name(),
-            'nr_matricula' => fake(11)->unique()->numerify('###########'),
+            'nr_matricula' => fake('pt_BR')->unique()->cpf(true),
             'nm_setor' => fake()->word(),
             'nr_telefone' => fake()->unique()->numerify('###########'),
             'nm_email' => fake()->unique()->safeEmail(),
