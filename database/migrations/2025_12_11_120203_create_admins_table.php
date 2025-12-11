@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('name');
-            $table->index('email');
+            
             /*
                  <--! IMPORTANTE, UNIQUE JÁ CRIA UM INDEX, PRA CRIAR UM TABLE INDEX TEM QUE SER UM DADO SEM UNIQUEEEE !-->
             como usar o index? 
@@ -29,9 +29,9 @@ return new class extends Migration
             e então, rodará o seguinte código:
             Admin::where('cpf', '12345678901')->first();
             aqui ele vai encontrar o joaozinho em questão de vapt vupt, demorô?
-            Com o email é a mesma coisa,
-            Admin::where('email','joaodascouvenaoereal@gmail.com')->first();
-            aqui ele faz a mesma coisa que você fez acima, só que com o email.
+            Com o nome é a mesma coisa,
+            Admin::where('nome','joaozinho das couve')->first();
+            aqui ele faz a mesma coisa que você fez acima, só que com o nome.
             mas se por acaso você quiser encontrar todos os seres humanos com Jõao no nome, dai o comando muda.
             Admin::where('name','like','%joao%')->get();
             */

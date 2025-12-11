@@ -1,20 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
 });
-<<<<<<< HEAD
 Route::get('views/pages/inicio', function () {
     return view('pages.inicio.inicio');
 });
 
 Route::get('views/adm', function () {
     return view('adm');
-=======
 });
-Route::get('views/pages/inicio', function () {
-    return view('pages.inicio.inicio');
->>>>>>> 4c78dd4 (table adm e models criados)
+
+/* área teste dos admin papai*/
+
+Route::get('/teste-login', function () {
+    $check = Auth::guard('admin')->attempt([
+        'cpf' => '12345678904', 
+        'password' => 'adm123'
+    ]);
+    
+    return $check ? 'Boa!' : 'Falha';
 });
