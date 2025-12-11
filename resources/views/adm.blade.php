@@ -19,7 +19,7 @@
             <div class="card-body text-center p-0">
                 
                 <div class="logo-placeholder mb-3">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo DGP" class="img-fluid logo">
+                    <img src="{{ asset('img/logotipo-dgp.png') }}" alt="Logo DGP" class="img-fluid logo">
                 </div>
                 
                 <h1 class="h5 fw-bold mt-2" style="color: #0E622F;">ÁREA ADMINISTRATIVA</h1>
