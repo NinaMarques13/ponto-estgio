@@ -39,7 +39,7 @@ class EstagiariosController extends Controller
             'estagiario_id' => $estagiario->id,
             'ds_motivo' => $motivo,
             'hr_registro' => Carbon::now(),
-            'ip_registro' => $request->ip()
+            'ip_registro' => $request->ip(),
         ]);
         return redirect()->back()->with('sucesso', 'Ponto de '.$motivo.'registrado com sucesso!');      
     }
