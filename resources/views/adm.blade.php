@@ -8,14 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 
 <body>
 
-    <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0 ponto-container">
         
-        <div class="card p-5 shadow-lg login-card" style="max-width: 400px; border-radius: 20px;">
+        <div class="card p-5 shadow-lg ponto-card" style="max-width: 400px; border-radius: 20px;">
             <div class="card-body text-center p-0">
                 
                 <div class="logo-placeholder mb-3">

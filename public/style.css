@@ -27,10 +27,10 @@ body {
     /* MANTÉM o centralizador flexbox do Bootstrap */
     
     /* 🛠️ CORREÇÃO PRINCIPAL: A imagem de fundo (brasão) é aplicada aqui */
-    background-image: url('img/logotipo-de-fundo.png');
+    background-image: url('/img/logotipo-de-fundo.png');
     background-repeat: no-repeat;
     background-position: center center; /* Centraliza a imagem na área do container */
-    background-size: 55vh; /* Define o tamanho baseado na altura da tela */
+    background-size: 40vh; /* Define o tamanho baseado na altura da tela */
     
     /* 🛠️ A imagem está no plano de fundo do container, 
        então não precisamos mais de z-index complexo */
@@ -44,7 +44,7 @@ body {
 .ponto-card {
     /* 🛠️ CORREÇÃO PRINCIPAL: Fundo branco semitransparente (RGBA) */
     /* Usamos 0.9 (90% opaco) para manter o texto nítido, mas permitindo que o fundo do .ponto-container apareça. */
-    background-color: rgba(255, 255, 255, 0.5) !important; 
+    background-color: rgba(255, 255, 255, 0.7) !important; 
     
     border: none !important;
     max-width: 600px; 
