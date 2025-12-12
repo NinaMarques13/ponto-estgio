@@ -13,14 +13,5 @@ Route::get('views/pages/inicio', function () {
 Route::get('views/adm', function () {
     return view('adm');
 });
-
-/* área teste dos admin papai*/
-
-Route::get('/teste-login', function () {
-    $check = Auth::guard('admin')->attempt([
-        'cpf' => '12345678904', 
-        'password' => 'adm123'
-    ]);
-    
-    return $check ? 'Boa!' : 'Falha';
-});
+Route::get('/views/pages/inicio', [App\Http\Controllers\EstagiariosController::class, 'index'])->name('inicio.index');
+route::any('/registrar-ponto', [App\Http\Controllers\EstagiariosController::class, 'store'])->name('registrar-ponto');

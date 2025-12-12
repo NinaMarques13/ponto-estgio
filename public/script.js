@@ -61,14 +61,14 @@ $(document).ready(function() {
         }
         // --- FIM DA VALIDAÇÃO BÁSICA ---
 
-        // Simulação do processamento de registro
-        console.log(`Registrando ${acaoSelecionada} para o CPF: ${cpf}`);
+        // // Simulação do processamento de registro
+        // console.log(`Registrando ${acaoSelecionada} para o CPF: ${cpf}`);
         
-        // Simulação de sucesso
-        setTimeout(() => {
-             alert(`Ponto de ${acaoSelecionada} para o CPF ${cpf} SIMULADO com sucesso!`);
-             $('#cpf').val(''); // Limpa o campo
-        }, 300);
+        // // Simulação de sucesso
+        // setTimeout(() => {
+        //      alert(`Ponto de ${acaoSelecionada} para o CPF ${cpf} SIMULADO com sucesso!`);
+        //      $('#cpf').val(''); // Limpa o campo
+        // }, 300);
         
         /*
         // Lógica REAL de AJAX para enviar os dados para o servidor:

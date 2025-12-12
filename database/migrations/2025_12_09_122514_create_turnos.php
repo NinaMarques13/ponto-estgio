@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('ds_tipo', 8);
             $table->time('hr_entrada');
             $table->time('hr_saida');
+            $table->time('hr_total')->nullable;
             $table->timestamps();
         });
     }
