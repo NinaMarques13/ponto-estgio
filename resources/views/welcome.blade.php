@@ -64,7 +64,7 @@
                             <span>
                                 Read the
                                 <a href="https://laravel.com/docs" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
-                                    <span>Documentation</span>
+                                    <span>as girias da linguagem</span>
                                     <svg
                                         width="10"
                                         height="11"
@@ -89,9 +89,9 @@
                                 </span>
                             </span>
                             <span>
-                                Watch video tutorials at
-                                <a href="https://laracasts.com" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
-                                    <span>Laracasts</span>
+                                Estude comigo!
+                                <a href="https://www.youtube.com/watch?v=cDEVWbz2PpQ&t=2323s" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                    <span>to me baseando nesse mano aqui</span>
                                     <svg
                                         width="10"
                                         height="11"
