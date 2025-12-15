@@ -1,49 +1,67 @@
-/* Definições de cores e fontes para o visual exato */
+
 :root {
-    --cor-primaria: #0e4c25; /* Verde escuro do botão e texto */
-    --cor-fundo: #f8f9fa; /* Fundo claro */
-    --cor-texto-link: #0e4c25; /* Cor do link de registro */
+    --cor-primaria: #0e4c25; 
+    --cor-fundo: #f8f9fa; 
+    --cor-texto-link: #0e4c25; 
     --cor-input-borda: #ccc;
     --cor-input-fundo: #fff;
     --fonte-principal: Arial, sans-serif; 
 }
 
-/* ------------------------------------------- */
-/* ❌ REMOVEMOS O BLOCO .background-image-container POIS A DIV FOI REMOVIDA DO HTML */
-/* ------------------------------------------- */
 
 
-/* ------------------------------------------- */
-/* ESTILOS PARA O CORPO E CONTEÚDO PRINCIPAL (COM IMAGEM DE FUNDO APLICADA) */
-/* ------------------------------------------- */
+.admin-access-btn {
+   
+    position: fixed;
+    
+    
+    top: 20px; 
+    right: 20px; 
+    
+    
+    background-color: var(--cor-primaria); 
+    color: white !important; 
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; 
+    font-weight: bold;
+    font-size: 0.9rem;
+    
+    
+    z-index: 9999; 
+    
+    
+    transition: background-color 0.3s ease;
+}
+
+.admin-access-btn:hover {
+    background-color: #0b4e25; 
+    color: white;
+}
+
+
 
 body {
-    /* Define o fundo da página inteira (se precisar de uma imagem no fundo de toda a tela, defina aqui) */
     background-color: var(--cor-fundo);
     font-family: var(--fonte-principal);
 }
 
 .ponto-container {
-    /* MANTÉM o centralizador flexbox do Bootstrap */
     
-    /* 🛠️ CORREÇÃO PRINCIPAL: A imagem de fundo (brasão) é aplicada aqui */
     background-image: url('img/logotipo-de-fundo.png');
     background-repeat: no-repeat;
-    background-position: center center; /* Centraliza a imagem na área do container */
-    background-size: 55vh; /* Define o tamanho baseado na altura da tela */
-    
-    /* 🛠️ A imagem está no plano de fundo do container, 
-       então não precisamos mais de z-index complexo */
+    background-position: center center;
+    background-size: 55vh; 
     
     overflow: hidden; 
-    position: relative; /* Mantido por boa prática */
-    z-index: 1; /* Mantido para garantir que o container não se perca */
+    position: relative; 
+    z-index: 1; 
 }
 
-/* Estilo do Card Principal (Simula a área de foco) */
+
 .ponto-card {
-    /* 🛠️ CORREÇÃO PRINCIPAL: Fundo branco semitransparente (RGBA) */
-    /* Usamos 0.9 (90% opaco) para manter o texto nítido, mas permitindo que o fundo do .ponto-container apareça. */
+    
     background-color: rgba(255, 255, 255, 0.5) !important; 
     
     border: none !important;
@@ -52,32 +70,31 @@ body {
     border-radius: 1rem; 
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); 
     
-    /* Z-index maior que o do container (z-index: 1) para garantir a sobreposição, embora não seja estritamente necessário aqui */
     z-index: 10; 
 }
 
-/* Brasão do topo */
+
 .brasao-topo {
-    width: 200px; /* Ajuste conforme a proporção real */
+    width: 200px; 
     height: auto;
 }
 
-/* Título 'Ponto de Registro de Estagiários' */
+
 .ponto-titulo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--cor-primaria); /* Verde escuro */
+    color: var(--cor-primaria); 
     line-height: 1.2;
 }
 
-/* Label 'Matrícula (CPF)' */
+
 .matricula-label {
     font-size: 1.1rem;
     font-weight: bold;
     color: #000;
 }
 
-/* Campo de Input (CPF) */
+
 .cpf-input {
     border-radius: 0.5rem;
     padding: 1rem 0.75rem;
@@ -89,9 +106,8 @@ body {
     color: #999;
 }
 
-/* Ícone da Câmera no Input */
+
 .camera-icon {
-    /* Mantido o fundo branco sólido para o ícone */
     background-color: #fff;
     border: 1px solid var(--cor-input-borda);
     border-left: none;
@@ -100,33 +116,33 @@ body {
     padding: 0.5rem 1rem;
 }
 .camera-icon i {
-    color: var(--cor-primaria); /* Ícone na cor verde */
+    color: var(--cor-primaria);
     font-size: 1.5rem;
 }
 
-/* Links de Entrada/Saída */
+
 .registro-opcoes {
     font-size: 0.9rem;
-    color: #6c757d; /* Cor do texto "Primeiro registro do dia" */
+    color: #6c757d; 
     display: flex;
 }
 .text-intro{
     color: var(--cor-primaria);
     font-weight: bold;
-    text-decoration: none; /* Remove sublinhado padrão */
+    text-decoration: none; 
     padding: 0 0.2rem;
 }
 .registro-link {
     color: var(--cor-primaria);
     font-weight: bold;
-    text-decoration: none; /* Remove sublinhado padrão */
+    text-decoration: none; 
     padding: 0 0.2rem;
 }
 .registro-link.active {
-    /* Pode-se adicionar um estilo para o link ativo, se necessário */
+   
 }
 
-/* Botão REGISTRAR */
+
 .registrar-btn {
     background-color: var(--cor-primaria);
     color: #fff;
@@ -139,6 +155,6 @@ body {
 }
 
 .registrar-btn:hover {
-    background-color: #09381c; /* Um tom um pouco mais escuro ao passar o mouse */
+    background-color: #09381c; 
     color: #fff;
 }
