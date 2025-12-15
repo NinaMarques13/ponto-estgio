@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('estagiarios', function (Blueprint $table) {
             $table->id();
             $table->string('nm_estagiarios', 100);
-            $table->string('nr_matricula',11)->unique();
+            $table->string('nr_matricula',14)->unique();
             $table->string('nm_setor', 255);
             $table->string('nr_telefone', 11)->unique();
             $table->string('nm_email', 255)->unique();
