@@ -7,9 +7,6 @@
     --cor-input-fundo: #fff;
     --fonte-principal: Arial, sans-serif; 
 }
-
-
-
 .admin-access-btn {
    
     position: fixed;
@@ -34,7 +31,6 @@
     
     transition: background-color 0.3s ease;
 }
-
 .admin-access-btn:hover {
     background-color: #0b4e25; 
     color: white;

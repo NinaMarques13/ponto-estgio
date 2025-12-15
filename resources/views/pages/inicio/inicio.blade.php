@@ -7,24 +7,16 @@
     <title>Ponto de Registro de Estagiários</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    
     <link rel="stylesheet" href="{{asset('style.css')}}">
 </head>
 
 <body>
-
-    
-    <a href="{{ asset('admin/login') }}" class="btn admin-access-btn" title="Acessar Área Administrativa">
-        <i class="bi bi-person-circle me-1"></i> 
-        Área Admin
-    </a>
-
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0 ponto-container">
+        <a href="{{ asset('views/login/adm') }}" class="btn admin-access-btn" title="Acessar Área Administrativa">
+            <i class="bi bi-person-circle me-1"></i>
+            Área Admin
+        </a>
         <div class="card ponto-card">
-          <div class="text-center pt-4 pb-3">
-                <img src="{{asset('img/logotipo-dgp.png')}}" alt="Brasão DGP" class="img-fluid brasao-topo">
-                <h1 class="ponto-titulo mt-3 mb-4">PONTO DE REGISTRO<br>DE ESTAGIÁRIOS</h1>
-            </div>
             <form action="/registrar-ponto" method="post">
                 @csrf <div class="form-group">
                     <div class="text-center pt-4 pb-3">
