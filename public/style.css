@@ -142,3 +142,6 @@ body {
     background-color: #09381c; /* Um tom um pouco mais escuro ao passar o mouse */
     color: #fff;
 }
+.img-exp{
+    align-items: center;
+}
