@@ -43,6 +43,7 @@ Route::middleware(['auth', 'checklevel:2'])->group(function () {
 Route::get('views/login/adm', function () {
     return view('pages.login.adm');
 });
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 Route::get('views/principal/dashboard', function () {
@@ -55,6 +56,12 @@ Route::get('views/principal/dashboard', function () {
 Route::get('views/principal/cadastro', function () {
     return view('pages.principal.cadastro');
 });
+=======
+Route::get('views/principal/exportacao', function () {
+    return view('pages.principal.exportacao');
+});
+
+>>>>>>> a0f2483 (inicio da tela de exportação)
 Route::get('/views/pages/inicio', [App\Http\Controllers\EstagiariosController::class, 'index'])->name('inicio.index');
 route::any('/registrar-ponto', [App\Http\Controllers\EstagiariosController::class, 'store'])->name('registrar-ponto');
 <<<<<<< HEAD

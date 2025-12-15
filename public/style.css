@@ -154,6 +154,7 @@ body {
     background-color: #09381c; 
     color: #fff;
 }
+<<<<<<< HEAD
 
 .home-body {
     background-color: var(--cor-fundo);
@@ -262,4 +263,8 @@ body {
 
 .footer-link-sair {
     color: #dc3545;
+=======
+.img-exp{
+    align-items: center;
+>>>>>>> a0f2483 (inicio da tela de exportação)
 }
