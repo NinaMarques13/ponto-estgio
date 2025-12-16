@@ -90,4 +90,12 @@ $(document).ready(function() {
         alert("Ação de Leitura de CPF/QR Code ativada (Simulação)");
     });
 
+    $('.nav-link').on('click', function () {
+        $('.nav-link').removeClass('active');
+        $(this).addClass('active');
+        let type = $(this).attr('id');
+        $('.conteudo-aba').hide();
+        $('.conteudo-aba.'+type).fadeIn();
+    });
+
 });
