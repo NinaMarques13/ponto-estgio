@@ -18,8 +18,9 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         Estagiario::factory(10)
-                ->hasTurno(1)
+                ->hasTurno(2)
                 ->hasRegistroPonto(5)
                 ->create();
-    }
+    } 
 }
+ 

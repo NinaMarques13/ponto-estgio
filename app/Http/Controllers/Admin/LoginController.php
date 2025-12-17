@@ -1,11 +1,65 @@
 <?php
-
+// Admin controller
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    //
+    protected $guard = 'admin';
+
+
+    protected $loginPath = '/views/adm';
+
+    public function showLoginForm()
+    {
+        if (Auth::guard('admin')->check()) {
+            return redirect('/dashboard');
+        }
+
+        return view('views/adm');
+    }
+
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'=> 'required|email',
+            'password'=> 'required',
+        ]);
+        
+        if (Auth::guard('admin')->attempt($credentials,$request->has('remember'))){
+            $request->session()->regenerate();
+
+            return redirect()->intended('admin/inicio');
+        }
+
+        return back()
+            ->withInput($request ->only('email'))
+            ->withErrors(['email' => 'As informações não coincidem com nossos registros.']);
+    }
+
+
+    public function logout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect('/');
+    
+    }
+
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:admins',
+            'password' => 'required|min:6|confirmed',
+        ]);
+    }
+
 }
