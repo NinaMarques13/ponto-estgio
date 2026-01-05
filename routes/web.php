@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\Admin\LoginController;
 
 Route::get('/', function () {
@@ -10,6 +10,14 @@ Route::get('/', function () {
 Route::get('views/pages/inicio', function () {
     return view('pages.inicio.inicio');
 });
+
+// Rotas para o admin.
+Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
+Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+
+
 
 Route::get('views/login/adm', function () {
     return view('pages.login.adm');

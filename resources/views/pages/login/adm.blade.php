@@ -25,15 +25,26 @@
                 <h1 class="h5 fw-bold mt-2" style="color: #0E622F;">ÁREA ADMINISTRATIVA</h1>
                 <p class="text-secondary mb-4 small">Sistema de Estagiários</p>
                 
-                <form class="text-start">
+                <form class="text-start" action="{{ route('admin.login.submit') }}" method="POST">
+                    @csrf
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger p-2 small">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="mb-3">
-                        <label for="usuario" class="form-label fw-bold">Usuário</label>
-                        <input type="text" id="usuario" name="usuario" class="form-control" placeholder="Digite seu usuário">
+                        <label for="email" class="form-label fw-bold">Usuário</label>
+                        <input type="email" id="usuario" name="email" class="form-control" placeholder="Digite seu e-mail">
                     </div>
 
                     <div class="mb-4">
                         <label for="senha" class="form-label fw-bold">Senha</label>
-                        <input type="password" id="senha" name="senha" class="form-control" placeholder="Digite sua senha">
+                        <input type="password" id="senha" name="password" class="form-control" placeholder="Digite sua senha">
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
@@ -45,7 +56,7 @@
 
                 <p class="text-muted mt-4 small">
                     Credenciais padrão: <br>
-                    Usuário: **admin** | Senha: **admin123**
+                    Usuário: **admin@admin.com** | Senha: **admin123**
                 </p>
             </div>
         </div>

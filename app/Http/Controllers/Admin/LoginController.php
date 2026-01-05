@@ -22,7 +22,7 @@ class LoginController extends Controller
             return redirect('/dashboard');
         }
 
-        return view('views/adm');
+        return view('pages.login.adm');
     }
 
 

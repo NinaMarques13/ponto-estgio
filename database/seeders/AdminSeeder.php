@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Hash;
 class AdminSeeder extends Seeder
 {
     /**
@@ -15,8 +15,8 @@ class AdminSeeder extends Seeder
         Admin::create([
             'cpf' => '12345678904',
             'name' => 'Admin',
-            'email' => 'admin@adminm.com',
-            'password' => 'adm123',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('adm123'),
         ]);
     
     
