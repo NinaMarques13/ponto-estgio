@@ -98,4 +98,98 @@ $(document).ready(function() {
         $('.conteudo-aba.'+type).fadeIn();
     });
 
+    // Carregar o número de estagiários presentes no dia
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-estagiarios',
+            type: 'GET',
+            success: function(response) {
+                $('#contador-presentes').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-registros',
+            type: 'GET',
+            success: function(response) {
+                $('#registros-dia').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-recesso',
+            type: 'GET',
+            success: function(response) {
+                $('#recesso-dia').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-atestados',
+            type: 'GET',
+            success: function(response) {
+                $('#atestados-dia').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-folgas',
+            type: 'GET',
+            success: function(response) {
+                $('#folgas-dia').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-dispensas',
+            type: 'GET',
+            success: function(response) {
+                $('#dispensas-dia').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $.ajax({
+            url: '/relatorio-faltas',
+            type: 'GET',
+            success: function(response) {
+                $('#faltas-dia').text(response.total);
+            }
+        });
+    });
+    $(document).ready(function() {
+        carregarListaEstagiarios();
+    });
+    function carregarListaEstagiarios() {
+        $.ajax({
+            url: '/lista-estagiarios',
+            type: 'get',
+            success: function(lista) {
+                let html = '';
+                lista.forEach(function(item) {
+                    html += `
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control" value="${item.data}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" value="${item.entrada}">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" value="${item.saida}">
+                        </td>
+                        <td>${item.matricula}</td>
+                        <td>${item.nome}</td>
+                    </tr>
+                    `;
+                });
+                $('#tabela-estagiarios-corpo').html(html);
+            }
+        });
+    }
 });

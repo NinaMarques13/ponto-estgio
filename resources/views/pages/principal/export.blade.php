@@ -86,7 +86,7 @@
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
+                                                    <div class="h3 fw-bold my-1" id="contador-presentes">...</div>
                                                     <div class="small">Do dia</div>
                                                 </div>
                                             </div>
@@ -98,9 +98,9 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Registros</div>
+                                                    <div class="h3 fw-bold my-1" id="registros-dia">...</div>
+                                                    <div class="small">Diário</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -111,9 +111,9 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Recesso</div>
+                                                    <div class="h3 fw-bold my-1" id="recesso-dia">...</div>
+                                                    <div class="small">Diário</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,9 +124,9 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Atestados</div>
+                                                    <div class="h3 fw-bold my-1" id="atestados-dia">...</div>
+                                                    <div class="small">Diário</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -137,9 +137,9 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Folga</div>
+                                                    <div class="h3 fw-bold my-1" id="folgas-dia">...</div>
+                                                    <div class="small">Diário</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -150,9 +150,9 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Dispensa</div>
+                                                    <div class="h3 fw-bold my-1" id="dispensas-dia">...</div>
+                                                    <div class="small">Diário</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -163,48 +163,34 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <div class="small">Estagiários</div>
-                                                    <div class="h3 fw-bold my-1">5</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Falta</div>
+                                                    <div class="h3 fw-bold my-1" id="faltas-dia">...</div>
+                                                    <div class="small">Diário</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row g-7 mb-2 mt-2">
-                                <div class="col">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="small">Data</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="row g-3 mb-2 mt-2">
+                                <table class="table">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th>Data</th>
+                                            <th>Hora Entrada</th>
+                                            <th>Hora Saída</th>
+                                            <th>Total Horas</th>
+                                            <th>Matrícula (CPF)</th>
+                                            <th>Nome</th>
+                                            <th>Motivo</th>
+                                            <th>Setor</th>
+                                            <th>Observação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-secundary" id="tabela-estagiarios-corpo">
+                                        
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

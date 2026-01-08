@@ -7,6 +7,8 @@ use App\Models\Estagiario;
 use App\Models\RegistroPonto;
 use carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Http\JsonResponse;
+use Nette\Utils\Json;
 
 class EstagiariosController extends Controller
 {
@@ -43,4 +45,66 @@ class EstagiariosController extends Controller
         ]);
         return redirect()->back()->with('sucesso', 'Ponto de '.$motivo.'registrado com sucesso!');      
     }
+    public function relatorioEstagiarios(): JsonResponse{
+        $qtdPresentes = Estagiario::whereHas('registroPonto', function ($query) {
+            $query->whereDate('hr_registro', Carbon::today())
+                  ->where('ds_motivo', 'Entrada');
+        })->count();
+        return response()->json(['total' => $qtdPresentes]);
+    }
+    public function relatorioRegistros(): JsonResponse{
+        $qtdRegistros = RegistroPonto::whereDate('hr_registro', Carbon::today())->count();
+        return response()->json(['total' => $qtdRegistros]);    
+    }
+    public function relatorioRecesso(): JsonResponse{
+        $qtdRecessos = RegistroPonto::whereDate('hr_registro', Carbon::today())
+                            ->where('ds_motivo', 'Recesso')
+                            ->count();
+        return response()->json(['total' => $qtdRecessos]);    
+    }
+    public function relatorioAtestado(): JsonResponse{
+        $qtdAtestados = RegistroPonto::whereDate('hr_registro', Carbon::today())
+                            ->where('ds_motivo', 'Atestado')
+                            ->count();
+        return response()->json(['total' => $qtdAtestados]);    
+    }    
+    public function relatorioFolga(): JsonResponse{
+        $qtdFolgas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+                            ->where('ds_motivo', 'Folga')
+                            ->count();
+        return response()->json(['total' => $qtdFolgas]);    
+    }
+    public function relatorioDispensa(): JsonResponse{
+        $qtdDispensas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+                            ->where('ds_motivo', 'Dispensa')
+                            ->count();
+        return response()->json(['total' => $qtdDispensas]);    
+    }
+    public function relatorioFalta(): JsonResponse{
+        $qtdFolgas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+                            ->where('ds_motivo', 'Folga')
+                            ->count();
+        return response()->json(['total' => $qtdFolgas]);    
+    }
+    public function listaEstagiariosDia(): JsonResponse{
+        $estagiarios = Estagiario::with(['RegistroPonto' => function ($query) {
+            $query->whereDate('hr_registro', Carbon::today());
+        }])->get();
+        $dadosFormatadados = $estagiarios->map(function($estagiario){
+            $entrada = $estagiario->registroPonto->where('ds_motivo', 'Entrada')->first();
+            $saida = $estagiario->registroPonto->where('ds_motivo', 'Saída')->first();
+            
+            return [
+                'id' => $estagiario->id,
+                'data'=> Carbon::today()->format('d/m/Y'),
+                'nome' => $estagiario->nm_estagiario,
+                'matricula' => $estagiario->nr_matricula,
+                'entrada' => $entrada ? Carbon::parse($entrada->hr_registro)->format('H:i:s') : '',
+                'saida' => $saida ? Carbon::parse($saida->hr_registro)->format('H:i:s') : '',
+                'motivo' => $entrada ? $entrada->ds_motivo : '',
+                'setor' => $estagiario->ds_setor,
+            ];
+        });
+        return response()->json(['data' => $dadosFormatadados]);
+      }
 }
