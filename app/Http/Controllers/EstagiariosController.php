@@ -106,24 +106,40 @@ class EstagiariosController extends Controller
         return response()->json(['total' => $qtdFolgas]);    
     }
     public function listaEstagiariosDia(): JsonResponse{
-        $estagiarios = Estagiario::with(['RegistroPonto' => function ($query) {
+        $estagiarios = Estagiario::with(['registroPonto' => function ($query) {
             $query->whereDate('hr_registro', Carbon::today());
         }])->get();
         $dadosFormatadados = $estagiarios->map(function($estagiario){
             $entrada = $estagiario->registroPonto->where('ds_motivo', 'Entrada')->first();
             $saida = $estagiario->registroPonto->where('ds_motivo', 'Saída')->first();
-            
+            $registrosHoje = $estagiario->registroPonto;
+            $ocorrencia = $registrosHoje->whereNotIn('ds_motivo', ['Entrada', 'Saída'])->first();
+            if ($ocorrencia){
+                $textoMotivo = $ocorrencia->ds_motivo;
+            } elseif ($entrada && $saida) {
+                $textoMotivo = 'Presente';
+            } elseif ($entrada) {
+                $textoMotivo = 'Em Andamento';
+            } else {
+                $textoMotivo = '---';
+            }
+            $totalHoras = '---';
+            if($entrada && $saida) {
+                $chegada = Carbon::parse($entrada->hr_registro);
+                $partida = Carbon::parse($saida->hr_registro);
+                $totalHoras = $chegada->diff($partida)->format('%H:%I:%S');
+            }
             return [
-                'id' => $estagiario->id,
                 'data'=> Carbon::today()->format('d/m/Y'),
-                'nome' => $estagiario->nm_estagiario,
+                'nome' => $estagiario->nm_estagiarios,
                 'matricula' => $estagiario->nr_matricula,
                 'entrada' => $entrada ? Carbon::parse($entrada->hr_registro)->format('H:i:s') : '',
                 'saida' => $saida ? Carbon::parse($saida->hr_registro)->format('H:i:s') : '',
-                'motivo' => $entrada ? $entrada->ds_motivo : '',
-                'setor' => $estagiario->ds_setor,
+                'motivo' => $textoMotivo,
+                'setor' => $estagiario->nm_setor,
+                'total_horas' => $totalHoras,
             ];
-        });
+        })->values();
         return response()->json(['data' => $dadosFormatadados]);
       }
 }
