@@ -77,6 +77,13 @@ $(document).ready(function() {
         alert("Ação de Leitura de CPF/QR Code ativada (Simulação)");
     });
 
+    $(".nav-link").on("click", function () {
+        $(".nav-link").removeClass("active");
+        $(this).addClass("active");
+        let type = $(this).attr("id");
+        $(".conteudo-aba").hide();
+        $(".conteudo-aba." + type).fadeIn();
+    });
     $(document).ready(function () {
 
 <<<<<<< HEAD
@@ -100,7 +107,6 @@ $(document).ready(function() {
     
 =======
     // Carregar o número de estagiários presentes no dia
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-estagiarios",
             type: "GET",
@@ -108,8 +114,6 @@ $(document).ready(function() {
                 $("#contador-presentes").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-registros",
             type: "GET",
@@ -117,8 +121,6 @@ $(document).ready(function() {
                 $("#registros-dia").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-recesso",
             type: "GET",
@@ -126,8 +128,6 @@ $(document).ready(function() {
                 $("#recesso-dia").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-atestados",
             type: "GET",
@@ -135,8 +135,6 @@ $(document).ready(function() {
                 $("#atestados-dia").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-folgas",
             type: "GET",
@@ -144,8 +142,6 @@ $(document).ready(function() {
                 $("#folgas-dia").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-dispensas",
             type: "GET",
@@ -153,8 +149,6 @@ $(document).ready(function() {
                 $("#dispensas-dia").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
         $.ajax({
             url: "/relatorio-faltas",
             type: "GET",
@@ -162,31 +156,70 @@ $(document).ready(function() {
                 $("#faltas-dia").text(response.total);
             },
         });
-    });
-    $(document).ready(function () {
+        carregarSelectEstagiarios();
         carregarListaEstagiarios();
-    });
+        $("#filtro-motivo, #filtro-estagiario").change(function () {
+            carregarListaEstagiarios();
+        });
+    function carregarSelectEstagiarios() {
+        $.ajax({
+            url: "/pesquisar-estagiarios",
+            type: "GET",
+            success: function (resposta) {
+                let html = '<option value="">Todos</option>';
+                const lista = resposta.data || [];
+
+                lista.forEach(function (item) {
+                    const nome = item.nm_estagiarios
+                        ? item.nm_estagiarios.toUpperCase()
+                        : "SEM NOME";
+                    html += `<option value="${item.id}">${nome}</option>`;
+                });
+                $("#filtro-estagiario").html(html);
+            },
+            error: function (err) {
+                console.error("Erro ao carregar nomes:", err);
+                $("#filtro-estagiario").html(
+                    '<option value="">Erro ao carregar</option>'
+                );
+            },
+        });
+    }
     function carregarListaEstagiarios() {
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        if (!$.isNumeric(estagiarioVal)) {
+        estagiarioVal = ""; 
+        }
+        console.log("Filtrando por:", { motivo: motivoVal, id: estagiarioVal });
         $.ajax({
             url: "/lista-estagiarios",
             type: "GET",
+            data: {
+                motivo: motivoVal,
+                estagiario_id: estagiarioVal,
+            },
             success: function (lista) {
                 let html = "";
                 const dadosReais = lista.data || [];
-                dadosReais.forEach(function (item) {
-                    const nomeLimpo = item.nome
-                        ? item.nome.toUpperCase()
-                        : "---";
-                    const matriculaLimpa = item.matricula
-                        ? item.matricula
-                        : "---";
-                    const horaEntrada = item.entrada || "";
-                    const horaSaida = item.saida || "";
-                    const totalHoras = item.total_horas || "";
-                    const motivoRegistro = item.motivo || "";
-                    const setorEstagiario = item.setor || "---";
-                    const dataDia = item.data || '';
-                    html += `
+                if (dadosReais.length === 0) {
+                    html =
+                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+                } else {
+                    dadosReais.forEach(function (item) {
+                        const nomeLimpo = item.nome
+                            ? item.nome.toUpperCase()
+                            : "---";
+                        const matriculaLimpa = item.matricula
+                            ? item.matricula
+                            : "---";
+                        const horaEntrada = item.entrada || "";
+                        const horaSaida = item.saida || "";
+                        const totalHoras = item.total_horas || "";
+                        const motivoRegistro = item.motivo || "";
+                        const setorEstagiario = item.setor || "---";
+                        const dataDia = item.data || "";
+                        html += `
                     <tr>
                         <td>
                             ${dataDia}
@@ -204,8 +237,15 @@ $(document).ready(function() {
                         <td>${setorEstagiario}</td>
                     </tr>
                     `;
-                    $("#tabela-estagiarios-corpo").html(html);
-                });
+                    });
+                }
+                $("#tabela-estagiarios-corpo").html(html);
+            },
+            error: function (err) {
+                console.error("Erro ao carregar lista:", err);
+                $("#tabela-estagiarios-corpo").html(
+                    '<tr><td colspan="8" class="text-danger">Erro ao carregar dados.</td></tr>'
+                );
             },
         });
     }

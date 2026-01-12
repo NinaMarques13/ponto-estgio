@@ -62,14 +62,24 @@
                                                     class="form-control">
                                             </div>
                                             <div class="col">
-                                                <p>Filtrar por Estagiário</p>
-                                                <input type=search" name="sc-estagiario" id="sc-estagiario"
-                                                    class="form-control">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Filtrar por Estagiário</label>
+                                                    <select id="filtro-estagiario" class="form-select">
+                                                        <option value="">Carregando...</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="col">
-                                                <p>Filtrar por Motivo</p>
-                                                <input type=search" name="sc-motivo" id="sc-motivo"
-                                                    class="form-control">
+                                                <label for="filtro-motivo" class="form-label">Filtrar por Motivo</label>
+                                                <select id="filtro-motivo" class="form-select">
+                                                    <option value="">Todos</option>
+                                                    <option value="Presente">Presente (Registros Completos)</option>
+                                                    <option value="Em Andamento">Em Andamento (Só Entrada)</option>
+                                                    <option value="Falta">Falta</option>
+                                                    <option value="Dispensa">Dispensa</option>
+                                                    <option value="Folga">Folga</option>
+                                                    <option value="Atestado">Atestado</option>
+                                                </select>
                                             </div>
                                             <div class="col">
                                                 <button id="excel-btn">Excel</button>
@@ -188,7 +198,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="table-secundary" id="tabela-estagiarios-corpo">
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
