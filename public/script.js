@@ -242,4 +242,59 @@ $(document).ready(function () {
             },
         });
     }
+    $('#data-completa').on('change', function(e) {
+        let dataSelecionada = $(this).val();
+        let token = $('input[name="_token"]').val();
+        $.ajax({
+            url:"/pesquisar-data",
+            data: {
+                'data-completa': dataSelecionada,
+                '_token': token
+            },
+            type: "post",
+            success: function (resposta) {
+                let html = "";
+                const dadosReais = resposta.data || [];
+                if (dadosReais.length === 0) {
+                    html =
+                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+                } else {
+                    dadosReais.forEach(function (item) {
+                        const nomeLimpo = item.nome
+                            ? item.nome.toUpperCase()
+                            : "---";
+                        const matriculaLimpa = item.matricula
+                            ? item.matricula
+                            : "---";
+                        const horaEntrada = item.entrada || "";
+                        const horaSaida = item.saida || "";
+                        const totalHoras = item.total_horas || "";
+                        const motivoRegistro = item.motivo || "";
+                        const setorEstagiario = item.setor || "---";
+                        const dataDia = item.data || "";
+                        html += `
+                    <tr>
+                        <td>
+                            ${dataDia}
+                        </td>
+                        <td>
+                            ${horaEntrada}
+                        </td>
+                        <td>
+                            ${horaSaida}
+                        </td>
+                        <td>${totalHoras}</td>
+                        <td>${matriculaLimpa}</td>
+                        <td>${nomeLimpo}</td>
+                        <td>${motivoRegistro}</td>
+                        <td>${setorEstagiario}</td>
+                    </tr>
+                    `;
+                    });
+                }
+                $("#tabela-estagiarios-corpo").html(html);
+            },
+        });
+    }); 
+       
 });

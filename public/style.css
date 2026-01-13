@@ -122,9 +122,6 @@ body {
     text-decoration: none; /* Remove sublinhado padrão */
     padding: 0 0.2rem;
 }
-.registro-link.active {
-    /* Pode-se adicionar um estilo para o link ativo, se necessário */
-}
 
 /* Botão REGISTRAR */
 .registrar-btn {
@@ -144,4 +141,32 @@ body {
 }
 .img-exp{
     align-items: center;
+}
+.admin-access-btn {
+   
+    position: fixed;
+    
+    
+    top: 20px; 
+    right: 20px; 
+    
+    
+    background-color: var(--cor-primaria); 
+    color: white !important; 
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; 
+    font-weight: bold;
+    font-size: 0.9rem;
+    
+    
+    z-index: 9999; 
+    
+    
+    transition: background-color 0.3s ease;
+}
+.admin-access-btn:hover {
+    background-color: #0b4e25; 
+    color: white;
 }

@@ -9,6 +9,7 @@ use carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
 use Nette\Utils\Json;
+use Symfony\Component\HttpFoundation\Response;
 
 class EstagiariosController extends Controller
 {
@@ -88,10 +89,10 @@ class EstagiariosController extends Controller
     }
     public function relatorioFalta(): JsonResponse
     {
-        $qtdFolgas = RegistroPonto::whereDate('hr_registro', Carbon::today())
-            ->where('ds_motivo', 'Folga')
+        $qtdFaltas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+            ->where('ds_motivo', 'Falta')
             ->count();
-        return response()->json(['total' => $qtdFolgas]);
+        return response()->json(['total' => $qtdFaltas]);
     }
     public function pesquisarEstagiarios(): JsonResponse
     {
@@ -103,6 +104,52 @@ class EstagiariosController extends Controller
             return response()->json(['data' => $estagiarios]);
         } catch (\Exception $e) {
             // Se der erro, retorna o motivo para aparecer no console do navegador
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function pesquisarData(Request $request, Response $response): JsonResponse {
+        try {
+            $dataSelecionada = $request->input('data-completa');
+            $dataCarbon = Carbon::parse($dataSelecionada);
+            $queryData = Estagiario::whereHas('registroPonto', function ($query) use ($dataCarbon) {
+                $query->whereDate('hr_registro', $dataCarbon);
+            })->with(['registroPonto' => function ($query) use ($dataCarbon) {
+                $query->whereDate('hr_registro', $dataCarbon);
+            }])->get();
+            $dadosFormatados = $queryData->map(function ($estagiario) use ($dataCarbon){
+                $entrada = $estagiario->registroPonto->where('ds_motivo', 'Entrada')->first();
+                $saida = $estagiario->registroPonto->where('ds_motivo', 'Saída')->first();
+                $registrosNaData = $estagiario->registroPonto;
+                $ocorrencia = $registrosNaData->whereNotIn('ds_motivo', ['Entrada', 'Saída'])->first();
+                if ($ocorrencia) {
+                    $textoMotivo = $ocorrencia->ds_motivo;
+                } elseif ($entrada && $saida) {
+                    $textoMotivo = 'Presente';
+                } elseif ($entrada) {
+                    $textoMotivo = 'Em Andamento';
+                } else {
+                    $textoMotivo = '---';
+                }
+                $totalHoras = '---';
+                if ($entrada && $saida) {
+                    $chegada = Carbon::parse($entrada->hr_registro);
+                    $partida = Carbon::parse($saida->hr_registro);
+                    $totalHoras = $chegada->diff($partida)->format('%H:%I:%S');
+                }
+                return [
+                    'id' => $estagiario->id,
+                    'data' => $dataCarbon->format('d/m/Y'),
+                    'nome' => $estagiario->nm_estagiarios,
+                    'matricula' => $estagiario->nr_matricula,
+                    'entrada' => $entrada ? Carbon::parse($entrada->hr_registro)->format('H:i:s') : '',
+                    'saida' => $saida ? Carbon::parse($saida->hr_registro)->format('H:i:s') : '',
+                    'motivo' => $textoMotivo,
+                    'setor' => $estagiario->nm_setor,
+                    'total_horas' => $totalHoras,
+                ];
+            });
+                return response()->json(['data' => $dadosFormatados]);        
+            } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
