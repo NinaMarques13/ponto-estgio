@@ -206,3 +206,60 @@ body {
     padding-top: 3rem !important;
     padding-bottom: 3rem !important; 
 }
+
+.titulo-sistema {
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.table-header-custom {
+    background-color: #e8f5e9;
+}
+
+.table-header-custom th {
+    color: var(--cor-primaria);
+    font-weight: bold;
+    border: none;
+    padding: 12px 15px;
+    font-size: 1rem;
+}
+
+.table tr {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.btn-purple {
+    background-color: purple;
+    transition: filter 0.2s;
+}
+
+.btn-purple:hover {
+    filter: brightness(0.9);
+}
+
+.btn-sm {
+    border-radius: 4px;
+    padding: 5px 8px;
+}
+
+.form-label.text-secondary {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.bg-light.form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.footer-link-registro {
+    color: var(--cor-primaria);
+    text-decoration: underline;
+}
+
+.footer-link-sair {
+    color: #dc3545;
+}

@@ -26,5 +26,9 @@ Route::get('views/login/adm', function () {
 Route::get('views/principal/dashboard', function () {
     return view('pages.principal.dashboard');
 });
+
+Route::get('views/principal/cadastro', function () {
+    return view('pages.principal.cadastro');
+});
 Route::get('/views/pages/inicio', [App\Http\Controllers\EstagiariosController::class, 'index'])->name('inicio.index');
 route::any('/registrar-ponto', [App\Http\Controllers\EstagiariosController::class, 'store'])->name('registrar-ponto');
