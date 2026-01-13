@@ -47,19 +47,28 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col">
+                                                <form action="/pesquisar-data" method="post">
+                                                @csrf
                                                 <p>Data</p>
                                                 <input type="date" name="data-completa" id="data-completa"
                                                     class="form-control">
+                                                </form>
                                             </div>
                                             <div class="col">
                                                 <p>Mês</p>
-                                                <input type="month" name="data-mes" id="data-completa"
+                                                <input type="month" name="data-mes" id="data-mes"
                                                     class="form-control">
                                             </div>
                                             <div class="col">
                                                 <p>Ano</p>
-                                                <input type="datetime-local" name="data-ano" id="data-completa"
-                                                    class="form-control">
+                                                <input type="number" 
+                                                        name="data-ano" 
+                                                        id="data-ano" 
+                                                        class="form-control" 
+                                                        min="2020" 
+                                                        max="2030" 
+                                                        step="1" 
+                                                        value="{{ date('Y') }}">
                                             </div>
                                             <div class="col">
                                                 <div class="col-md-3">
