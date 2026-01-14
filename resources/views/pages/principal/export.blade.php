@@ -48,27 +48,27 @@
                                         <div class="row">
                                             <div class="col">
                                                 <form action="/pesquisar-data" method="post">
-                                                @csrf
-                                                <p>Data</p>
-                                                <input type="date" name="data-completa" id="data-completa"
-                                                    class="form-control">
+                                                    @csrf
+                                                    <p>Data</p>
+                                                    <input type="date" name="data-completa" id="data-completa"
+                                                        class="form-control">
                                                 </form>
                                             </div>
                                             <div class="col">
-                                                <p>Mês</p>
-                                                <input type="month" name="data-mes" id="data-mes"
-                                                    class="form-control">
+                                                <form action="/pesquisarMesAno" method="post">
+                                                    @csrf
+                                                    <p>Mês</p>
+                                                    <input type="month" name="data-mes" id="data-mes"
+                                                        class="form-control">
+                                                </form>
                                             </div>
                                             <div class="col">
-                                                <p>Ano</p>
-                                                <input type="number" 
-                                                        name="data-ano" 
-                                                        id="data-ano" 
-                                                        class="form-control" 
-                                                        min="2020" 
-                                                        max="2030" 
-                                                        step="1" 
-                                                        value="{{ date('Y') }}">
+                                                <form action="/pesquisarMesAno" method="post">
+                                                    @csrf
+                                                    <p>Ano</p>
+                                                    <input type="number" name="data-ano" id="data-ano" class="form-control"
+                                                    min="2000" max="2100" step="1" value="{{ date('Y') }}">
+                                                </form>
                                             </div>
                                             <div class="col">
                                                 <div class="col-md-3">

@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Função auxiliar para limpar o CPF, removendo todos os caracteres não-dígitos
     const limparCPF = (cpf) => {
         return cpf.replace(/[^\d]/g, "");
-    }
+    };
 
     // 🛠️ NOVIDADE: Função para aplicar a máscara 000.000.000-00
     const aplicarMascaraCPF = (valor) => {
@@ -100,60 +100,60 @@ $(document).ready(function () {
         $(".conteudo-aba." + type).fadeIn();
     });
     // Carregar o número de estagiários presentes no dia
-        $.ajax({
-            url: "/relatorio-estagiarios",
-            type: "GET",
-            success: function (response) {
-                $("#contador-presentes").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-registros",
-            type: "GET",
-            success: function (response) {
-                $("#registros-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-recesso",
-            type: "GET",
-            success: function (response) {
-                $("#recesso-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-atestados",
-            type: "GET",
-            success: function (response) {
-                $("#atestados-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-folgas",
-            type: "GET",
-            success: function (response) {
-                $("#folgas-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-dispensas",
-            type: "GET",
-            success: function (response) {
-                $("#dispensas-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-faltas",
-            type: "GET",
-            success: function (response) {
-                $("#faltas-dia").text(response.total);
-            },
-        });
-        carregarSelectEstagiarios();
+    $.ajax({
+        url: "/relatorio-estagiarios",
+        type: "GET",
+        success: function (response) {
+            $("#contador-presentes").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-registros",
+        type: "GET",
+        success: function (response) {
+            $("#registros-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-recesso",
+        type: "GET",
+        success: function (response) {
+            $("#recesso-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-atestados",
+        type: "GET",
+        success: function (response) {
+            $("#atestados-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-folgas",
+        type: "GET",
+        success: function (response) {
+            $("#folgas-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-dispensas",
+        type: "GET",
+        success: function (response) {
+            $("#dispensas-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-faltas",
+        type: "GET",
+        success: function (response) {
+            $("#faltas-dia").text(response.total);
+        },
+    });
+    carregarSelectEstagiarios();
+    carregarListaEstagiarios();
+    $("#filtro-motivo, #filtro-estagiario").change(function () {
         carregarListaEstagiarios();
-        $("#filtro-motivo, #filtro-estagiario").change(function () {
-            carregarListaEstagiarios();
-        });
+    });
     function carregarSelectEstagiarios() {
         $.ajax({
             url: "/pesquisar-estagiarios",
@@ -182,9 +182,8 @@ $(document).ready(function () {
         let motivoVal = $("#filtro-motivo").val() || "";
         let estagiarioVal = $("#filtro-estagiario").val() || "";
         if (!$.isNumeric(estagiarioVal)) {
-        estagiarioVal = ""; 
+            estagiarioVal = "";
         }
-        console.log("Filtrando por:", { motivo: motivoVal, id: estagiarioVal });
         $.ajax({
             url: "/lista-estagiarios",
             type: "GET",
@@ -242,14 +241,14 @@ $(document).ready(function () {
             },
         });
     }
-    $('#data-completa').on('change', function(e) {
+    $("#data-completa").on("change", function (e) {
         let dataSelecionada = $(this).val();
         let token = $('input[name="_token"]').val();
         $.ajax({
-            url:"/pesquisar-data",
+            url: "/pesquisar-data",
             data: {
-                'data-completa': dataSelecionada,
-                '_token': token
+                "data-completa": dataSelecionada,
+                _token: token,
             },
             type: "post",
             success: function (resposta) {
@@ -295,6 +294,27 @@ $(document).ready(function () {
                 $("#tabela-estagiarios-corpo").html(html);
             },
         });
-    }); 
-       
+    });
+    $("#data-mes").change(function (resposta) {
+        let mes = $(this).val();
+        let token = $('input[name="_token"]').val();
+        if(!mes) return;
+        $.ajax({
+            url: "/pesquisar-mes-ano",
+            data: {
+                mes: mes,
+                _token: token,
+            },
+            type: "post",
+            dataType: "json",
+            success: function resposta(resposta) {
+            console.log("Objeto recebido:", resposta);
+            console.log("Início:", resposta.inicio);
+            console.log("Fim:", resposta.fim);
+            },
+            error: function(xhr) {
+            console.log("Erro:", xhr.responseText);
+            }
+        });
+    });
 });

@@ -214,4 +214,18 @@ class EstagiariosController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function pesquisarMesAno(Request $request): JsonResponse
+    {
+        try {
+            $mes = $request->input('mes');
+            $estagiario = Estagiario::with(['registroPonto' => function ($query) use ($mes) {
+                $query->whereMonth('hr_registro', $mes);
+            }])->where('id', )->first();  
+            return response()->json([
+                'nome' => $estagiario->nm_estagiarios
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
