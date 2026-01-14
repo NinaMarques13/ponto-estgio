@@ -107,60 +107,60 @@ $(document).ready(function() {
     
 =======
     // Carregar o número de estagiários presentes no dia
-        $.ajax({
-            url: "/relatorio-estagiarios",
-            type: "GET",
-            success: function (response) {
-                $("#contador-presentes").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-registros",
-            type: "GET",
-            success: function (response) {
-                $("#registros-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-recesso",
-            type: "GET",
-            success: function (response) {
-                $("#recesso-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-atestados",
-            type: "GET",
-            success: function (response) {
-                $("#atestados-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-folgas",
-            type: "GET",
-            success: function (response) {
-                $("#folgas-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-dispensas",
-            type: "GET",
-            success: function (response) {
-                $("#dispensas-dia").text(response.total);
-            },
-        });
-        $.ajax({
-            url: "/relatorio-faltas",
-            type: "GET",
-            success: function (response) {
-                $("#faltas-dia").text(response.total);
-            },
-        });
-        carregarSelectEstagiarios();
+    $.ajax({
+        url: "/relatorio-estagiarios",
+        type: "GET",
+        success: function (response) {
+            $("#contador-presentes").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-registros",
+        type: "GET",
+        success: function (response) {
+            $("#registros-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-recesso",
+        type: "GET",
+        success: function (response) {
+            $("#recesso-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-atestados",
+        type: "GET",
+        success: function (response) {
+            $("#atestados-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-folgas",
+        type: "GET",
+        success: function (response) {
+            $("#folgas-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-dispensas",
+        type: "GET",
+        success: function (response) {
+            $("#dispensas-dia").text(response.total);
+        },
+    });
+    $.ajax({
+        url: "/relatorio-faltas",
+        type: "GET",
+        success: function (response) {
+            $("#faltas-dia").text(response.total);
+        },
+    });
+    carregarSelectEstagiarios();
+    carregarListaEstagiarios();
+    $("#filtro-motivo, #filtro-estagiario").change(function () {
         carregarListaEstagiarios();
-        $("#filtro-motivo, #filtro-estagiario").change(function () {
-            carregarListaEstagiarios();
-        });
+    });
     function carregarSelectEstagiarios() {
         $.ajax({
             url: "/pesquisar-estagiarios",
@@ -189,9 +189,8 @@ $(document).ready(function() {
         let motivoVal = $("#filtro-motivo").val() || "";
         let estagiarioVal = $("#filtro-estagiario").val() || "";
         if (!$.isNumeric(estagiarioVal)) {
-        estagiarioVal = ""; 
+            estagiarioVal = "";
         }
-        console.log("Filtrando por:", { motivo: motivoVal, id: estagiarioVal });
         $.ajax({
             url: "/lista-estagiarios",
             type: "GET",
@@ -249,14 +248,14 @@ $(document).ready(function() {
             },
         });
     }
-    $('#data-completa').on('change', function(e) {
+    $("#data-completa").on("change", function (e) {
         let dataSelecionada = $(this).val();
         let token = $('input[name="_token"]').val();
         $.ajax({
-            url:"/pesquisar-data",
+            url: "/pesquisar-data",
             data: {
-                'data-completa': dataSelecionada,
-                '_token': token
+                "data-completa": dataSelecionada,
+                _token: token,
             },
             type: "post",
             success: function (resposta) {

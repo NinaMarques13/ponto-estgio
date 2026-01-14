@@ -47,3 +47,4 @@ Route::get('/relatorio-faltas', [EstagiariosController::class, 'relatorioFalta']
 Route::get('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::get('/pesquisar-estagiarios', [EstagiariosController::class, 'pesquisarEstagiarios'])->name('filtrar.estagiarios');
 Route::any('/pesquisar-data', [EstagiariosController::class, 'pesquisarData'])->name('pesquisar.data');
+route::any('/pesquisar-mes-ano', [EstagiariosController::class, 'pesquisarMesAno'])->name('pesquisar.mes.ano');
