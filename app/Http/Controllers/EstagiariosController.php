@@ -9,6 +9,7 @@ use carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
 use Nette\Utils\Json;
+use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Component\HttpFoundation\Response;
 
 class EstagiariosController extends Controller
@@ -107,16 +108,19 @@ class EstagiariosController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function pesquisarData(Request $request, Response $response): JsonResponse {
+    public function pesquisarData(Request $request, Response $response): JsonResponse
+    {
         try {
             $dataSelecionada = $request->input('data-completa');
             $dataCarbon = Carbon::parse($dataSelecionada);
             $queryData = Estagiario::whereHas('registroPonto', function ($query) use ($dataCarbon) {
                 $query->whereDate('hr_registro', $dataCarbon);
-            })->with(['registroPonto' => function ($query) use ($dataCarbon) {
-                $query->whereDate('hr_registro', $dataCarbon);
-            }])->get();
-            $dadosFormatados = $queryData->map(function ($estagiario) use ($dataCarbon){
+            })->with([
+                        'registroPonto' => function ($query) use ($dataCarbon) {
+                            $query->whereDate('hr_registro', $dataCarbon);
+                        }
+                    ])->get();
+            $dadosFormatados = $queryData->map(function ($estagiario) use ($dataCarbon) {
                 $entrada = $estagiario->registroPonto->where('ds_motivo', 'Entrada')->first();
                 $saida = $estagiario->registroPonto->where('ds_motivo', 'Saída')->first();
                 $registrosNaData = $estagiario->registroPonto;
@@ -148,8 +152,8 @@ class EstagiariosController extends Controller
                     'total_horas' => $totalHoras,
                 ];
             });
-                return response()->json(['data' => $dadosFormatados]);        
-            } catch (\Exception $e) {
+            return response()->json(['data' => $dadosFormatados]);
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -218,14 +222,85 @@ class EstagiariosController extends Controller
     {
         try {
             $mes = $request->input('mes');
-            $estagiario = Estagiario::with(['registroPonto' => function ($query) use ($mes) {
-                $query->whereMonth('hr_registro', $mes);
-            }])->where('id', )->first();  
-            return response()->json([
-                'nome' => $estagiario->nm_estagiarios
-            ]);
+            $inicioMes = Carbon::parse($mes)->startOfMonth()->format('Y-m-d');
+            $fimMes = Carbon::parse($mes)->endOfMonth()->format('Y-m-d');
+            $queryMes = Estagiario::whereHas('registroPonto', function ($query) use ($inicioMes, $fimMes) {
+                $query->whereBetween('hr_registro', [$inicioMes, $fimMes]);
+            })->with([
+                        'registroPonto' => function ($query) use ($inicioMes, $fimMes) {
+                            $query->whereBetween('hr_registro', [$inicioMes, $fimMes])
+                                ->orderBy('hr_registro', 'asc');
+                        }
+                    ])->get();
+            $dadosMes = $queryMes->map(function ($estagiario) use ($inicioMes, $fimMes) {
+                $periodo = CarbonPeriod::create($inicioMes, $fimMes);
+                $registrosPorDia = [];
+                foreach ($periodo as $data) {
+                    $dataFormatada = $data->format('Y-m-d');
+                    $entrada = $estagiario->RegistroPonto->where('ds_motivo', 'Entrada')
+                        ->where('hr_registro', $dataFormatada)->first();
+                    $saida = $estagiario->RegistroPonto->where('ds_motivo', 'Saída')
+                        ->where('hr_registro', $dataFormatada)->first();
+                    $registrosPorDia[] = $estagiario->RegistroPonto->filter(function ($ponto) use ($dataFormatada) {
+                        return str_starts_with($ponto->hr_registro, $dataFormatada);
+                    });
+                    $registrosHoje = $estagiario->registroPonto;
+                    $ocorrencia = $registrosHoje->whereNotIn('ds_motivo', ['Entrada', 'Saída'])->first();
+                    if ($ocorrencia) {
+                        $textoMotivo = $ocorrencia->ds_motivo;
+                    } elseif ($entrada && $saida) {
+                        $textoMotivo = 'Presente';
+                    } elseif ($entrada) {
+                        $textoMotivo = 'Em Andamento';
+                    } else {
+                        $textoMotivo = '---';
+                    }
+                    $totalHoras = '---';
+                    if ($entrada && $saida) {
+                        $chegada = Carbon::parse($entrada->hr_registro);
+                        $partida = Carbon::parse($saida->hr_registro);
+                        $totalHoras = $chegada->diff($partida)->format('%H:%I:%S');
+                    }
+                    $registrosPorDia[] = [
+                        'id' => $estagiario->id,
+                        'data' => $data->format('d/m/Y'),
+                        'nome' => $estagiario->nm_estagiarios,
+                        'matricula' => $estagiario->nr_matricula,
+                        'entrada' => $entrada ? Carbon::parse($entrada->hr_registro)->format('H:i:s') : '',
+                        'saida' => $saida ? Carbon::parse($saida->hr_registro)->format('H:i:s') : '',
+                        'motivo' => $textoMotivo,
+                        'setor' => $estagiario->nm_setor,
+                        'total_horas' => $totalHoras,
+                    ];
+                }
+                return $registrosPorDia;
+            });
+            $listaCompleta = $dadosMes->collapse();
+
+            // 2. FILTRO BLINDADO (Corrige o erro "Undefined array key")
+            $listaLimpa = $listaCompleta->filter(function ($item) {
+                // Passo A: Verifica se o item é realmente um array
+                if (!is_array($item)) {
+                    return false;
+                }
+                // Passo B: Verifica se a chave 'data' existe dentro desse array
+                if (!isset($item['data'])) {
+                    return false;
+                }
+                // Passo C: Verifica se a data não está vazia/nula
+                if (empty($item['data'])) {
+                    return false;
+                }
+
+                return true; // Se passou por tudo, mantém o item
+            });
+
+            // 3. Retorna reorganizando os índices (array_values) para o JSON ficar perfeito
+            return response()->json(['data' => array_values($listaLimpa->toArray())]);
+
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            // Dica: Adicionei o $e->getLine() para saber exatamente onde quebra se houver outro erro
+            return response()->json(['error' => $e->getMessage() . ' na linha ' . $e->getLine()], 500);
         }
     }
 }

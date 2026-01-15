@@ -298,7 +298,7 @@ $(document).ready(function () {
     $("#data-mes").change(function (resposta) {
         let mes = $(this).val();
         let token = $('input[name="_token"]').val();
-        if(!mes) return;
+        if (!mes) return;
         $.ajax({
             url: "/pesquisar-mes-ano",
             data: {
@@ -307,14 +307,48 @@ $(document).ready(function () {
             },
             type: "post",
             dataType: "json",
-            success: function resposta(resposta) {
-            console.log("Objeto recebido:", resposta);
-            console.log("Início:", resposta.inicio);
-            console.log("Fim:", resposta.fim);
+            success: function (resposta) {
+                let html = "";
+                const dadosReais = resposta.data || [];
+                if (dadosReais.length === 0) {
+                    html =
+                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+                } else {
+                    dadosReais.forEach(function (item) {
+                        const nomeLimpo = item.nome
+                            ? item.nome.toUpperCase()
+                            : "---";
+                        const matriculaLimpa = item.matricula
+                            ? item.matricula
+                            : "---";
+                        const horaEntrada = item.entrada || "";
+                        const horaSaida = item.saida || "";
+                        const totalHoras = item.total_horas || "";
+                        const motivoRegistro = item.motivo || "";
+                        const setorEstagiario = item.setor || "---";
+                        const dataDia = item.data || "";
+                        html += `
+                    <tr>
+                        <td>
+                            ${dataDia}
+                        </td>
+                        <td>
+                            ${horaEntrada}
+                        </td>
+                        <td>
+                            ${horaSaida}
+                        </td>
+                        <td>${totalHoras}</td>
+                        <td>${matriculaLimpa}</td>
+                        <td>${nomeLimpo}</td>
+                        <td>${motivoRegistro}</td>
+                        <td>${setorEstagiario}</td>
+                    </tr>
+                    `;
+                    });
+                }
+                $("#tabela-estagiarios-corpo").html(html);
             },
-            error: function(xhr) {
-            console.log("Erro:", xhr.responseText);
-            }
         });
     });
 });

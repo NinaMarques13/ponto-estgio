@@ -35,12 +35,6 @@
                     </nav>
                     <hr class="mt-2 mb-5">
                     <div class="d-flex gap-3">
-                        <div class="conteudo-aba home">
-                            <p>Olá mundo 1</p>
-                        </div>
-                        <div class="conteudo-aba cad">
-                            <p>Olá mundo 2</p>
-                        </div>
                         <div class="conteudo-aba plan">
                             <div class="col">
                                 <div class="card">
