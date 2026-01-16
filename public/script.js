@@ -151,7 +151,7 @@ $(document).ready(function () {
     });
     carregarSelectEstagiarios();
     carregarListaEstagiarios();
-    $("#filtro-motivo, #filtro-estagiario").change(function () {
+    $("#filtro-motivo, #filtro-estagiario, #data-ano").change(function () {
         carregarListaEstagiarios();
     });
     function carregarSelectEstagiarios() {
@@ -181,6 +181,7 @@ $(document).ready(function () {
     function carregarListaEstagiarios() {
         let motivoVal = $("#filtro-motivo").val() || "";
         let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let AnoVal = $("#data-ano")
         if (!$.isNumeric(estagiarioVal)) {
             estagiarioVal = "";
         }
@@ -189,7 +190,7 @@ $(document).ready(function () {
             type: "GET",
             data: {
                 motivo: motivoVal,
-                estagiario_id: estagiarioVal,
+                estagiario_id: estagiarioVal, 
             },
             success: function (lista) {
                 let html = "";
@@ -300,7 +301,7 @@ $(document).ready(function () {
         let token = $('input[name="_token"]').val();
         if (!mes) return;
         $.ajax({
-            url: "/pesquisar-mes-ano",
+            url: "/pesquisar-mes",
             data: {
                 mes: mes,
                 _token: token,
@@ -350,5 +351,61 @@ $(document).ready(function () {
                 $("#tabela-estagiarios-corpo").html(html);
             },
         });
+    });
+    $('#data-ano').change(function change(resposta) {
+        let ano = $(this).val();
+        let token = $('input[name="_token"]').val();
+        if (!ano) return;
+        $.ajax({
+            url: '/pesquisa-ano',
+            data: {
+                ano: ano,
+                _token: token
+            },
+            type: "post",
+            dataType: "json",
+            success: function (resposta) {
+                let html = "";
+                const dadosReais = resposta.data || [];
+                if (dadosReais.length === 0) {
+                    html =
+                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+                } else {
+                    dadosReais.forEach(function (item) {
+                        const nomeLimpo = item.nome
+                            ? item.nome.toUpperCase()
+                            : "---";
+                        const matriculaLimpa = item.matricula
+                            ? item.matricula
+                            : "---";
+                        const horaEntrada = item.entrada || "";
+                        const horaSaida = item.saida || "";
+                        const totalHoras = item.total_horas || "";
+                        const motivoRegistro = item.motivo || "";
+                        const setorEstagiario = item.setor || "---";
+                        const dataDia = item.data || "";
+                        html += `
+                    <tr>
+                        <td>
+                            ${dataDia}
+                        </td>
+                        <td>
+                            ${horaEntrada}
+                        </td>
+                        <td>
+                            ${horaSaida}
+                        </td>
+                        <td>${totalHoras}</td>
+                        <td>${matriculaLimpa}</td>
+                        <td>${nomeLimpo}</td>
+                        <td>${motivoRegistro}</td>
+                        <td>${setorEstagiario}</td>
+                    </tr>
+                    `;
+                    });
+                }
+                $("#tabela-estagiarios-corpo").html(html);
+            },
+        })
     });
 });

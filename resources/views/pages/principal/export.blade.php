@@ -49,7 +49,7 @@
                                                 </form>
                                             </div>
                                             <div class="col">
-                                                <form action="/pesquisarMesAno" method="post">
+                                                <form action="/pesquisarMes" method="post">
                                                     @csrf
                                                     <p>Mês</p>
                                                     <input type="month" name="data-mes" id="data-mes"
@@ -57,7 +57,7 @@
                                                 </form>
                                             </div>
                                             <div class="col">
-                                                <form action="/pesquisarMesAno" method="post">
+                                                <form action="/pesquisarAno" method="post">
                                                     @csrf
                                                     <p>Ano</p>
                                                     <input type="number" name="data-ano" id="data-ano" class="form-control"

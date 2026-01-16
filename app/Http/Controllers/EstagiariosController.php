@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Estagiario;
 use App\Models\RegistroPonto;
-use carbon\Carbon;
+use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
 use Nette\Utils\Json;
@@ -23,7 +23,7 @@ class EstagiariosController extends Controller
         $cpf = $request->input('cpf');
         $estagiario = Estagiario::where('nr_matricula', $cpf)->first();
         if (!$estagiario) {
-            dd('Estagiário não encontrado com o CPF: ' . $cpf);
+            return redirect()->back()->with('erro', "Estagiário não encontrado com o CPF: {$cpf}");
         }
         $agora = Carbon::now();
         $inicioPermitido = Carbon::today()->setTime(5, 0, 0);
@@ -45,7 +45,7 @@ class EstagiariosController extends Controller
             'hr_registro' => Carbon::now(),
             'ip_registro' => $request->ip(),
         ]);
-        return redirect()->back()->with('sucesso', 'Ponto de ' . $motivo . 'registrado com sucesso!');
+        return redirect()->back()->with('sucesso', "Ponto de {$motivo} registrado com sucesso!");
     }
     public function relatorioEstagiarios(): JsonResponse
     {
@@ -218,34 +218,37 @@ class EstagiariosController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function pesquisarMesAno(Request $request): JsonResponse
+    public function pesquisarMes(Request $request): JsonResponse
     {
         try {
             $mes = $request->input('mes');
             $inicioMes = Carbon::parse($mes)->startOfMonth()->format('Y-m-d');
             $fimMes = Carbon::parse($mes)->endOfMonth()->format('Y-m-d');
+            
             $queryMes = Estagiario::whereHas('registroPonto', function ($query) use ($inicioMes, $fimMes) {
                 $query->whereBetween('hr_registro', [$inicioMes, $fimMes]);
             })->with([
-                        'registroPonto' => function ($query) use ($inicioMes, $fimMes) {
-                            $query->whereBetween('hr_registro', [$inicioMes, $fimMes])
-                                ->orderBy('hr_registro', 'asc');
-                        }
-                    ])->get();
+                'registroPonto' => function ($query) use ($inicioMes, $fimMes) {
+                    $query->whereBetween('hr_registro', [$inicioMes, $fimMes])
+                        ->orderBy('hr_registro', 'asc');
+                }
+            ])->get();
+
             $dadosMes = $queryMes->map(function ($estagiario) use ($inicioMes, $fimMes) {
                 $periodo = CarbonPeriod::create($inicioMes, $fimMes);
                 $registrosPorDia = [];
+
                 foreach ($periodo as $data) {
                     $dataFormatada = $data->format('Y-m-d');
-                    $entrada = $estagiario->RegistroPonto->where('ds_motivo', 'Entrada')
-                        ->where('hr_registro', $dataFormatada)->first();
-                    $saida = $estagiario->RegistroPonto->where('ds_motivo', 'Saída')
-                        ->where('hr_registro', $dataFormatada)->first();
-                    $registrosPorDia[] = $estagiario->RegistroPonto->filter(function ($ponto) use ($dataFormatada) {
+                    
+                    $registrosNoDia = $estagiario->registroPonto->filter(function ($ponto) use ($dataFormatada) {
                         return str_starts_with($ponto->hr_registro, $dataFormatada);
                     });
-                    $registrosHoje = $estagiario->registroPonto;
-                    $ocorrencia = $registrosHoje->whereNotIn('ds_motivo', ['Entrada', 'Saída'])->first();
+
+                    $entrada = $registrosNoDia->where('ds_motivo', 'Entrada')->first();
+                    $saida = $registrosNoDia->where('ds_motivo', 'Saída')->first();
+                    $ocorrencia = $registrosNoDia->whereNotIn('ds_motivo', ['Entrada', 'Saída'])->first();
+
                     if ($ocorrencia) {
                         $textoMotivo = $ocorrencia->ds_motivo;
                     } elseif ($entrada && $saida) {
@@ -255,12 +258,14 @@ class EstagiariosController extends Controller
                     } else {
                         $textoMotivo = '---';
                     }
+
                     $totalHoras = '---';
                     if ($entrada && $saida) {
                         $chegada = Carbon::parse($entrada->hr_registro);
                         $partida = Carbon::parse($saida->hr_registro);
                         $totalHoras = $chegada->diff($partida)->format('%H:%I:%S');
                     }
+
                     $registrosPorDia[] = [
                         'id' => $estagiario->id,
                         'data' => $data->format('d/m/Y'),
@@ -274,33 +279,73 @@ class EstagiariosController extends Controller
                     ];
                 }
                 return $registrosPorDia;
-            });
-            $listaCompleta = $dadosMes->collapse();
+            })->collapse();
 
-            // 2. FILTRO BLINDADO (Corrige o erro "Undefined array key")
-            $listaLimpa = $listaCompleta->filter(function ($item) {
-                // Passo A: Verifica se o item é realmente um array
-                if (!is_array($item)) {
-                    return false;
-                }
-                // Passo B: Verifica se a chave 'data' existe dentro desse array
-                if (!isset($item['data'])) {
-                    return false;
-                }
-                // Passo C: Verifica se a data não está vazia/nula
-                if (empty($item['data'])) {
-                    return false;
-                }
-
-                return true; // Se passou por tudo, mantém o item
-            });
-
-            // 3. Retorna reorganizando os índices (array_values) para o JSON ficar perfeito
-            return response()->json(['data' => array_values($listaLimpa->toArray())]);
+            return response()->json(['data' => array_values($dadosMes->toArray())]);
 
         } catch (\Exception $e) {
-            // Dica: Adicionei o $e->getLine() para saber exatamente onde quebra se houver outro erro
             return response()->json(['error' => $e->getMessage() . ' na linha ' . $e->getLine()], 500);
+        }
+    }
+    public function pesquisaAno (Request $request){
+        try {
+            $ano = $request->input('ano');
+            $inicioAno = Carbon::parse($ano)->startOfYear()->format('Y-m-d');
+            $fimAno = Carbon::parse($ano)->endOfYear()->format('Y-m-d');
+            $queryAno = Estagiario::whereHas('registroPonto', function($query) use ($fimAno, $inicioAno){
+                $query->whereBetween('hr_registro', [$inicioAno, $fimAno]);
+            })->with(['registroPonto' => function($query) use ($inicioAno, $fimAno){
+                $query->whereBetween('hr_registro', [$inicioAno, $fimAno])
+                    ->orderBy('hr_registro', 'asc');
+            }])->get();
+
+            $dadosAno = $queryAno->map(function($estagiario) use ($inicioAno, $fimAno): array {
+                $periodo = CarbonPeriod::create($inicioAno, $fimAno);
+                $registrosPorDia = [];
+                foreach ($periodo as $data) {
+                    $dataFormatada = $data->format('Y-m-d');
+                    $registrosNoDia = $estagiario->registroPonto->filter(function($ponto) use ($dataFormatada){
+                        return str_starts_with($ponto->hr_registro, $dataFormatada);
+                    });
+                    $entrada = $registrosNoDia->where('ds_motivo', 'Entrada')->first();
+                    $saida = $registrosNoDia->where('ds_motivo', 'Saída')->first();
+                    $ocorrencia = $registrosNoDia->whereNotIn('ds_motivo', ['Entrada','Saída'])->first();
+
+                    if ($ocorrencia){
+                        $textoMotivo = $ocorrencia->ds_motivo;
+                    } elseif ($entrada && $saida){
+                        $textoMotivo = 'Presente';
+                    } elseif ($entrada) {
+                        $textoMotivo = 'Em Andamento';
+                    } else {
+                        $textoMotivo = '---';
+                    }
+
+                    $totalHoras = '---';
+                    if ($entrada && $saida) {
+                        $chegada = Carbon::parse($entrada->hr_registro);
+                        $partida = Carbon::parse($saida->hr_registro);
+                        $segundos = $chegada->diffInSeconds($partida);
+                        $totalHoras = gmdate('H:i:s', $segundos);
+                    }
+
+                    $registrosPorDia[] = [
+                        'id' => $estagiario->id,
+                        'data' => $data->format('d/m/Y'),
+                        'nome' => $estagiario->nm_estagiarios,
+                        'matricula' => $estagiario->nr_matricula,
+                        'entrada' => $entrada ? Carbon::parse($entrada->hr_registro)->format('H:i:s') : '',
+                        'saida' => $saida ? Carbon::parse($saida->hr_registro)->format('H:i:s') : '',
+                        'motivo' => $textoMotivo,
+                        'setor' => $estagiario->nm_setor,
+                        'total_horas' => $totalHoras,
+                    ];
+                }
+                return $registrosPorDia;
+            })->collapse();
+            return response()->json(['data' => array_values($dadosAno->toArray())]);
+        } catch (\Exception $th) {
+            return response()->json(['error' => $th->getMessage() . ' na linha ' . $th->getLine()]);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Estagiario;
 use App\Models\RegistroPonto;
-use App\Models\Turno; // Certifique-se de importar o Model de Turno
+use App\Models\Turno;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
