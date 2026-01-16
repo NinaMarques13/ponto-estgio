@@ -158,7 +158,7 @@ $(document).ready(function() {
     });
     carregarSelectEstagiarios();
     carregarListaEstagiarios();
-    $("#filtro-motivo, #filtro-estagiario").change(function () {
+    $("#filtro-motivo, #filtro-estagiario, #data-ano").change(function () {
         carregarListaEstagiarios();
     });
     function carregarSelectEstagiarios() {
@@ -188,6 +188,7 @@ $(document).ready(function() {
     function carregarListaEstagiarios() {
         let motivoVal = $("#filtro-motivo").val() || "";
         let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let AnoVal = $("#data-ano")
         if (!$.isNumeric(estagiarioVal)) {
             estagiarioVal = "";
         }
@@ -196,7 +197,7 @@ $(document).ready(function() {
             type: "GET",
             data: {
                 motivo: motivoVal,
-                estagiario_id: estagiarioVal,
+                estagiario_id: estagiarioVal, 
             },
             success: function (lista) {
                 let html = "";
