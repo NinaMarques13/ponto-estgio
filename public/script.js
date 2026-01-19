@@ -99,59 +99,11 @@ $(document).ready(function () {
         $(".conteudo-aba").hide();
         $(".conteudo-aba." + type).fadeIn();
     });
-    // Carregar o número de estagiários presentes no dia
-    $.ajax({
-        url: "/relatorio-estagiarios",
-        type: "GET",
-        success: function (response) {
-            $("#contador-presentes").text(response.total);
-        },
-    });
-    $.ajax({
-        url: "/relatorio-registros",
-        type: "GET",
-        success: function (response) {
-            $("#registros-dia").text(response.total);
-        },
-    });
-    $.ajax({
-        url: "/relatorio-recesso",
-        type: "GET",
-        success: function (response) {
-            $("#recesso-dia").text(response.total);
-        },
-    });
-    $.ajax({
-        url: "/relatorio-atestados",
-        type: "GET",
-        success: function (response) {
-            $("#atestados-dia").text(response.total);
-        },
-    });
-    $.ajax({
-        url: "/relatorio-folgas",
-        type: "GET",
-        success: function (response) {
-            $("#folgas-dia").text(response.total);
-        },
-    });
-    $.ajax({
-        url: "/relatorio-dispensas",
-        type: "GET",
-        success: function (response) {
-            $("#dispensas-dia").text(response.total);
-        },
-    });
-    $.ajax({
-        url: "/relatorio-faltas",
-        type: "GET",
-        success: function (response) {
-            $("#faltas-dia").text(response.total);
-        },
-    });
     carregarSelectEstagiarios();
     carregarListaEstagiarios();
-    $("#filtro-motivo, #filtro-estagiario, #data-ano").change(function () {
+    $(
+        "#filtro-motivo, #filtro-estagiario, #data-ano, #data-completa, #data-mes",
+    ).change(function () {
         carregarListaEstagiarios();
     });
     function carregarSelectEstagiarios() {
@@ -161,7 +113,6 @@ $(document).ready(function () {
             success: function (resposta) {
                 let html = '<option value="">Todos</option>';
                 const lista = resposta.data || [];
-
                 lista.forEach(function (item) {
                     const nome = item.nm_estagiarios
                         ? item.nm_estagiarios.toUpperCase()
@@ -173,25 +124,38 @@ $(document).ready(function () {
             error: function (err) {
                 console.error("Erro ao carregar nomes:", err);
                 $("#filtro-estagiario").html(
-                    '<option value="">Erro ao carregar</option>'
+                    '<option value="">Erro ao carregar</option>',
                 );
             },
         });
     }
     function carregarListaEstagiarios() {
+        let dataVal = $("#data-completa").val() || "";
         let motivoVal = $("#filtro-motivo").val() || "";
         let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let AnoVal = $("#data-ano")
-        if (!$.isNumeric(estagiarioVal)) {
-            estagiarioVal = "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
         }
         $.ajax({
             url: "/lista-estagiarios",
             type: "GET",
-            data: {
-                motivo: motivoVal,
-                estagiario_id: estagiarioVal, 
-            },
+            data: payload,
             success: function (lista) {
                 let html = "";
                 const dadosReais = lista.data || [];
@@ -237,175 +201,176 @@ $(document).ready(function () {
             error: function (err) {
                 console.error("Erro ao carregar lista:", err);
                 $("#tabela-estagiarios-corpo").html(
-                    '<tr><td colspan="8" class="text-danger">Erro ao carregar dados.</td></tr>'
+                    '<tr><td colspan="8" class="text-danger">Erro ao carregar dados.</td></tr>',
                 );
             },
         });
     }
-    $("#data-completa").on("change", function (e) {
-        let dataSelecionada = $(this).val();
-        let token = $('input[name="_token"]').val();
-        $.ajax({
-            url: "/pesquisar-data",
-            data: {
-                "data-completa": dataSelecionada,
-                _token: token,
-            },
-            type: "post",
-            success: function (resposta) {
-                let html = "";
-                const dadosReais = resposta.data || [];
-                if (dadosReais.length === 0) {
-                    html =
-                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
-                } else {
-                    dadosReais.forEach(function (item) {
-                        const nomeLimpo = item.nome
-                            ? item.nome.toUpperCase()
-                            : "---";
-                        const matriculaLimpa = item.matricula
-                            ? item.matricula
-                            : "---";
-                        const horaEntrada = item.entrada || "";
-                        const horaSaida = item.saida || "";
-                        const totalHoras = item.total_horas || "";
-                        const motivoRegistro = item.motivo || "";
-                        const setorEstagiario = item.setor || "---";
-                        const dataDia = item.data || "";
-                        html += `
-                    <tr>
-                        <td>
-                            ${dataDia}
-                        </td>
-                        <td>
-                            ${horaEntrada}
-                        </td>
-                        <td>
-                            ${horaSaida}
-                        </td>
-                        <td>${totalHoras}</td>
-                        <td>${matriculaLimpa}</td>
-                        <td>${nomeLimpo}</td>
-                        <td>${motivoRegistro}</td>
-                        <td>${setorEstagiario}</td>
-                    </tr>
-                    `;
-                    });
-                }
-                $("#tabela-estagiarios-corpo").html(html);
-            },
-        });
-    });
-    $("#data-mes").change(function (resposta) {
-        let mes = $(this).val();
-        let token = $('input[name="_token"]').val();
-        if (!mes) return;
-        $.ajax({
-            url: "/pesquisar-mes",
-            data: {
-                mes: mes,
-                _token: token,
-            },
-            type: "post",
-            dataType: "json",
-            success: function (resposta) {
-                let html = "";
-                const dadosReais = resposta.data || [];
-                if (dadosReais.length === 0) {
-                    html =
-                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
-                } else {
-                    dadosReais.forEach(function (item) {
-                        const nomeLimpo = item.nome
-                            ? item.nome.toUpperCase()
-                            : "---";
-                        const matriculaLimpa = item.matricula
-                            ? item.matricula
-                            : "---";
-                        const horaEntrada = item.entrada || "";
-                        const horaSaida = item.saida || "";
-                        const totalHoras = item.total_horas || "";
-                        const motivoRegistro = item.motivo || "";
-                        const setorEstagiario = item.setor || "---";
-                        const dataDia = item.data || "";
-                        html += `
-                    <tr>
-                        <td>
-                            ${dataDia}
-                        </td>
-                        <td>
-                            ${horaEntrada}
-                        </td>
-                        <td>
-                            ${horaSaida}
-                        </td>
-                        <td>${totalHoras}</td>
-                        <td>${matriculaLimpa}</td>
-                        <td>${nomeLimpo}</td>
-                        <td>${motivoRegistro}</td>
-                        <td>${setorEstagiario}</td>
-                    </tr>
-                    `;
-                    });
-                }
-                $("#tabela-estagiarios-corpo").html(html);
-            },
-        });
-    });
-    $('#data-ano').change(function change(resposta) {
-        let ano = $(this).val();
-        let token = $('input[name="_token"]').val();
-        if (!ano) return;
-        $.ajax({
-            url: '/pesquisa-ano',
-            data: {
-                ano: ano,
-                _token: token
-            },
-            type: "post",
-            dataType: "json",
-            success: function (resposta) {
-                let html = "";
-                const dadosReais = resposta.data || [];
-                if (dadosReais.length === 0) {
-                    html =
-                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
-                } else {
-                    dadosReais.forEach(function (item) {
-                        const nomeLimpo = item.nome
-                            ? item.nome.toUpperCase()
-                            : "---";
-                        const matriculaLimpa = item.matricula
-                            ? item.matricula
-                            : "---";
-                        const horaEntrada = item.entrada || "";
-                        const horaSaida = item.saida || "";
-                        const totalHoras = item.total_horas || "";
-                        const motivoRegistro = item.motivo || "";
-                        const setorEstagiario = item.setor || "---";
-                        const dataDia = item.data || "";
-                        html += `
-                    <tr>
-                        <td>
-                            ${dataDia}
-                        </td>
-                        <td>
-                            ${horaEntrada}
-                        </td>
-                        <td>
-                            ${horaSaida}
-                        </td>
-                        <td>${totalHoras}</td>
-                        <td>${matriculaLimpa}</td>
-                        <td>${nomeLimpo}</td>
-                        <td>${motivoRegistro}</td>
-                        <td>${setorEstagiario}</td>
-                    </tr>
-                    `;
-                    });
-                }
-                $("#tabela-estagiarios-corpo").html(html);
-            },
-        })
-    });
 });
+//     $("#data-completa").on("change", function (e) {
+//         let dataSelecionada = $(this).val();
+//         let token = $('input[name="_token"]').val();
+//         $.ajax({
+//             url: "/pesquisar-data",
+//             data: {
+//                 "data-completa": dataSelecionada,
+//                 _token: token,
+//             },
+//             type: "post",
+//             success: function (resposta) {
+//                 let html = "";
+//                 const dadosReais = resposta.data || [];
+//                 if (dadosReais.length === 0) {
+//                     html =
+//                         '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+//                 } else {
+//                     dadosReais.forEach(function (item) {
+//                         const nomeLimpo = item.nome
+//                             ? item.nome.toUpperCase()
+//                             : "---";
+//                         const matriculaLimpa = item.matricula
+//                             ? item.matricula
+//                             : "---";
+//                         const horaEntrada = item.entrada || "";
+//                         const horaSaida = item.saida || "";
+//                         const totalHoras = item.total_horas || "";
+//                         const motivoRegistro = item.motivo || "";
+//                         const setorEstagiario = item.setor || "---";
+//                         const dataDia = item.data || "";
+//                         html += `
+//                     <tr>
+//                         <td>
+//                             ${dataDia}
+//                         </td>
+//                         <td>
+//                             ${horaEntrada}
+//                         </td>
+//                         <td>
+//                             ${horaSaida}
+//                         </td>
+//                         <td>${totalHoras}</td>
+//                         <td>${matriculaLimpa}</td>
+//                         <td>${nomeLimpo}</td>
+//                         <td>${motivoRegistro}</td>
+//                         <td>${setorEstagiario}</td>
+//                     </tr>
+//                     `;
+//                     });
+//                 }
+//                 $("#tabela-estagiarios-corpo").html(html);
+//             },
+//         });
+//     });
+//     $("#data-mes").change(function (resposta) {
+//         let mes = $(this).val();
+//         let token = $('input[name="_token"]').val();
+//         if (!mes) return;
+//         $.ajax({
+//             url: "/pesquisar-mes",
+//             data: {
+//                 mes: mes,
+//                 _token: token,
+//             },
+//             type: "post",
+//             dataType: "json",
+//             success: function (resposta) {
+//                 let html = "";
+//                 const dadosReais = resposta.data || [];
+//                 if (dadosReais.length === 0) {
+//                     html =
+//                         '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+//                 } else {
+//                     dadosReais.forEach(function (item) {
+//                         const nomeLimpo = item.nome
+//                             ? item.nome.toUpperCase()
+//                             : "---";
+//                         const matriculaLimpa = item.matricula
+//                             ? item.matricula
+//                             : "---";
+//                         const horaEntrada = item.entrada || "";
+//                         const horaSaida = item.saida || "";
+//                         const totalHoras = item.total_horas || "";
+//                         const motivoRegistro = item.motivo || "";
+//                         const setorEstagiario = item.setor || "---";
+//                         const dataDia = item.data || "";
+//                         html += `
+//                     <tr>
+//                         <td>
+//                             ${dataDia}
+//                         </td>
+//                         <td>
+//                             ${horaEntrada}
+//                         </td>
+//                         <td>
+//                             ${horaSaida}
+//                         </td>
+//                         <td>${totalHoras}</td>
+//                         <td>${matriculaLimpa}</td>
+//                         <td>${nomeLimpo}</td>
+//                         <td>${motivoRegistro}</td>
+//                         <td>${setorEstagiario}</td>
+//                     </tr>
+//                     `;
+//                     });
+//                 }
+//                 $("#tabela-estagiarios-corpo").html(html);
+//             },
+//         });
+//     });
+//     $('#data-ano').change(function change(resposta) {
+//         let ano = $(this).val();
+//         let token = $('input[name="_token"]').val();
+//         if (!ano) return;
+//         $.ajax({
+//             url: '/pesquisa-ano',
+//             data: {
+//                 ano: ano,
+//                 _token: token
+//             },
+//             type: "post",
+//             dataType: "json",
+//             success: function (resposta) {
+//                 let html = "";
+//                 const dadosReais = resposta.data || [];
+//                 if (dadosReais.length === 0) {
+//                     html =
+//                         '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
+//                 } else {
+//                     dadosReais.forEach(function (item) {
+//                         const nomeLimpo = item.nome
+//                             ? item.nome.toUpperCase()
+//                             : "---";
+//                         const matriculaLimpa = item.matricula
+//                             ? item.matricula
+//                             : "---";
+//                         const horaEntrada = item.entrada || "";
+//                         const horaSaida = item.saida || "";
+//                         const totalHoras = item.total_horas || "";
+//                         const motivoRegistro = item.motivo || "";
+//                         const setorEstagiario = item.setor || "---";
+//                         const dataDia = item.data || "";
+//                         html += `
+//                     <tr>
+//                         <td>
+//                             ${dataDia}
+//                         </td>
+//                         <td>
+//                             ${horaEntrada}
+//                         </td>
+//                         <td>
+//                             ${horaSaida}
+//                         </td>
+//                         <td>${totalHoras}</td>
+//                         <td>${matriculaLimpa}</td>
+//                         <td>${nomeLimpo}</td>
+//                         <td>${motivoRegistro}</td>
+//                         <td>${setorEstagiario}</td>
+//                     </tr>
+//                     `;
+//                     });
+//                 }
+//                 $("#tabela-estagiarios-corpo").html(html);
+//             },
+//         })
+//     });
+// });

@@ -22,15 +22,6 @@ Route::get('views/principal/export', function () {
 });
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
-Route::get('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
-Route::get('/relatorio-registros', [EstagiariosController::class, 'relatorioRegistros'])->name('relatorio.registros');
-Route::get('/relatorio-recesso', [EstagiariosController::class, 'relatorioRecesso'])->name('relatorio.recesso');
-Route::get('/relatorio-atestados', [EstagiariosController::class, 'relatorioAtestado'])->name('relatorio.atestados');
-Route::get('/relatorio-folgas', [EstagiariosController::class, 'relatorioFolga'])->name('relatorio.folgas');
-Route::get('/relatorio-dispensas', [EstagiariosController::class, 'relatorioDispensa'])->name('relatorio.dispensas');
-Route::get('/relatorio-faltas', [EstagiariosController::class, 'relatorioFalta'])->name('relatorio.faltas');
-Route::get('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
+Route::post('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
+Route::any('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::get('/pesquisar-estagiarios', [EstagiariosController::class, 'pesquisarEstagiarios'])->name('filtrar.estagiarios');
-Route::any('/pesquisar-data', [EstagiariosController::class, 'pesquisarData'])->name('pesquisar.data');
-Route::any('/pesquisar-mes', [EstagiariosController::class, 'pesquisarMes'])->name('pesquisar.mes');
-Route::any('/pesquisa-ano', [EstagiariosController::class, 'pesquisaAno'])->name('pesquisa.ano');

@@ -41,7 +41,7 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col">
-                                                <form action="/pesquisar-data" method="post">
+                                                <form action="/lista-estagiarios" method="post">
                                                     @csrf
                                                     <p>Data</p>
                                                     <input type="date" name="data-completa" id="data-completa"
@@ -49,7 +49,7 @@
                                                 </form>
                                             </div>
                                             <div class="col">
-                                                <form action="/pesquisarMes" method="post">
+                                                <form action="/lista-estagiarios" method="post">
                                                     @csrf
                                                     <p>Mês</p>
                                                     <input type="month" name="data-mes" id="data-mes"
@@ -57,7 +57,7 @@
                                                 </form>
                                             </div>
                                             <div class="col">
-                                                <form action="/pesquisarAno" method="post">
+                                                <form action="/lista-estagiarios" method="post">
                                                     @csrf
                                                     <p>Ano</p>
                                                     <input type="number" name="data-ano" id="data-ano" class="form-control"
