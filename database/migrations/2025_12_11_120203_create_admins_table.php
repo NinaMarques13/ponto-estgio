@@ -21,20 +21,7 @@ return new class extends Migration
 
             $table->index('name');
             
-            /*
-                 <--! IMPORTANTE, UNIQUE JÁ CRIA UM INDEX, PRA CRIAR UM TABLE INDEX TEM QUE SER UM DADO SEM UNIQUEEEE !-->
-            como usar o index? 
-            você vai usar ele para uma busca rápida no banco de X usuário, por exemplo:
-            "Ah, quero achar o joaozinho das couve no banco de dados..."
-            e então, rodará o seguinte código:
-            Admin::where('cpf', '12345678901')->first();
-            aqui ele vai encontrar o joaozinho em questão de vapt vupt, demorô?
-            Com o nome é a mesma coisa,
-            Admin::where('nome','joaozinho das couve')->first();
-            aqui ele faz a mesma coisa que você fez acima, só que com o nome.
-            mas se por acaso você quiser encontrar todos os seres humanos com Jõao no nome, dai o comando muda.
-            Admin::where('name','like','%joao%')->get();
-            */
+            
         });
     }
 
