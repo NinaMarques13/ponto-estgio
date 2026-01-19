@@ -158,7 +158,9 @@ $(document).ready(function() {
     });
     carregarSelectEstagiarios();
     carregarListaEstagiarios();
-    $("#filtro-motivo, #filtro-estagiario, #data-ano").change(function () {
+    $(
+        "#filtro-motivo, #filtro-estagiario, #data-ano, #data-completa, #data-mes",
+    ).change(function () {
         carregarListaEstagiarios();
     });
     function carregarSelectEstagiarios() {
@@ -168,7 +170,6 @@ $(document).ready(function() {
             success: function (resposta) {
                 let html = '<option value="">Todos</option>';
                 const lista = resposta.data || [];
-
                 lista.forEach(function (item) {
                     const nome = item.nm_estagiarios
                         ? item.nm_estagiarios.toUpperCase()
@@ -180,25 +181,38 @@ $(document).ready(function() {
             error: function (err) {
                 console.error("Erro ao carregar nomes:", err);
                 $("#filtro-estagiario").html(
-                    '<option value="">Erro ao carregar</option>'
+                    '<option value="">Erro ao carregar</option>',
                 );
             },
         });
     }
     function carregarListaEstagiarios() {
+        let dataVal = $("#data-completa").val() || "";
         let motivoVal = $("#filtro-motivo").val() || "";
         let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let AnoVal = $("#data-ano")
-        if (!$.isNumeric(estagiarioVal)) {
-            estagiarioVal = "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
         }
         $.ajax({
             url: "/lista-estagiarios",
             type: "GET",
-            data: {
-                motivo: motivoVal,
-                estagiario_id: estagiarioVal, 
-            },
+            data: payload,
             success: function (lista) {
                 let html = "";
                 const dadosReais = lista.data || [];
@@ -244,7 +258,7 @@ $(document).ready(function() {
             error: function (err) {
                 console.error("Erro ao carregar lista:", err);
                 $("#tabela-estagiarios-corpo").html(
-                    '<tr><td colspan="8" class="text-danger">Erro ao carregar dados.</td></tr>'
+                    '<tr><td colspan="8" class="text-danger">Erro ao carregar dados.</td></tr>',
                 );
             },
         });
