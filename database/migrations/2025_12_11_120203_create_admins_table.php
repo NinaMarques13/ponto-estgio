@@ -21,6 +21,13 @@ return new class extends Migration
 
             $table->index('name');
             
+            // SuperAdmin pode fazer tudo no sistema
+            // admin comum só vê e gera os relatórios feitos
+
+            $table->integer('level')->default(2);
+
+            $table->timestapms();
+            $table->index('name');
             
         });
     }
