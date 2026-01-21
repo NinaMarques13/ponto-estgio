@@ -15,6 +15,7 @@ use Nette\Utils\Json;
 use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class EstagiariosController extends Controller
 {
     public function index()
@@ -68,27 +69,96 @@ class EstagiariosController extends Controller
     }
     public function relatorioEstagiarios(Request $request): JsonResponse
     {
-        try {
-            $data = $request->input(function ($data){
-                if ($data = 'data-completa') {
-                    $inicioDia = Carbon::parse($data)->startOfDay();
-                    $fimDia = Carbon::parse($data)->endOfDay();
-                    $totalEstagiarios = Estagiario::count();
-                    $estagiariosPresentes = Estagiario::whereHas('registroPonto', function ($query) use ($inicioDia, $fimDia){
-                        $query->whereBetween('hr_registro', [$inicioDia, $fimDia])
-                              ->where('ds_motivo', 'Entrada', 'Saida');
-                    })->count();
-                    return [
-                        'total_estagiarios' => $totalEstagiarios,
-                    ];
-                }
-            });
-            return response()->json(['data' => $data]);
-        } catch (\Throwable $th) {
-            //throw $th;
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
         }
+        $query = Estagiario::query();
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('id', $request->estagiario_id);
+        }
+        $motivoAlvo = $request->filled('motivo') ? $request->motivo : 'Entrada';
+        if ($motivoAlvo === 'Presente') {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Entrada');
+            });
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Saida');
+            });
+        } elseif ($motivoAlvo === 'Em Andamento') {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Entrada');
+            });
+            $query->whereDoesntHave('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Saida');
+            });
+        } elseif ($motivoAlvo === 'Todos' || $motivoAlvo === 'todos') {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim]);
+            });
+        } else {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim, $motivoAlvo) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', $motivoAlvo);
+            });
+        }
+        $qtdPresentes = $query->count();
+        return response()->json(['total' => $qtdPresentes]);
     }
-    
+    // public function relatorioRegistros(): JsonResponse
+    // {
+    //     $qtdRegistros = RegistroPonto::whereDate('hr_registro', Carbon::today())->count();
+    //     return response()->json(['total' => $qtdRegistros]);
+    // }
+    // public function relatorioRecesso(): JsonResponse
+    // {
+    //     $qtdRecessos = RegistroPonto::whereDate('hr_registro', Carbon::today())
+    //         ->where('ds_motivo', 'Recesso')
+    //         ->count();
+    //     return response()->json(['total' => $qtdRecessos]);
+    // }
+    // public function relatorioAtestado(): JsonResponse
+    // {
+    //     $qtdAtestados = RegistroPonto::whereDate('hr_registro', Carbon::today())
+    //         ->where('ds_motivo', 'Atestado')
+    //         ->count();
+    //     return response()->json(['total' => $qtdAtestados]);
+    // }
+    // public function relatorioFolga(): JsonResponse
+    // {
+    //     $qtdFolgas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+    //         ->where('ds_motivo', 'Folga')
+    //         ->count();
+    //     return response()->json(['total' => $qtdFolgas]);
+    // }
+    // public function relatorioDispensa(): JsonResponse
+    // {
+    //     $qtdDispensas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+    //         ->where('ds_motivo', 'Dispensa')
+    //         ->count();
+    //     return response()->json(['total' => $qtdDispensas]);
+    // }
+    // public function relatorioFalta(): JsonResponse
+    // {
+    //     $qtdFaltas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+    //         ->where('ds_motivo', 'Falta')
+    //         ->count();
+    //     return response()->json(['total' => $qtdFaltas]);
+    // }
+
     public function pesquisarEstagiarios(): JsonResponse
     {
         try {
@@ -123,11 +193,13 @@ class EstagiariosController extends Controller
             if ($request->filled('estagiario_id') && $request->estagiario_id != '') {
                 $query->where('id', $request->estagiario_id);
             }
-            $estagiarios = $query->with(['registroPonto' => function ($q) use ($inicio, $fim){
-                $q ->whereBetween('hr_registro', [$inicio->format('Y-m-d H:i:s'), $fim->format('Y-m-d H:i:s')])
-                    ->orderBy('hr_registro', 'asc');  
-            }])->get();
-            
+            $estagiarios = $query->with([
+                'registroPonto' => function ($q) use ($inicio, $fim) {
+                    $q->whereBetween('hr_registro', [$inicio->format('Y-m-d H:i:s'), $fim->format('Y-m-d H:i:s')])
+                        ->orderBy('hr_registro', 'asc');
+                }
+            ])->get();
+
             $dadosFormatados = $estagiarios->map(function ($estagiario) use ($inicio, $fim) {
                 $periodo = CarbonPeriod::create($inicio, $fim);
                 $registrosPorDia = [];
@@ -136,11 +208,11 @@ class EstagiariosController extends Controller
                     $dataFormatada = $dataLoop->format('Y-m-d');
                     $registrosNoDia = $estagiario->registroPonto->filter(function ($ponto) use ($dataFormatada) {
                         return str_starts_with($ponto->hr_registro, $dataFormatada);
-                    }); 
+                    });
                     $entrada = $registrosNoDia->where('ds_motivo', 'Entrada')->first();
                     $saida = $registrosNoDia->where('ds_motivo', 'Saída')->first();
                     $ocorrencia = $registrosNoDia->whereNotIn('ds_motivo', ['Entrada', 'Saída'])->first();
-                    
+
                     if ($ocorrencia) {
                         $textoMotivo = $ocorrencia->ds_motivo;
                     } elseif ($entrada && $saida) {

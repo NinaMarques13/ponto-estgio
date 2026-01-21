@@ -158,10 +158,13 @@ $(document).ready(function() {
     });
     carregarSelectEstagiarios();
     carregarListaEstagiarios();
+    cardEstagiarios();
     $(
         "#filtro-motivo, #filtro-estagiario, #data-ano, #data-completa, #data-mes",
     ).change(function () {
+        console.log($(this).val());
         carregarListaEstagiarios();
+        cardEstagiarios();
     });
     function carregarSelectEstagiarios() {
         $.ajax({
