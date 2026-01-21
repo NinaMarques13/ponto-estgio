@@ -22,6 +22,6 @@ Route::get('views/principal/export', function () {
 });
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
-Route::post('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
+Route::get('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
 Route::any('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::get('/pesquisar-estagiarios', [EstagiariosController::class, 'pesquisarEstagiarios'])->name('filtrar.estagiarios');
