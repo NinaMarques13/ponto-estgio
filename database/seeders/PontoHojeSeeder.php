@@ -17,7 +17,7 @@ class PontoHojeSeeder extends Seeder
         $estagiarios = Estagiario::all();
 
         foreach ($estagiarios as $estagiario) {
-            
+
             // 🎲 Sorteia o cenário do dia para este estagiário
             // 1 a 70: Veio trabalhar (70% de chance)
             // 71 a 100: Ocorrência especial (30% de chance)
@@ -43,40 +43,50 @@ class PontoHojeSeeder extends Seeder
         // 2. Define hora de entrada aleatória (entre 07:00 e 10:00)
         // O Carbon::today() garante que seja HOJE
         $entrada = Carbon::today()->setHour(rand(7, 10))->setMinute(rand(0, 59));
-        
+
         // 3. Calcula a saída baseada na entrada
         $saida = (clone $entrada)->addHours($cargaHoraria);
 
         // Cria registro de ENTRADA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => 'Entrada',
-            'hr_registro'   => $entrada,
-            'ip_registro'   => $this->faker->ipv4(),
+            'ds_motivo' => 'Entrada',
+            'hr_registro' => $entrada,
+            'ip_registro' => $this->faker->ipv4(),
         ]);
+        $saida = (clone $entrada)->addHours($cargaHoraria);
+        $agora = Carbon::now();
 
         // Cria registro de SAÍDA
-        RegistroPonto::create([
-            'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => 'Saída',
-            'hr_registro'   => $saida,
-            'ip_registro'   => $this->faker->ipv4(),
-        ]);
+        // RegistroPonto::create([
+        //         'estagiario_id' => $estagiario->id,
+        //         'ds_motivo' => 'Saida', // Sem acento, perfeito!
+        //         'hr_registro' => $saida,
+        //         'ip_registro' => $this->faker->ipv4(),
+        // ]);
+        if ($saida->lessThan($agora) && rand(1, 100) > 10) {
+            RegistroPonto::create([
+                'estagiario_id' => $estagiario->id,
+                'ds_motivo' => 'Saida', // Sem acento, perfeito!
+                'hr_registro' => $saida,
+                'ip_registro' => $this->faker->ipv4(),
+            ]);
+        }
     }
 
     private function gerarOcorrencia($estagiario)
     {
         $motivosEspeciais = ['Falta', 'Dispensa', 'Recesso', 'Folga'];
-        
+
         // Escolhe um motivo aleatório da lista
         $motivo = $motivosEspeciais[array_rand($motivosEspeciais)];
 
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => $motivo,
+            'ds_motivo' => $motivo,
             // Horário zerado (00:00:00) do dia de hoje
-            'hr_registro'   => Carbon::today()->startOfDay(),
-            'ip_registro'   => $this->faker->ipv4(),
+            'hr_registro' => Carbon::today()->startOfDay(),
+            'ip_registro' => $this->faker->ipv4(),
         ]);
     }
 }

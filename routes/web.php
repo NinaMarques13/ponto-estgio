@@ -2,6 +2,7 @@
 
 // use Illuminate\Support\Facades\App;
 
+use App\Models\Estagiario;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\Admin\LoginController;
@@ -38,5 +39,7 @@ Route::get('views/principal/export', function () {
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
 Route::get('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
+Route::get('/relatorio-registros', [EstagiariosController::class, 'relatorioRegistros'])->name('relatorio-registros');
+Route::get('/relatorio-recessos', [EstagiariosController::class, 'relatorioRecesso'])->name('relatorio-recessos');
 Route::any('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::get('/pesquisar-estagiarios', [EstagiariosController::class, 'pesquisarEstagiarios'])->name('filtrar.estagiarios');

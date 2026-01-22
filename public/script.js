@@ -159,12 +159,14 @@ $(document).ready(function() {
     carregarSelectEstagiarios();
     carregarListaEstagiarios();
     cardEstagiarios();
+    cardRegistros();
     $(
         "#filtro-motivo, #filtro-estagiario, #data-ano, #data-completa, #data-mes",
     ).change(function () {
         console.log($(this).val());
         carregarListaEstagiarios();
         cardEstagiarios();
+        cardRegistros()
     });
     function carregarSelectEstagiarios() {
         $.ajax({
@@ -319,6 +321,75 @@ $(document).ready(function() {
                 $("#tabela-estagiarios-corpo").html(html);
             },
         });
+    }
+    function cardRegistros() {
+        let dataVal = $("#data-completa").val() || "";
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
+        }
+        $.ajax({
+            url: "/relatorio-registros",
+            type: "GET",
+            data: payload,
+            success: function (response) {
+                $("#registros-dia").text(response.total);
+            },
+        });
+    }
+    // $.ajax({
+    //     url: "/relatorio-recesso",
+    //     type: "GET",
+    //     success: function (response) {
+    //         $("#recesso-dia").text(response.total);
+    //     },
+    // });
+    // $.ajax({
+    //     url: "/relatorio-atestados",
+    //     type: "GET",
+    //     success: function (response) {
+    //         $("#atestados-dia").text(response.total);
+    //     },
+    // });
+    // $.ajax({
+    //     url: "/relatorio-folgas",
+    //     type: "GET",
+    //     success: function (response) {
+    //         $("#folgas-dia").text(response.total);
+    //     },
+    // });
+    // $.ajax({
+    //     url: "/relatorio-dispensas",
+    //     type: "GET",
+    //     success: function (response) {
+    //         $("#dispensas-dia").text(response.total);
+    //     },
+    // });
+    // $.ajax({
+    //     url: "/relatorio-faltas",
+    //     type: "GET",
+    //     success: function (response) {
+    //         $("#faltas-dia").text(response.total);
+    //     },
+    // });
+});
     }); 
        
 <<<<<<< HEAD

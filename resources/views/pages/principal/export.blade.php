@@ -82,6 +82,7 @@
                                                     <option value="Dispensa">Dispensa</option>
                                                     <option value="Folga">Folga</option>
                                                     <option value="Atestado">Atestado</option>
+                                                    <option value="Recesso">Recesso</option>
                                                 </select>
                                             </div>
                                             <div class="col">
@@ -100,7 +101,7 @@
                                                 <div class="col">
                                                     <div class="small">Estagiários</div>
                                                     <div class="h3 fw-bold my-1" id="contador-presentes">...</div>
-                                                    <div class="small">Do dia</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>
