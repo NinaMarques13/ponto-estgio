@@ -15,11 +15,9 @@ class AdminSeeder extends Seeder
         Admin::create([
             'cpf' => '12345678904',
             'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('adm123'),
+            'email' => 'admin@adminm.com',
+            'password' => 'adm123',
+            'level'=>1,
         ]);
-    
-    
-        
     }
 }
