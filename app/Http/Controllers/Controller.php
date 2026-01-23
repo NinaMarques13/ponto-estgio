@@ -58,7 +58,7 @@ class RelatorioController extends Controller
         if ($request->filled('ano')) $query->whereYear('created_at', $request->ano);
         if ($request->filled('mes')) $query->whereMonth('created_at', $request->mes);
         if ($request->filled('dia')) $query->whereDay('created_at', $request->dia);
-        if ($request->filled('ds_motivo')) {$query->where('created_at', $request->ds_motivo);}
+        if ($request->filled('ds_motivo')) {$query->where('ds_motivo', $request->ds_motivo);}
 
         $registros = $query->get();
 

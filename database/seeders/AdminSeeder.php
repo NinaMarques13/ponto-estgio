@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
             'cpf' => '12345678904',
             'name' => 'Admin',
             'email' => 'admin@adminm.com',
-            'password' => bcrypt('adm123'),
+            'password' => 'adm123',
             'level'=>1,
         ]);
     }

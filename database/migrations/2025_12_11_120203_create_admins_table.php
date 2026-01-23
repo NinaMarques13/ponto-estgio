@@ -16,17 +16,11 @@ return new class extends Migration
             $table->string('cpf',11) -> unique();
             $table->string('password', 255);
             $table->string('name', 99)-> nullable();
-            $table->string('email', 255)-> nullable() -> unique();
-            $table->timestamps();
-
-            $table->index('name');
-            
+            $table->string('email', 255)-> nullable() -> unique();           
             // SuperAdmin pode fazer tudo no sistema
             // admin comum só vê e gera os relatórios feitos
-
             $table->integer('level')->default(2);
-
-            $table->timestapms();
+            $table->timestamps();
             $table->index('name');
             
         });
