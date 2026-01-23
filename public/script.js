@@ -160,13 +160,23 @@ $(document).ready(function() {
     carregarListaEstagiarios();
     cardEstagiarios();
     cardRegistros();
+    cardRecessos();
+    cardAtestados();
+    cardFolgas();
+    cardDispensas();
+    cardFaltas();
     $(
         "#filtro-motivo, #filtro-estagiario, #data-ano, #data-completa, #data-mes",
     ).change(function () {
         console.log($(this).val());
         carregarListaEstagiarios();
         cardEstagiarios();
-        cardRegistros()
+        cardRegistros();
+        cardRecessos();
+        cardAtestados();
+        cardFolgas();
+        cardDispensas();
+        cardFaltas();
     });
     function carregarSelectEstagiarios() {
         $.ajax({
@@ -238,6 +248,7 @@ $(document).ready(function() {
                         const motivoRegistro = item.motivo || "";
                         const setorEstagiario = item.setor || "---";
                         const dataDia = item.data || "";
+                        const observacao = item.ds_observacao || "---";
                         html += `
                     <tr>
                         <td>
@@ -254,6 +265,7 @@ $(document).ready(function() {
                         <td>${nomeLimpo}</td>
                         <td>${motivoRegistro}</td>
                         <td>${setorEstagiario}</td>
+                        <td>${observacao}</td>
                     </tr>
                     `;
                     });
@@ -354,41 +366,162 @@ $(document).ready(function() {
             },
         });
     }
-    // $.ajax({
-    //     url: "/relatorio-recesso",
-    //     type: "GET",
-    //     success: function (response) {
-    //         $("#recesso-dia").text(response.total);
-    //     },
-    // });
-    // $.ajax({
-    //     url: "/relatorio-atestados",
-    //     type: "GET",
-    //     success: function (response) {
-    //         $("#atestados-dia").text(response.total);
-    //     },
-    // });
-    // $.ajax({
-    //     url: "/relatorio-folgas",
-    //     type: "GET",
-    //     success: function (response) {
-    //         $("#folgas-dia").text(response.total);
-    //     },
-    // });
-    // $.ajax({
-    //     url: "/relatorio-dispensas",
-    //     type: "GET",
-    //     success: function (response) {
-    //         $("#dispensas-dia").text(response.total);
-    //     },
-    // });
-    // $.ajax({
-    //     url: "/relatorio-faltas",
-    //     type: "GET",
-    //     success: function (response) {
-    //         $("#faltas-dia").text(response.total);
-    //     },
-    // });
+    function cardRecessos() {
+        let dataVal = $("#data-completa").val() || "";
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
+        }
+        $.ajax({
+            url: "/relatorio-recessos",
+            type: "GET",
+            data: payload,
+            success: function (response) {
+                $("#recesso-dia").text(response.total);
+            },
+        });
+    }
+    function cardAtestados() {
+        let dataVal = $("#data-completa").val() || "";
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
+        }
+        $.ajax({
+            url: "/relatorio-atestados",
+            type: "GET",
+            success: function (response) {
+                $("#atestados-dia").text(response.total);
+            },
+        });
+    }
+    function cardFolgas() {
+        let dataVal = $("#data-completa").val() || "";
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
+        }
+        $.ajax({
+            url: "/relatorio-folgas",
+            type: "GET",
+            success: function (response) {
+                $("#folgas-dia").text(response.total);
+            },
+        });
+    }
+    function cardDispensas() {
+        let dataVal = $("#data-completa").val() || "";
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
+        }
+        $.ajax({
+            url: "/relatorio-dispensas",
+            type: "GET",
+            success: function (response) {
+                $("#dispensas-dia").text(response.total);
+            },
+        });
+    }
+    function cardFaltas() {
+        let dataVal = $("#data-completa").val() || "";
+        let motivoVal = $("#filtro-motivo").val() || "";
+        let estagiarioVal = $("#filtro-estagiario").val() || "";
+        let anoVal = $("#data-ano").val() || "";
+        let MesVal = $("#data-mes").val() || "";
+        let token = $('input[name="_token"]').val();
+        let payload = { _token: token };
+        if (anoVal && anoVal !== "") {
+            payload.ano = anoVal;
+        }
+        if (MesVal && MesVal !== "") {
+            payload.mes = MesVal;
+        }
+        if (motivoVal && motivoVal !== "") {
+            payload.motivo = motivoVal;
+        }
+        if (estagiarioVal && estagiarioVal !== "") {
+            payload.estagiario_id = estagiarioVal;
+        }
+        if (dataVal && dataVal !== "") {
+            payload.data = dataVal;
+        }
+        $.ajax({
+            url: "/relatorio-faltas",
+            type: "GET",
+            success: function (response) {
+                $("#faltas-dia").text(response.total);
+            },
+        });
+    }
 });
     }); 
        

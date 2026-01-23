@@ -53,6 +53,7 @@ class PontoHojeSeeder extends Seeder
             'ds_motivo' => 'Entrada',
             'hr_registro' => $entrada,
             'ip_registro' => $this->faker->ipv4(),
+            'ds_observacao' => 'Entrada'
         ]);
         $saida = (clone $entrada)->addHours($cargaHoraria);
         $agora = Carbon::now();
@@ -70,6 +71,7 @@ class PontoHojeSeeder extends Seeder
                 'ds_motivo' => 'Saida', // Sem acento, perfeito!
                 'hr_registro' => $saida,
                 'ip_registro' => $this->faker->ipv4(),
+                'ds_observacao' => 'Saida'
             ]);
         }
     }
@@ -87,6 +89,7 @@ class PontoHojeSeeder extends Seeder
             // Horário zerado (00:00:00) do dia de hoje
             'hr_registro' => Carbon::today()->startOfDay(),
             'ip_registro' => $this->faker->ipv4(),
+            'ds_observacao' => 'motivos Especiais'
         ]);
     }
 }
