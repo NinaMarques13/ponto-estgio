@@ -66,14 +66,16 @@ class DatabaseSeeder extends Seeder
             'ds_motivo'     => 'Entrada', // Motivo fixo para o sistema reconhecer
             'hr_registro'   => $entrada,
             'ip_registro'   => $faker->ipv4(),
+            'ds_observacao' => 'Entrada'
         ]);
 
         // Cria registro de SAÍDA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => 'Saída', // Motivo fixo para o sistema reconhecer
+            'ds_motivo'     => 'Saida', // Motivo fixo para o sistema reconhecer
             'hr_registro'   => $saida,
             'ip_registro'   => $faker->ipv4(),
+            'ds_observacao' => 'Entrada'
         ]);
     }
 

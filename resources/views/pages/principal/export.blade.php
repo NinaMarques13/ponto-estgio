@@ -114,7 +114,7 @@
                                                 <div class="col">
                                                     <div class="small">Registros</div>
                                                     <div class="h3 fw-bold my-1" id="registros-dia">...</div>
-                                                    <div class="small">Diário</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -127,7 +127,7 @@
                                                 <div class="col">
                                                     <div class="small">Recesso</div>
                                                     <div class="h3 fw-bold my-1" id="recesso-dia">...</div>
-                                                    <div class="small">Diário</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -140,7 +140,7 @@
                                                 <div class="col">
                                                     <div class="small">Atestados</div>
                                                     <div class="h3 fw-bold my-1" id="atestados-dia">...</div>
-                                                    <div class="small">Diário</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -153,7 +153,7 @@
                                                 <div class="col">
                                                     <div class="small">Folga</div>
                                                     <div class="h3 fw-bold my-1" id="folgas-dia">...</div>
-                                                    <div class="small">Diário</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -166,7 +166,7 @@
                                                 <div class="col">
                                                     <div class="small">Dispensa</div>
                                                     <div class="h3 fw-bold my-1" id="dispensas-dia">...</div>
-                                                    <div class="small">Diário</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +179,7 @@
                                                 <div class="col">
                                                     <div class="small">Falta</div>
                                                     <div class="h3 fw-bold my-1" id="faltas-dia">...</div>
-                                                    <div class="small">Diário</div>
+                                                    <div class="small">Total</div>
                                                 </div>
                                             </div>
                                         </div>

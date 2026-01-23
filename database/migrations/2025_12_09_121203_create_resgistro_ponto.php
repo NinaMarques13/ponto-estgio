@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('ds_motivo', 55);
             $table->timestamp('hr_registro');
             $table->ipAddress('ip_registro');
+            $table->string('ds_observacao', 255);
             $table->timestamps();
         });
     }
