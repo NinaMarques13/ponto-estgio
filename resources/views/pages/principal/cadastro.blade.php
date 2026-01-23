@@ -60,7 +60,7 @@
                         <tr>
                             <td></td> <td></td> <td></td> <td></td> <td></td> <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-purple btn-sm text-white border-0">
+                                    <button class="btn btn-purple btn-sm text-white border-0" id="openQrCadastro">
                                         <i class="bi bi-qr-code"></i>
                                     </button>
                                     <button class="btn btn-primary btn-sm border-0">
@@ -76,11 +76,33 @@
                 </table>
             </div>
             
+            <div class="modal fade" id="qrModalCadastro" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modal de exemplo para qr code do estagiário</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div id="qrcodeCadastro"></div>
+                            <p class="mt-3 text-muted">Exemplo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
             <div class="d-flex justify-content-between mt-4">
                 <a href="#" class="text-success text-decoration-none fw-bold border-bottom border-success">Ir para Ponto de Registro</a>
                 <a href="#" class="text-danger text-decoration-none fw-bold">Sair</a>
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <script src="{{ asset('script.js') }}"></script>
+
 </body>
 </html>
