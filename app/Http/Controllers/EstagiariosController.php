@@ -15,7 +15,7 @@ use Nette\Utils\Json;
 use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
-
+use Symfony\Component\Mime\Message;
 
 class EstagiariosController extends Controller
 {
@@ -385,5 +385,9 @@ class EstagiariosController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+    public function atualizarEstagiario(Request $request)
+    {
+
     }
 }

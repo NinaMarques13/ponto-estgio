@@ -266,6 +266,9 @@ $(document).ready(function() {
                         <td>${motivoRegistro}</td>
                         <td>${setorEstagiario}</td>
                         <td>${observacao}</td>
+                        <td><button class="btn btn-sm btn-primary btn-editar" 
+                        data-item='${JSON.stringify(item)}'>Editar</button>
+                        </td>
                     </tr>
                     `;
                     });
@@ -519,6 +522,73 @@ $(document).ready(function() {
             type: "GET",
             success: function (response) {
                 $("#faltas-dia").text(response.total);
+            },
+        });
+    }
+    function formatarData(data) {
+        if (!data) return "";
+        const [dia, mes, ano] = data.split("/");
+        return `${ano}-${mes}-${dia}`;
+    }
+    $(document).on("click", ".btn-editar", function () {
+        const item = $(this).data("item");
+        console.log(item);
+        $("#edit-id").val(item.id || "");
+        $("#edit-data").val(formatarData(item.dataVal || ""));
+        $("#edit-nome").val(item.nome || "");
+        $("#edit-matricula").val(item.matricula || "");
+        $("#edit-entrada").val(item.entrada.substring(0, 5) || "");
+        $("#edit-saida").val(item.saida.substring(0, 5) || "");
+        $("#edit-total-horas").val(item.total_horas || "");
+        $("#edit-motivo").val(item.motivo || "");
+        $("#edit-setor").val(item.setor || "");
+        $("#edit-obs").val(item.ds_observacao || "");
+        $('input[name="_token"]').val();
+        const modal = new bootstrap.Modal(
+            document.getElementById("modalEditarEstagiario"),
+        );
+        modal.show();
+    });
+    $(document).on("click", "#btn-salvar", function () {
+        const item = $(this).data("item");
+        $("#edit-id").val();
+        $("#edit-data").val();
+        $("#edit-nome").val();
+        $("#edit-matricula").val();
+        $("#edit-entrada").val();
+        $("#edit-saida").val();
+        $("#edit-total-horas").val();
+        $("#edit-motivo").val();
+        $("#edit-setor").val();
+        $("#edit-obs").val();
+        $('input[name="_token"]').val();
+        salvarEstagiario();
+    });
+    function salvarEstagiario() {
+        let payload = {
+            id: $("#edit-id").val(),
+            data: $("#edit-data").val(),
+            entrada: $("#edit-entrada").val(),
+            saida: $("#edit-saida").val(),
+            motivo: $("#edit-motivo").val(),
+            setor: $("#edit-setor").val(),
+            observacao: $("#edit-obs").val(),
+            _token: $('input[name="_token"]').val(),
+        };
+        if (!payload.id) {
+            alert("Erro: ID do registro não encontrado.");
+            return;
+        }
+        $.ajax({
+            url: "/atualizar-estagiarios",
+            type: "put",
+            data: payload,
+            success: function (response) {
+                location.reload();
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                alert("Erro ao salvar. Verifique o console.");
             },
         });
     }

@@ -60,8 +60,9 @@
                                                 <form action="/lista-estagiarios" method="post">
                                                     @csrf
                                                     <p>Ano</p>
-                                                    <input type="number" name="data-ano" id="data-ano" class="form-control"
-                                                    min="2000" max="2100" step="1" value="{{ date('Y') }}">
+                                                    <input type="number" name="data-ano" id="data-ano"
+                                                        class="form-control" min="2000" max="2100" step="1"
+                                                        value="{{ date('Y') }}">
                                                 </form>
                                             </div>
                                             <div class="col">
@@ -215,6 +216,79 @@
                     </div>
                     <div>
                         <a href="#" style="color: #dc3545;">Sair</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Modal-->
+        <div class="modal fade" id="modalEditarEstagiario" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar
+                            Estagiário
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEditarEstagiario">
+                            @csrf
+                            <input type="hidden" id="edit-id">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Data</label>
+                                    <input type="date" id="edit-data" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Hora Entrada</label>
+                                    <input type="time" id="edit-entrada" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label>Hora Saída</label>
+                                    <input type="time" id="edit-saida" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label>Total Horas</label>
+                                    <input type="text" id="edit-total-horas" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Matricula</label>
+                                    <input type="text" id="edit-matricula" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Nome</label>
+                                    <input type="text" id="edit-nome" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Motivo</label>
+                                    <input type="text" id="edit-motivo" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Setor</label>
+                                    <input type="text" id="edit-setor" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Observação</label>
+                                    <input type="text" id="edit-obs" class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btn-salvar">Salvar</button>
                     </div>
                 </div>
             </div>
