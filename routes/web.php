@@ -47,4 +47,4 @@ Route::get('/relatorio-dispensas', [EstagiariosController::class, 'relatorioDisp
 Route::get('/relatorio-faltas', [EstagiariosController::class, 'relatorioFalta'])->name('relatorio-faltas');
 Route::any('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::get('/pesquisar-estagiarios', [EstagiariosController::class, 'pesquisarEstagiarios'])->name('filtrar.estagiarios');
-Route::put('/atualizar-estagiarios', [EstagiariosController::class, 'atualizarEstagiario'])->name('atualizar-estagiarios');
+Route::put('/atualizar-estagiarios/{id}', [EstagiariosController::class, 'update'])->name('atualizar-estagiarios');
