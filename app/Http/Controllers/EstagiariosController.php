@@ -368,8 +368,52 @@ class EstagiariosController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function atualizarEstagiario(Request $request)
+    public function update(Request $request, $id)
     {
-
+        $request->validate([
+            'id' => 'required|exists:estagiarios,id',
+            'data' => 'date',
+            'entrada' => 'nullable',
+            'saida' => 'nullable',
+            'matricula' => 'required|max:14',
+            'nome' => 'required',
+            'motivo' => 'nullable|string',
+            'setor' => 'required',
+            'observacao' => 'nullable|string'
+        ]);
+        $estagiario = Estagiario::findOrFail($id);
+        $estagiario->nm_estagiarios = $request->nome;
+        $estagiario->nr_matricula = $request->matricula;
+        $estagiario->nm_setor = $request->setor;
+        $estagiario->save();
+        $timestampEntrada = $request->data . ' ' . $request->entrada;
+        $timestampSaida = $request->data . ' ' . $request->saida;
+        $estagiario->registroPonto()
+            ->whereDate('hr_registro', $request->data)
+            ->update([
+                'ds_motivo' => $request->motivo,
+                'ds_observacao' => $request->observacao
+            ]);
+        if ($request->filled('Entrada')) {
+            $estagiario->registroPonto()
+                ->where('ds_motivo', 'Entrada')
+                ->whereDate('hr_registro', $request->data)
+                ->update([
+                    'hr_registro' => $timestampEntrada
+                ]);
+        }
+        if ($request->filled('Saida')) {
+            $estagiario->registroPonto()
+                ->where('ds_motivo', 'Saida')
+                ->whereDate('hr_registro', $request->data)
+                ->update([
+                    'hr_registro' => $timestampSaida
+                ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Estagiário cadastrado com sucesso',
+            'data' => $estagiario
+        ]);
     }
 }

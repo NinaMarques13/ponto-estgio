@@ -232,7 +232,8 @@
                     </div>
                     <div class="modal-body">
                         <form id="formEditarEstagiario">
-                            @csrf
+                            @csrf 
+                            @method('put')
                             <input type="hidden" id="edit-id">
                             <div class="row mb-3">
                                 <div class="col">

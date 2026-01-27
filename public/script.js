@@ -446,16 +446,16 @@ $(document).ready(function () {
             },
         });
     }
-    function formatarData(data) {
-        if (!data) return "";
-        const [dia, mes, ano] = data.split("/");
-        return `${ano}-${mes}-${dia}`;
-    }
     $(document).on("click", ".btn-editar", function () {
         const item = $(this).data("item");
+        let dataFormatada = "";
+        if (item.data && item.data.includes("/")) {
+            const partes = item.data.split("/");
+            dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+        }
         console.log(item);
         $("#edit-id").val(item.id || "");
-        $("#edit-data").val(formatarData(item.dataVal || ""));
+        $("#edit-data").val(dataFormatada || "");
         $("#edit-nome").val(item.nome || "");
         $("#edit-matricula").val(item.matricula || "");
         $("#edit-entrada").val(item.entrada.substring(0, 5) || "");
@@ -471,18 +471,6 @@ $(document).ready(function () {
         modal.show();
     });
     $(document).on("click", "#btn-salvar", function () {
-        const item = $(this).data("item");
-        $("#edit-id").val();
-        $("#edit-data").val();
-        $("#edit-nome").val();
-        $("#edit-matricula").val();
-        $("#edit-entrada").val();
-        $("#edit-saida").val();
-        $("#edit-total-horas").val();
-        $("#edit-motivo").val();
-        $("#edit-setor").val();
-        $("#edit-obs").val();
-        $('input[name="_token"]').val();
         salvarEstagiario();
     });
     function salvarEstagiario() {
@@ -491,20 +479,25 @@ $(document).ready(function () {
             data: $("#edit-data").val(),
             entrada: $("#edit-entrada").val(),
             saida: $("#edit-saida").val(),
+            matricula: $("#edit-matricula").val(),
+            nome: $("#edit-nome").val(),
             motivo: $("#edit-motivo").val(),
             setor: $("#edit-setor").val(),
             observacao: $("#edit-obs").val(),
             _token: $('input[name="_token"]').val(),
+            _method: "PUT",
         };
+        console.log("Payload sendo enviado:", payload);
         if (!payload.id) {
             alert("Erro: ID do registro não encontrado.");
             return;
         }
         $.ajax({
-            url: "/atualizar-estagiarios",
-            type: "put",
+            url: "/atualizar-estagiarios/" + payload.id,
+            type: "post",
             data: payload,
             success: function (response) {
+                console.log(response);
                 location.reload();
             },
             error: function (xhr) {
