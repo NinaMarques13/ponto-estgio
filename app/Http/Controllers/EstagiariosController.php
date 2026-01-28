@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Estagiario;
 use App\Models\RegistroPonto;
-use carbon\Carbon;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
 use Nette\Utils\Json;
 use PhpParser\Node\Stmt\Foreach_;
@@ -24,21 +25,28 @@ class EstagiariosController extends Controller
         $cpf = $request->input('cpf');
         $estagiario = Estagiario::where('nr_matricula', $cpf)->first();
         if (!$estagiario) {
-            dd('Estagiário não encontrado com o CPF: ' . $cpf);
+            return redirect()->back()->with('erro', "Estagiário não encontrado com o CPF: {$cpf}");
         }
-        $ultimoRegistro = RegistroPonto::where('estagiario_id', $estagiario->id)->first()
+        $agora = Carbon::now();
+        $inicioPermitido = Carbon::today()->setTime(5, 0, 0);
+        $fimPermitido = Carbon::today()->setTime(23, 59, 59);
+        if (!$agora->between($inicioPermitido, $fimPermitido)) {
+            return redirect()->back()->with('Ponto fechado');
+        }
+        $ultimoRegistro = RegistroPonto::where('estagiario_id', $estagiario->id)
             ->whereDate('hr_registro', Carbon::today())
             ->orderBy('hr_registro', 'desc')
             ->first();
         $motivo = 'Entrada';
-                            if (!$ultimoRegistro && $ultimoRegistro->tp_registro === 'Entrada') {
-            $motivo = 'Saída';
+        if ($ultimoRegistro && $ultimoRegistro->ds_motivo == 'Entrada') {
+            $motivo = 'Saida';
         }
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
             'ds_motivo' => $motivo,
             'hr_registro' => Carbon::now(),
-            'ip_registro' => $request->ip()
+            'ip_registro' => $request->ip(),
+            'ds_observacao' => $motivo
         ]);
         return redirect()->back()->with('sucesso', "Ponto de {$motivo} registrado com sucesso!");
     }

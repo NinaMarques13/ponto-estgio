@@ -4,9 +4,9 @@
 
 use App\Models\Estagiario;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; 
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\ReportController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\EstagiariosController;
+use League\Uri\Http;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,16 +22,6 @@ Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.log
 
 Route::get('views/login/adm', function () {
     return view('pages.login.adm');
-});
-Route::get('views/principal/dashboard', function () {
-    return view('pages.principal.dashboard');
-});
-
-Route::get('views/principal/cadastro', function () {
-    return view('pages.principal.cadastro');
-});
-Route::get('views/principal/exportacao', function () {
-    return view('pages.principal.exportacao');
 });
 Route::get('views/principal/export', function () {
     return view('pages.principal.export');
