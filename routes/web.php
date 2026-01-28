@@ -6,6 +6,7 @@ use App\Models\Estagiario;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\EstagiariosController;
+use app\Http\Controllers\Admin\LoginController;
 use League\Uri\Http;
 
 Route::get('/', function () {

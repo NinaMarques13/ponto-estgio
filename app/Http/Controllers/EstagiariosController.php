@@ -8,11 +8,8 @@ use App\Models\RegistroPonto;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
-use Nette\Utils\Json;
-use PhpParser\Node\Stmt\Foreach_;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Mime\Message;
+
 
 class EstagiariosController extends Controller
 {

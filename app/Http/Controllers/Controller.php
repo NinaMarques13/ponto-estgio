@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class RelatorioController extends Controller
+class Controller extends Controller
 {
     public function exportExcel(Request $request)
     {

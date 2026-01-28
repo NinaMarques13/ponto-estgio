@@ -19,7 +19,7 @@ class CheckAdminLevel
             abort(401);
         }
         if (auth()->user()->level> $requiredLevel){
-            abort(403,'Acesso Negado.')
+            abort(403,'Acesso Negado.');
         }
 
         return $next($request);
