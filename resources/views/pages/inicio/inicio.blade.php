@@ -12,10 +12,10 @@
 
 <body>
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0 ponto-container">
-        <a href="{{ asset('views/login/adm') }}" class="btn admin-access-btn" title="Acessar Área Administrativa">
-            <i class="bi bi-person-circle me-1"></i>
-            Área Admin
-        </a>
+        <a href="{{ asset('views/login/adm') }}" class="admin-access-btn" title="Acessar Área Administrativa">
+                <i class="bi bi-person-circle me-1"></i>
+                Área Admin
+            </a>
         <div class="card ponto-card">
 <<<<<<< HEAD
             <form action="/registrar-ponto" method="post">
