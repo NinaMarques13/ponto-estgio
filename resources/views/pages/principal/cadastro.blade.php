@@ -40,7 +40,10 @@
                             <td></td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-purple btn-sm text-white border-0" id="openQrCadastro">
+                                    <button class="btn btn-purple btn-sm text-white border-0 btn-gerar-qr"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#qrModalCadastro"
+                                        data-identificador="">
                                         <i class="bi bi-qr-code"></i>
                                     </button>
                                     <button class="btn btn-primary btn-sm border-0">

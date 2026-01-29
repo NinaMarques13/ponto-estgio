@@ -526,4 +526,25 @@ $(document).ready(function () {
         });
     
     });
+
+    const myModal = document.getElementById('qrModalCadastro');
+
+    if (myModal) {
+        myModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const idEstagiario = $(button).data('identificador') || "0";
+
+            const urlUnica = "https://ponto-estagio.pm.pr.gov.br/registrar/" + idEstagiario;
+
+            const container = document.getElementById("qrcodeCadastro");
+            container.innerHTML = "";
+
+            new QRCode(container, {
+                text: urlUnica,
+                width: 220,
+                height: 220
+            });
+        });
+    }
 });
