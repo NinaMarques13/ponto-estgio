@@ -9,27 +9,27 @@
                             <div class="col">
                                 <form action="/lista-estagiarios" method="post">
                                     @csrf
-                                    <label class="form-label">Data</label>
+                                    <p>Data</p>
                                     <input type="date" name="data-completa" id="data-completa" class="form-control">
                                 </form>
                             </div>
                             <div class="col">
                                 <form action="/lista-estagiarios" method="post">
                                     @csrf
-                                    <label class="form-label">Mês</label>
+                                    <p>Mês</p>
                                     <input type="month" name="data-mes" id="data-mes" class="form-control">
                                 </form>
                             </div>
                             <div class="col">
                                 <form action="/lista-estagiarios" method="post">
                                     @csrf
-                                    <label class="form-label">Ano</label>
+                                    <p>Ano</p>
                                     <input type="number" name="data-ano" id="data-ano" class="form-control" min="2000"
                                         max="2100" step="1" value="{{ date('Y') }}">
                                 </form>
                             </div>
                             <div class="col">
-                                <div class="col">
+                                <div class="col-md-3">
                                     <label class="form-label">Filtrar por Estagiário</label>
                                     <select id="filtro-estagiario" class="form-select">
                                         <option value="">Carregando...</option>
@@ -49,10 +49,10 @@
                                     <option value="Recesso">Recesso</option>
                                 </select>
                             </div>
-                            <!-- <div class="col">
-                                                <button class="btn btn-success">Excel</button>
-                                                <button class="btn btn-bd-primary">PDF</button>
-                                            </div> -->
+                            <div class="col">
+                                <button id="excel-btn">Excel</button>
+                                <button id="pdf-btn">PDF</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -151,9 +151,9 @@
                 </div>
             </div>
             <div class="row g-3 mb-2 mt-2">
-                <table class="table table-bordered">
+                <table class="table">
                     <thead>
-                        <tr class="table-header-custom">
+                        <tr class="table-primary">
                             <th>Data</th>
                             <th>Hora Entrada</th>
                             <th>Hora Saída</th>
@@ -163,7 +163,6 @@
                             <th>Motivo</th>
                             <th>Setor</th>
                             <th>Observação</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody class="table-secundary" id="tabela-estagiarios-corpo">
@@ -174,12 +173,14 @@
         </div>
     </div>
     </div>
+@endsection
+@section('modal')
     <!--Modal-->
     <div class="modal fade" id="modalEditarEstagiario" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="text-pmp-azul fs-5" id="staticBackdropLabel">Editar
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar
                         Estagiário
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -244,7 +245,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancelar"
                         data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-bd-primary" id="btn-salvar">Salvar</button>
+                    <button type="button" class="btn btn-primary" id="btn-salvar">Salvar</button>
                 </div>
             </div>
         </div>

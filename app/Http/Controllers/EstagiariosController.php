@@ -307,7 +307,12 @@ class EstagiariosController extends Controller
                         ->orderBy('hr_registro', 'asc');
                 }
             ])->get();
-            $dadosFormatados = $estagiarios->flatMap(function ($estagiario) use ($estagiarios, $periodo) {
+            if ($request->filled('estagiario_id') && $request->estagiario_id != '') {
+                $id = $request->input('estagiario_id');
+                $totalHoras = $this->calculoHoras($inicio, $fim, $id);
+            }
+            
+            $dadosFormatados = $estagiarios->flatMap(function ($estagiario) use ($periodo) {
                 $registrosPorDia = [];
                 $pontos = $estagiario->registroPonto ?: collect();
                 $pontosAgrupados = $pontos->groupBy(function ($ponto) {
@@ -337,12 +342,6 @@ class EstagiariosController extends Controller
                     } elseif ($saida && $saida->ds_observacao) {
                         $obsReal = $saida->ds_observacao;
                     }
-                    $totalHoras = '---';
-                    if ($entrada && $saida) {
-                        $chegada = Carbon::parse($entrada->hr_registro);
-                        $partida = Carbon::parse($saida->hr_registro);
-                        $totalHoras = $chegada->diff($partida)->format('%H:%I:%S');
-                    }
 
                     $registrosPorDia[] = [
                         'id' => $estagiario->id,
@@ -368,6 +367,13 @@ class EstagiariosController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+    private function calculoHoras($inicio, $fim, $id)
+    {
+        $pontos = RegistroPonto::where('estagiario_id', $id)
+            ->whereBetween('hr_registro', [$inicio, $fim])
+            ->orderBy('hr_registro', 'asc')
+            ->get();    
     }
     public function update(Request $request, $id)
     {
