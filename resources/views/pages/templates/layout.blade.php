@@ -50,23 +50,7 @@
       </div>
     </div>
   </div>
-  
-        <div class="footer-links">
-          <div class="container d-flex justify-content-between aling-itens-center p-3">
-            <div>
-              <a href="{{ route('inicio.index') }}">Ir para Ponto de Registro</a>
-            </div>
-            <div>
-              <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn-outline-danger px-2 py-1"; text-decoration: none;">
-                  Sair
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
+  @yield('modal')
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   
         <div class="footer-links">
