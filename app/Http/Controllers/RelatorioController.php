@@ -7,7 +7,8 @@ use App\Models\RegistroPonto;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class Controller extends Controller
+
+class RelatorioController extends Controller
 {
     public function exportExcel(Request $request)
     {
