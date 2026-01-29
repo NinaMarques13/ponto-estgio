@@ -687,3 +687,66 @@ $(document).ready(function () {
         });
     });
 });
+
+    $(document).ready(function () {
+
+        $('#openQrCadastro').on('click', function () {
+    
+            let urlCadastro = "https://ponto-estagio.pm.pr.gov.br/views/principal/cadastro";
+    
+            $('#qrcodeCadastro').html("");
+    
+            new QRCode(document.getElementById("qrcodeCadastro"), {
+                text: urlCadastro,
+                width: 220,
+                height: 220
+            });
+    
+            const modal = new bootstrap.Modal(document.getElementById('qrModalCadastro'));
+            modal.show();
+        });
+    
+    });
+
+    const myModal = document.getElementById('qrModalCadastro');
+
+    if (myModal) {
+        myModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const idEstagiario = $(button).data('identificador') || "0";
+
+            const urlUnica = "https://ponto-estagio.pm.pr.gov.br/registrar/" + idEstagiario;
+
+            const container = document.getElementById("qrcodeCadastro");
+            container.innerHTML = "";
+
+            new QRCode(container, {
+                text: urlUnica,
+                width: 220,
+                height: 220
+            });
+        });
+    }
+});
+
+    $(document).ready(function () {
+
+        $('#openQrCadastro').on('click', function () {
+    
+            let urlCadastro = "https://ponto-estagio.pm.pr.gov.br/views/principal/cadastro";
+    
+            $('#qrcodeCadastro').html("");
+    
+            new QRCode(document.getElementById("qrcodeCadastro"), {
+                text: urlCadastro,
+                width: 220,
+                height: 220
+            });
+    
+            const modal = new bootstrap.Modal(document.getElementById('qrModalCadastro'));
+            modal.show();
+        });
+    
+    });
+});
