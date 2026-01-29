@@ -548,3 +548,24 @@ $(document).ready(function () {
         });
     }
 });
+
+    $(document).ready(function () {
+
+        $('#openQrCadastro').on('click', function () {
+    
+            let urlCadastro = "https://ponto-estagio.pm.pr.gov.br/views/principal/cadastro";
+    
+            $('#qrcodeCadastro').html("");
+    
+            new QRCode(document.getElementById("qrcodeCadastro"), {
+                text: urlCadastro,
+                width: 220,
+                height: 220
+            });
+    
+            const modal = new bootstrap.Modal(document.getElementById('qrModalCadastro'));
+            modal.show();
+        });
+    
+    });
+});
