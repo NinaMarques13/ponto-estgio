@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Controllers\RelatorioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 
 
-class AuthController extends Controller
+
+class AuthController extends RelatorioController
 {
    public function login(Request $request)
    {
@@ -17,21 +18,21 @@ class AuthController extends Controller
             'cpf'=> ['required', 'string'],
             'password'=>['required'],
         ]);
-   }
+   
 
-        if(Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
             return response()->json([
-            'message'=> 'Login Realizado',
-            'user'=> Auth::user()
-    ]);
+                'message' => 'Login Realizado',
+                'user' => Auth::user()
+        ]);
    }
 
         throw ValidationException::withMessages([
-    'cpf'=> ['O úsuario não existe em nosso registro.'],
+    'cpf'=> ['CPF ou Senha inválidos.'],
    ]);
-
+   }
     public function logout(Request $request)
     {
         Auth::logout();

@@ -17,18 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-<<<<<<< HEAD
-        Estagiario::factory(10)
-                ->hasTurno(2)
-                ->hasRegistroPonto(5)
-                ->create();
-    } 
-=======
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
     }
->>>>>>> a8334e6 (Revert "Merge branch 'feature/tela-inicial' into 'master'")
 }
  
