@@ -60,12 +60,16 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Modal de exemplo para qr code do estagiário</h5>
+                            <h5 class="modal-title">QR Code do Estagiario</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body text-center">
+                        <div class="modal-body d-flex flex-colum align-items-center justify-content-center text-center">
                             <div id="qrcodeCadastro"></div>
-                            <p class="mt-3 text-muted">Exemplo</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-success" onclick="window.print();">
+                                <i class="bi bi-printer"></i> Imprimir QR Code
+                            </button>
                         </div>
                     </div>
                 </div>

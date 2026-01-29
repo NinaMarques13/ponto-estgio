@@ -182,3 +182,43 @@ body {
     background-color: #0b4e25; 
     color: white;
 }
+
+.btn-purple {
+    background-color: #6f42c1; 
+    color: white !important;
+    transition: background-color 0.3s;
+}
+
+.btn-purple:hover {
+    background-color: #59359a;
+    color: white !important;
+}
+
+.bi-qr-code {
+    font-size: 1.1rem;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    #qrcodeCadastro, #qrcodeCadastro * {
+        visibility: visible;
+    }
+
+    #qrcodeCadastro {
+        position: fixed;
+        left: 50%;
+        top: 20px;
+        transform: translateX(-50%);
+        display: block !important;
+    }
+
+    .modal-content, .modal-body {
+        border: none !important;
+        box-shadow: none !important;
+    }
+}

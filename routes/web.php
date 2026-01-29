@@ -27,18 +27,10 @@ Route::get('views/login/adm', function () {
 Route::get('views/principal/export', function () {
     return view('pages.principal.export');
 });
-Route::get('views/templates/layout', function () {
-    return view('pages.templates.layout');
-})->name('layout');
-Route::get('views/principal/dashboard', function () {
-    return view('pages.principal.dashboard');
-})->name('dashboard');
+
 Route::get('views/principal/cadastro', function () {
     return view('pages.principal.cadastro');
-})->name('cadastro');
-Route::get('views/principal/export', function () {
-    return view('pages.principal.export');
-})->name('export');
+});
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
 Route::get('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
