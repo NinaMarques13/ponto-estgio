@@ -45,7 +45,7 @@ body {
 
 .ponto-container {
     
-    background-image: url('img/logotipo-de-fundo.png');
+    background-image: url('img/fundo-pmpr.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 55vh; 
@@ -134,9 +134,6 @@ body {
     text-decoration: none; 
     padding: 0 0.2rem;
 }
-.registro-link.active {
-   
-}
 
 
 .registrar-btn {
@@ -154,112 +151,34 @@ body {
     background-color: #09381c; 
     color: #fff;
 }
-
-.home-body {
-    background-color: var(--cor-fundo);
-}
-
-.home-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
+.img-exp{
     align-items: center;
 }
-
-.main-card {
-    background-color: #fff !important;
-    border: none !important;
-    max-width: 900px;
-    width: 100%;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    position: relative; 
-}
-
-.bg-watermark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.18; 
-    width: 30%; 
-    height: auto;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.navbar-top-menu {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.footer-links {
-
-    background-color: white; 
-
-    border-top: 1px solid #eee;
+.admin-access-btn {
+   
+    position: fixed;
     
-    border-radius: 0 0 1rem 1rem; 
-}
-
-.main-card .card-body {
-    padding-top: 3rem !important;
-    padding-bottom: 3rem !important; 
-}
-
-.titulo-sistema {
-    color: var(--cor-primaria);
-    font-weight: 600;
-}
-
-.table-header-custom {
-    background-color: #e8f5e9;
-}
-
-.table-header-custom th {
-    color: var(--cor-primaria);
+    
+    top: 20px; 
+    right: 20px; 
+    
+    
+    background-color: var(--cor-primaria); 
+    color: white !important; 
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; 
     font-weight: bold;
-    border: none;
-    padding: 12px 15px;
-    font-size: 1rem;
-}
-
-.table tr {
-    padding: 12px 15px;
     font-size: 0.9rem;
-    border-bottom: 1px solid #f0f0f0;
+    
+    
+    z-index: 9999; 
+    
+    
+    transition: background-color 0.3s ease;
 }
-
-.btn-purple {
-    background-color: purple;
-    transition: filter 0.2s;
-}
-
-.btn-purple:hover {
-    filter: brightness(0.9);
-}
-
-.btn-sm {
-    border-radius: 4px;
-    padding: 5px 8px;
-}
-
-.form-label.text-secondary {
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-}
-
-.bg-light.form-control {
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 10px;
-}
-
-.footer-link-registro {
-    color: var(--cor-primaria);
-    text-decoration: underline;
-}
-
-.footer-link-sair {
-    color: #dc3545;
+.admin-access-btn:hover {
+    background-color: #0b4e25; 
+    color: white;
 }

@@ -12,36 +12,22 @@
 
 <body>
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0 ponto-container">
-        <a href="{{ asset('views/login/adm') }}" class="btn admin-access-btn" title="Acessar Área Administrativa">
-            <i class="bi bi-person-circle me-1"></i>
-            Área Admin
-        </a>
+        <a href="{{ asset('views/login/adm') }}" class="admin-access-btn" title="Acessar Área Administrativa">
+                <i class="bi bi-person-circle me-1"></i>
+                Área Admin
+            </a>
         <div class="card ponto-card">
-<<<<<<< HEAD
-            <form action="/registrar-ponto" method="post">
-                @csrf <div class="form-group">
-                    <div class="text-center pt-4 pb-3">
-                        <img src="{{asset('img/logotipo-dgp.png')}}" alt="Brasão DGP" class="img-fluid brasao-topo">
-                        <h1 class="ponto-titulo mt-3 mb-4">PONTO DE REGISTRO<br>DE ESTAGIÁRIOS</h1>
-                    </div>
-=======
             <div class="text-center pt-4 pb-3">
                 <img src="{{asset('img/logotipo-dgp.png')}}" alt="Brasão DGP" class="img-fluid brasao-topo">
                 <h1 class="ponto-titulo mt-3 mb-4">PONTO DE REGISTRO<br>DE ESTAGIÁRIOS</h1>
             </div>
             <form action="{{ route('estagiarios.store') }}" method="POST">
                 @csrf <div class="form-group">
->>>>>>> db14817 (tela inicial funcional)
                     <div class="card-body">
                         <div class="mb-4">
                             <label for="cpf" class="form-label matricula-label">Matrícula (CPF)</label>
                             <div class="input-group">
-<<<<<<< HEAD
-                                <input type="text" class="form-control cpf-input" name="cpf" id="cpf"
-                                    placeholder="Digite o CPF">
-=======
                                 <input type="text" class="form-control cpf-input" name="cpf" id="cpf" placeholder="Digite o CPF">
->>>>>>> db14817 (tela inicial funcional)
                                 <span class="input-group-text camera-icon">
                                     <i class="bi bi-camera-fill"></i> </span>
                             </div>

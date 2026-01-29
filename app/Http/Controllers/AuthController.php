@@ -12,34 +12,31 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends RelatorioController
 {
-   public function login(Request $request)
-   {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
-            'cpf'=> ['required', 'string'],
-            'password'=>['required'],
+            'cpf' => ['required', 'string'],
+            'password' => ['required'],
         ]);
-   
-
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
             return response()->json([
                 'message' => 'Login Realizado',
                 'user' => Auth::user()
-        ]);
-   }
-
+            ]);
+        }
         throw ValidationException::withMessages([
-    'cpf'=> ['CPF ou Senha inválidos.'],
-   ]);
-   }
+            'cpf' => ['O úsuario não existe em nosso registro.'],
+        ]);
+    }
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response()->json(['message'=>'Você se desconectou.']);
+        return response()->json(['message' => 'Você se desconectou.']);
     }
 
 }
