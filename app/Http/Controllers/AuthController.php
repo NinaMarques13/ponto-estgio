@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Controllers\RelatorioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 
 
-class AuthController extends Controller
+
+class AuthController extends RelatorioController
 {
     public function login(Request $request)
     {
