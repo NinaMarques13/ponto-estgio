@@ -60,11 +60,10 @@ class PontoHojeSeeder extends Seeder
 
         // Cria registro de SAÍDA
         RegistroPonto::create([
-            'estagiario_id' => $estagiario->id, 
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'Saida', // Sem acento, perfeito!
             'hr_registro' => $saida,
-            'ds_motivo' => 'saida',
             'ip_registro' => $this->faker->ipv4(),
-            'ds_observacao' => 'saida'
         ]);
         // if ($saida->lessThan($agora) && rand(1, 100) > 10) {
         //     RegistroPonto::create([
