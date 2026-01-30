@@ -26,7 +26,7 @@ $(document).ready(function () {
                 zeroRecords: "Nenhum registro encontrado",
                 info: "Mostrando página _PAGE_ de _PAGES_",
                 infoEmpty: "Nenhum registro disponível",
-                infoFiltered: "(filtrado de _MAX_ registros no total)"
+                infoFiltered: "(filtrado de _MAX_ registros no total)",
             },
         });
     } else {
@@ -44,371 +44,116 @@ $(document).ready(function () {
         $(".conteudo-aba").hide();
         $(".conteudo-aba." + type).fadeIn();
     });
-    carregarSelectEstagiarios();
-    carregarListaEstagiarios();
-    cardEstagiarios();
-    cardRegistros();
-    cardRecessos();
-    cardAtestados();
-    cardFolgas();
-    cardDispensas();
-    cardFaltas();
     $(
-        "#filtro-motivo, #filtro-estagiario, #data-ano, #data-completa, #data-mes",
-    ).change(function () {
-        console.log($(this).val());
-        carregarListaEstagiarios();
-        cardEstagiarios();
-        cardRegistros();
-        cardRecessos();
-        cardAtestados();
-        cardFolgas();
-        cardDispensas();
-        cardFaltas();
+        "#data-mes, #data-ano, #filtro-motivo, #filtro-estagiario, #data-completa",
+    ).on("change", function () {
+        console.log("Filtro alterado: " + $(this).val());
+        tabelaPontos.draw();
     });
-    function carregarSelectEstagiarios() {
-        $.ajax({
-            url: "/pesquisar-estagiarios",
-            type: "GET",
-            success: function (resposta) {
-                let html = '<option value="">Todos</option>';
-                const lista = resposta.data || [];
-                lista.forEach(function (item) {
-                    const nome = item.nm_estagiarios
-                        ? item.nm_estagiarios.toUpperCase()
-                        : "SEM NOME";
-                    html += `<option value="${item.id}">${nome}</option>`;
-                });
-                $("#filtro-estagiario").html(html);
-            },
-            error: function (err) {
-                console.error("Erro ao carregar nomes:", err);
-                $("#filtro-estagiario").html(
-                    '<option value="">Erro ao carregar</option>',
-                );
-            },
-        });
-    }
-    function carregarListaEstagiarios() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
+    tabelaPontos = $("#myTable").DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        ajax: {
             url: "/lista-estagiarios",
-            type: "GET",
-            data: payload,
-            success: function (lista) {
-                let html = "";
-                const dadosReais = lista.data || [];
-                if (dadosReais.length === 0) {
-                    html =
-                        '<tr><td colspan="8" class="text-center">Nenhum registro encontrado.</td></tr>';
-                } else {
-                    dadosReais.forEach(function (item) {
-                        const nomeLimpo = item.nome
-                            ? item.nome.toUpperCase()
-                            : "---";
-                        const matriculaLimpa = item.matricula
-                            ? item.matricula
-                            : "---";
-                        const horaEntrada = item.entrada || "";
-                        const horaSaida = item.saida || "";
-                        const totalHoras = item.total_horas || "";
-                        const motivoRegistro = item.motivo || "";
-                        const setorEstagiario = item.setor || "---";
-                        const dataDia = item.data || "";
-                        const observacao = item.ds_observacao || "---";
-                        html += `
-                    <tr>
-                        <td>
-                            ${dataDia}
-                        </td>
-                        <td>
-                            ${horaEntrada}
-                        </td>
-                        <td>
-                            ${horaSaida}
-                        </td>
-                        <td>${totalHoras}</td>
-                        <td>${matriculaLimpa}</td>
-                        <td>${nomeLimpo}</td>
-                        <td>${motivoRegistro}</td>
-                        <td>${setorEstagiario}</td>
-                        <td>${observacao}</td>
-                        <td><button class="btn btn-sm btn-bd-primary btn-editar" 
-                        data-item='${JSON.stringify(item)}'>Editar</button>
-                        </td>
-                    </tr>
-                    `;
-                    });
-                }
-                $("#tabela-estagiarios-corpo").html(html);
+            data: function (d) {
+                d._token = $('input[name="_token"]').val();
+                d.ano = $("#data-ano").val() || "";
+                d.mes = $("#data-mes").val() || "";
+                d.motivo = $("#filtro-motivo").val() || "";
+                d.estagiario_id = $("#filtro-estagiario").val() || "";
+                d.data = $("#data-completa").val() || "";
             },
-            error: function (err) {
-                console.error("Erro ao carregar lista:", err);
-                $("#tabela-estagiarios-corpo").html(
-                    '<tr><td colspan="8" class="text-danger">Erro ao carregar dados.</td></tr>',
-                );
+        },
+        columns: [
+            { data: "data", name: "hr_registro" },
+            {
+                data: "entrada",
+                name: "entrada",
+                orderable: false,
+                searchable: false,
             },
-        });
-    }
-    function cardEstagiarios() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-estagiarios",
-            type: "GET",
-            data: payload,
-            success: function (response) {
-                $("#contador-presentes").text(response.total);
+            {
+                data: "saida",
+                name: "saida",
+                orderable: false,
+                searchable: false,
             },
-        });
-    }
-    function cardRegistros() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-registros",
-            type: "GET",
-            data: payload,
-            success: function (response) {
-                $("#registros-dia").text(response.total);
+            {
+                data: "total_horas",
+                name: "total_horas",
+                orderable: false,
+                searchable: false,
             },
-        });
-    }
-    function cardRecessos() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-recessos",
-            type: "GET",
-            data: payload,
-            success: function (response) {
-                $("#recesso-dia").text(response.total);
+            {
+                data: "matricula",
+                name: "estagiario.nr_matricula",
+                orderable: false,
+                searchable: false,
             },
-        });
-    }
-    function cardAtestados() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-atestados",
-            type: "GET",
-            success: function (response) {
-                $("#atestados-dia").text(response.total);
+            {
+                data: "nome",
+                name: "estagiario.nm_estagiarios",
+                orderable: true,
+                searchable: true,
             },
-        });
-    }
-    function cardFolgas() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-folgas",
-            type: "GET",
-            success: function (response) {
-                $("#folgas-dia").text(response.total);
+            { data: "motivo", name: "ds_motivo" },
+            { data: "setor", name: "estagiario.nm_setor" },
+            {
+                data: "observacao",
+                name: "ds_observacao",
+                orderable: false,
+                searchable: false,
             },
-        });
-    }
-    function cardDispensas() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-dispensas",
-            type: "GET",
-            success: function (response) {
-                $("#dispensas-dia").text(response.total);
+            {
+                data: "action",
+                name: "action",
+                orderable: false,
+                searchable: false,
             },
-        });
-    }
-    function cardFaltas() {
-        let dataVal = $("#data-completa").val() || "";
-        let motivoVal = $("#filtro-motivo").val() || "";
-        let estagiarioVal = $("#filtro-estagiario").val() || "";
-        let anoVal = $("#data-ano").val() || "";
-        let MesVal = $("#data-mes").val() || "";
-        let token = $('input[name="_token"]').val();
-        let payload = { _token: token };
-        if (anoVal && anoVal !== "") {
-            payload.ano = anoVal;
-        }
-        if (MesVal && MesVal !== "") {
-            payload.mes = MesVal;
-        }
-        if (motivoVal && motivoVal !== "") {
-            payload.motivo = motivoVal;
-        }
-        if (estagiarioVal && estagiarioVal !== "") {
-            payload.estagiario_id = estagiarioVal;
-        }
-        if (dataVal && dataVal !== "") {
-            payload.data = dataVal;
-        }
-        $.ajax({
-            url: "/relatorio-faltas",
-            type: "GET",
-            success: function (response) {
-                $("#faltas-dia").text(response.total);
-            },
-        });
-    }
-    $(document).on("click", ".btn-editar", function () {
-        const item = $(this).data("item");
+        ],
+        language: {
+            url: "",
+            lengthMenu: "Exibir _MENU_ por página",
+            search: "Pesquisar Estagiário",
+            searchPlaceholder: "Digite a informação",
+            zeroRecords: "Nenhum registro encontrado",
+            info: "Mostrando página _PAGE_ de _PAGES_",
+            infoEmpty: "Nenhum registro disponível",
+            infoFiltered: "(filtrado de _MAX_ registros no total)",
+        },
+        drawCallback: function (settings) {
+            var json = this.api().ajax.json();
+            if (json && json.cards) {
+                $("#contador-presentes").text(json.cards.presentes);
+                $("#registros-dia").text(json.cards.registros);
+                $("#recesso-dia").text(json.cards.recessos);
+                $("#atestados-dia").text(json.cards.atestados);
+                $("#folgas-dia").text(json.cards.folgas);
+                $("#dispensas-dia").text(json.cards.dispensa);
+                $("#faltas-dia").text(json.cards.falta);
+            }
+        },
+    });
+    $(document).on("click", ".editar-btn", function () {
+        let tr = $(this).closest("tr");
+        let rowData = $("#myTable").DataTable().row(tr).data();
+        console.log("Dados capturados da linha:", rowData);
         let dataFormatada = "";
-        if (item.data && item.data.includes("/")) {
-            const partes = item.data.split("/");
+        if (rowData.data && rowData.data.includes("/")) {
+            const partes = rowData.data.split("/");
             dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
         }
-        console.log(item);
-        $("#edit-id").val(item.id || "");
+        $("#edit-id").val(rowData.estagiario_id || "");
         $("#edit-data").val(dataFormatada || "");
-        $("#edit-nome").val(item.nome || "");
-        $("#edit-matricula").val(item.matricula || "");
-        $("#edit-entrada").val(item.entrada.substring(0, 5) || "");
-        $("#edit-saida").val(item.saida.substring(0, 5) || "");
-        $("#edit-total-horas").val(item.total_horas || "");
-        $("#edit-motivo").val(item.motivo || "");
-        $("#edit-setor").val(item.setor || "");
-        $("#edit-obs").val(item.ds_observacao || "");
+        $("#edit-nome").val(rowData.nome || "");
+        $("#edit-matricula").val(rowData.matricula || "");
+        $("#edit-entrada").val(rowData.entrada.substring(0, 5) || "");
+        $("#edit-saida").val(rowData.saida.substring(0, 5) || "");
+        $("#edit-total-horas").val(rowData.total_horas || "");
+        $("#edit-motivo").val(rowData.motivo || "");
+        $("#edit-setor").val(rowData.setor || "");
+        $("#edit-obs").val(rowData.ds_observacao || "");
         $('input[name="_token"]').val();
         const modal = new bootstrap.Modal(
             document.getElementById("modalEditarEstagiario"),
@@ -524,7 +269,6 @@ $("#tabela-estagiarios-cadastrados").on(
             $("#setor_editar").val(data.nm_setor || "");
             $("#telefone_editar").val(data.nr_telefone || "");
             $("#email_editar").val(data.nm_email || "");
-
         } else {
             alert(
                 "Erro: O DataTable não forneceu um ID válido para esta linha.",
@@ -646,5 +390,3 @@ $(document).on("click", ".btn-excluir-estagiario", function (e) {
         });
     }
 });
-
-

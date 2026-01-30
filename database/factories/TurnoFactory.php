@@ -17,9 +17,9 @@ class TurnoFactory extends Factory
     public function definition(): array
     {
         return [
-            'ds_tipo'    => 'superior', 
+            'ds_tipo'    => 'MATUTINO', // ou use $this->faker->randomElement(['MANHA', 'TARDE'])
             'hr_entrada' => '08:00:00',
-            'hr_saida'   => '14:00:00',
+            'hr_saida'   => '12:00:00',
         ];
     }
 }

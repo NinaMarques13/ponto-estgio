@@ -22,11 +22,24 @@
                             </div>
                             <div class="col">
                                 <form action="/lista-estagiarios" method="post">
-                                    @csrf
-                                    <p>Ano</p>
-                                    <input type="number" name="data-ano" id="data-ano" class="form-control" min="2000"
-                                        max="2100" step="1" value="{{ date('Y') }}">
-                                </form>
+                                @csrf
+                                <label class="form-label">Ano</label>
+                                <select name="data-ano" id="data-ano" class="form-control">
+                                    @php
+                                        $anoAtual = date('Y');
+                                        $anoInicio = 2000;
+                                        $anoFim = 2100;
+                                    @endphp
+
+                                    @for ($i = $anoInicio; $i <= $anoFim; $i++)
+                                        <option value="{{ $i }}" {{ $i == $anoAtual ? 'selected' : '' }}>
+                                            {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+
+                            </form>
+
                             </div>
                             <div class="col">
                                 <div class="col-md-3">

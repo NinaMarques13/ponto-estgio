@@ -59,7 +59,14 @@ class PontoHojeSeeder extends Seeder
         $agora = Carbon::now();
 
         // Cria registro de SAÍDA
-        // RegistroPonto::create([
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'Saida', // Sem acento, perfeito!
+            'hr_registro' => $saida,
+            'ip_registro' => $this->faker->ipv4(),
+        ]);
+        // if ($saida->lessThan($agora) && rand(1, 100) > 10) {
+        //     RegistroPonto::create([
         //         'estagiario_id' => $estagiario->id,
         //         'ds_motivo' => 'saida', // Sem acento, perfeito!
         //         'hr_registro' => $saida,
