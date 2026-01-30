@@ -17,7 +17,8 @@ class Estagiario extends Model
         'nm_setor',
         'nr_telefone',
         'nm_email',
-        'ds_situacao',      
+        'ds_situacao',
+        'ds_observacao'      
     ];
     
     public function registroPonto()

@@ -205,8 +205,14 @@
                         <input type="hidden" id="edit-id">
                         <div class="row mb-3">
                             <div class="col">
-                                <label>Data</label>
-                                <input type="date" id="edit-data" class="form-control">
+                                <label>Data Inicial</label>
+                                <input type="date" id="edit-data-inicio" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label>Data Fim</label>
+                                <input type="date" id="edit-data-fim" class="form-control">
                             </div>
                         </div>
                         <div class="row mb-3">

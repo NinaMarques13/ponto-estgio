@@ -33,6 +33,87 @@ $(document).ready(function () {
         console.error("O plugin DataTable não foi carregado corretamente.");
     }
 
+    const aplicarMascaraCPF = (valor) => {
+        valor = limparCPF(valor);
+        valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+        valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+        valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+        if (valor.length > 14) {
+            valor = valor.substring(0, 14);
+        }
+        return valor;
+    };
+
+    // 0. Aplicar Máscara ao Input do CPF
+    $("#cpf").on("keyup", function () {
+        // Aplica a máscara a cada tecla digitada
+        $(this).val(aplicarMascaraCPF($(this).val()));
+    });
+
+    // -------------------------------------------
+
+    // 1. Alternar seleção Entrada/Saída
+    $(".registro-link").on("click", function (e) {
+        e.preventDefault();
+
+        $(".registro-link").removeClass("active");
+        $(this).addClass("active");
+
+        let acao = $(this).text().includes("Entrada") ? "Entrada" : "Saída";
+        console.log("Ação selecionada:", acao);
+    });
+
+    // 2. Lógica do botão REGISTRAR
+    $("#registrarBtn").on("click", function () {
+        // Pega o valor do CPF (com máscara) e limpa (apenas números)
+        let cpfBruto = $("#cpf").val().trim();
+        let cpf = limparCPF(cpfBruto);
+
+        // Pega a ação selecionada (Entrada ou Saída)
+        let acaoSelecionada = $(".registro-link.active")
+            .text()
+            .includes("Entrada")
+            ? "Entrada"
+            : "Saída";
+
+        if (cpf === "") {
+            alert("Por favor, digite o CPF.");
+            $("#cpf").focus();
+            return;
+        }
+
+        if (cpf.length !== 11) {
+            alert("O CPF deve conter exatamente 11 dígitos.");
+            $("#cpf").focus();
+            return;
+        }
+
+        // // Simulação do processamento de registro
+        // console.log(`Registrando ${acaoSelecionada} para o CPF: ${cpf}`);
+
+        // // Simulação de sucesso
+        // setTimeout(() => {
+        //      alert(`Ponto de ${acaoSelecionada} para o CPF ${cpf} SIMULADO com sucesso!`);
+        //      $('#cpf').val(''); // Limpa o campo
+        // }, 300);
+
+        /*
+        // Lógica REAL de AJAX para enviar os dados para o servidor:
+        // Exemplo:
+        // $.ajax({
+        //     url: 'seu_endpoint_de_registro.php', 
+        //     method: 'POST',
+        //     data: { 
+        //         cpf: cpf, // Envia o CPF limpo (somente dígitos)
+        //         acao: acaoSelecionada 
+        //     },
+        //     ...
+        // });
+        */
+    });
+
+    // 3. Ação para o ícone da câmera (simulação)
     $(".camera-icon").on("click", function () {
         alert("Ação de Leitura de CPF/QR Code ativada (Simulação)");
     });
@@ -166,7 +247,8 @@ $(document).ready(function () {
     function salvarEstagiario() {
         let payload = {
             id: $("#edit-id").val(),
-            data: $("#edit-data").val(),
+            inicio: $("#edit-data-inicio").val(),
+            fim: $("#edit-data-fim").val(),
             entrada: $("#edit-entrada").val(),
             saida: $("#edit-saida").val(),
             matricula: $("#edit-matricula").val(),
@@ -188,7 +270,7 @@ $(document).ready(function () {
             data: payload,
             success: function (response) {
                 console.log(response);
-                location.reload();
+                
             },
             error: function (xhr) {
                 console.error(xhr.responseText);
@@ -197,61 +279,36 @@ $(document).ready(function () {
         });
     }
 
-    $(document).on("click", ".btn-gerar-qr", function () {
-        const cpfdEstagiario = $(this).attr("data-identificador") || "0";
+    $(document).ready(function () {
+        $("#openQrCadastro").on("click", function () {
+            let urlCadastro =
+                "https://ponto-estagio.pm.pr.gov.br/views/principal/cadastro";
 
-        const dadoParaOQr = cpfdEstagiario;
+            $("#qrcodeCadastro").html("");
 
-        const container = document.getElementById("qrcodeCadastro");
-        container.innerHTML = "";
+            new QRCode(document.getElementById("qrcodeCadastro"), {
+                text: urlCadastro,
+                width: 220,
+                height: 220,
+            });
 
-        new QRCode(container, {
-            text: dadoParaOQr,
-            width: 220,
-            height: 220,
+            const modal = new bootstrap.Modal(
+                document.getElementById("qrModalCadastro"),
+            );
+            modal.show();
         });
     });
 
-    $("#formAdicionarEstagiario").on("submit", function (e) {
-        e.preventDefault();
-        let token = $('input[name="_token"]').val();
+    const myModal = document.getElementById("qrModalCadastro");
 
-        let payload = {
-            _token: token,
-            nm_estagiarios: $("#nome_cadastro").val(),
-            nr_matricula: $("#cpf_cadastro").val(),
-            nm_setor: $("#setor_cadastro").val(),
-            nr_telefone: $("#telefone_cadastro").val(),
-            nm_email: $("#email_cadastro").val(),
-        };
-        console.log(payload);
+    if (myModal) {
+        myModal.addEventListener("show.bs.modal", function (event) {
+            const button = event.relatedTarget;
 
-        $.ajax({
-            url: "/cadastrar-estagiario",
-            type: "POST",
-            headers: {
-                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
-                Accept: "application/json",
-            },
-            data: payload,
-            success: function (e) {
-                alert("Cadastro concluído!");
-                $("#modalAdicionarEstagiario").modal("hide");
-                location.reload();
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-                alert("Erro ao cadastrar.");
-            },
-        });
-    });
-});
+            const idEstagiario = $(button).data("identificador") || "0";
 
-$("#tabela-estagiarios-cadastrados").on(
-    "click",
-    ".btn-editar-estagiario",
-    function (e) {
-        e.preventDefault();
+            const urlUnica =
+                "https://ponto-estagio.pm.pr.gov.br/registrar/" + idEstagiario;
 
         const idParaEditar =
             $(this).attr("data-identificador") || $(this).data("identificador");
@@ -387,6 +444,11 @@ $(document).on("click", ".btn-excluir-estagiario", function (e) {
                 console.error(xhr.responseText);
                 alert("Erro ao excluir registro.");
             },
+            new QRCode(container, {
+                text: urlUnica,
+                width: 220,
+                height: 220,
+            });
         });
     }
 });

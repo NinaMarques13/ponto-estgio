@@ -185,7 +185,9 @@ class EstagiariosController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'data' => 'required|date',
+            'id' => 'required|exists:estagiarios,id',
+            'inicio' => 'date|nullable',
+            'fim' => 'date|nullable',
             'entrada' => 'nullable',
             'saida' => 'nullable',
             'matricula' => 'required|max:14',
@@ -196,42 +198,14 @@ class EstagiariosController extends Controller
         ]);
 
         $estagiario = Estagiario::findOrFail($id);
-
-        $estagiario->update([
-            'nm_estagiarios' => $request->nome,
-            'nr_matricula' => $request->matricula,
-            'nm_setor' => $request->setor
-        ]);
-
-        $data = $request->data;
-
-        $estagiario->registroPonto()
-            ->whereDate('hr_registro', $data)
-            ->update([
-                'ds_motivo' => $request->motivo,
-                'ds_observacao' => $request->observacao
-            ]);
-
-        if ($request->filled('entrada')) {
-            $timestampentrada = $data . ' ' . $request->entrada;
-
-            $estagiario->registroPonto()
-                ->where('ds_motivo', 'entrada')
-                ->whereDate('hr_registro', $data)
-                ->update([
-                    'hr_registro' => $timestampentrada
-                ]);
-        }
-
-        if ($request->filled('saida')) {
-            $timestampsaida = $data . ' ' . $request->saida;
-
-            $estagiario->registroPonto()
-                ->where('ds_motivo', 'saida')
-                ->whereDate('hr_registro', $data)
-                ->update([
-                    'hr_registro' => $timestampsaida
-                ]);
+        $estagiario->nm_estagiarios = $request->nome;
+        $estagiario->nr_matricula = $request->matricula;
+        $estagiario->nm_setor = $request->setor;
+        $estagiario->save();
+        if ($request->filled('motivo') && $request->motivo !== '---') {
+            $this->processarPeriodoRecesso($estagiario, $request);
+        } else {
+            $this->processarPontoDiario($estagiario, $request);
         }
 
         return response()->json([
@@ -354,5 +328,59 @@ class EstagiariosController extends Controller
             'ds_situacao' => false
         ]);
         return response()->json(['message' => 'Estagiário excluído com sucesso!']);
+            'message' => 'Estagiário recebido com sucesso',
+            'data' => $request->all()
+        ]);
+    }
+    private function processarPontoDiario($estagiario, $request)
+    {
+        if ($request->filled('entrada')) {
+            $timestampEntrada = $request->inicio . ' ' . $request->entrada;
+            $ip = $request->ip();
+            $estagiario->registroPonto()->updateOrCreate(
+                [
+                    'ds_motivo' => 'Entrada',
+                    'hr_registro' => $timestampEntrada
+                ],
+                [
+                    'ds_observacao' => $request->observacao,
+                    'ip_registro' => $ip
+                ]
+            );
+        }
+        if ($request->filled('saida')) {
+            $timestampSaida = $request->fim . ' ' . $request->saida;
+            $ip = $request->ip();
+            $estagiario->registroPonto()->updateOrCreate(
+                [
+                    'ds_motivo' => 'Saida',
+                    'hr_registro' => $timestampSaida
+                ],
+                [
+                    'ds_observacao' => $request->observacao,
+                    'ip_registro' => $ip
+                ]
+            );
+        }
+    }
+    private function processarPeriodoRecesso($estagiario, $request)
+    {
+        $periodo = new \DatePeriod(
+            new \DateTime($request->inicio),    // 1. Onde começa
+            new \DateInterval('P1D'),           // 2. O "passo" (P1D = Período de 1 Dia)
+            (new \DateTime($request->fim))->modify('+1 day') // 3. Onde termina
+        );
+        foreach ($periodo as $data) {
+            $ip = $request->ip();
+            $dataFormatada = $data->format('Y-m-d');
+            $estagiario->registroPonto()->updateOrCreate(
+                ['hr_registro' => $dataFormatada . ' 00:00:00'], // CONDIÇÃO DE BUSCA
+                [                                               // O QUE SERÁ SALVO
+                    'ds_motivo' => $request->motivo,
+                    'ds_observacao' => $request->observacao ?: 'Recesso lançado pelo RH',
+                    'ip_registro' => $ip
+                ]
+            );
+        }
     }
 }
