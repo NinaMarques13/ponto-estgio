@@ -270,7 +270,6 @@ $(document).ready(function () {
             data: payload,
             success: function (response) {
                 console.log(response);
-                
             },
             error: function (xhr) {
                 console.error(xhr.responseText);

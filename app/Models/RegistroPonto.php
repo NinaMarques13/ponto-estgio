@@ -11,12 +11,13 @@ class RegistroPonto extends Model
 
     protected $table = 'registro_ponto'; // Importante pois o Laravel procuraria 'registro_pontos'
     
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = [
         'estagiario_id',
         'ds_motivo',
         'hr_registro',
         'ip_registro',
+        'ds_observacao'
     ];
 
     public function estagiario()
