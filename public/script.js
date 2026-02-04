@@ -269,7 +269,13 @@ $(document).ready(function () {
             type: "post",
             data: payload,
             success: function (response) {
-                console.log(response);
+                if (response.success) {
+                    console.log(response);
+                    // alert("Success! Now reloading...");
+                    // window.location.reload();
+                } else {
+                    alert("Erro reportado pelo servidor: " + response.message);
+                }
             },
             error: function (xhr) {
                 console.error(xhr.responseText);
