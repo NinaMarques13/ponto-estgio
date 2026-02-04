@@ -66,7 +66,7 @@
                             <h5 class="modal-title">QR Code do Estagiario</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body d-flex flex-colum align-items-center justify-content-center text-center">
+                        <div class="modal-body d-flex flex-column align-items-center justify-content-center text-center">
                             <div id="qrcodeCadastro"></div>
                         </div>
                         <div class="modal-footer justify-content-center">
@@ -76,13 +76,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
 
-            <div class="d-flex justify-content-between mt-4">
-                <a href="#" class="text-success text-decoration-none fw-bold border-bottom border-success">Ir para Ponto de
-                    Registro</a>
-                <a href="#" class="text-danger text-decoration-none fw-bold">Sair</a>
-            </div>
-        </div>
+        <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     </div>
 @endsection

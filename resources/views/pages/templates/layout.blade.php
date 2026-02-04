@@ -16,7 +16,7 @@
 <body class="home-body">
   <div class="container home-container">
     <div class="card main-card shadow-lg p-0">
-      <div class="card-body p-5 position-relative" style="z-index: 1;">
+      <div class="card-body p-5 position-relative">
 
         <img src="{{ asset('img/fundo-pmpr.png') }}" alt="PM PR Fundo" class="bg-watermark">
 
