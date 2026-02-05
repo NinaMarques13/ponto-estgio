@@ -553,6 +553,7 @@ class EstagiariosController extends Controller
                     'ds_situacao' => 1
                 ]
             );
+            dd($estagiario);
             return response()->json([
                 'success' => true,
                 'message' => 'Estagiario cadastrado com sucesso!',
