@@ -31,7 +31,7 @@
                             <th class="text-center">Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabela-estagiarios" class="table">
                         <tr>
                             <td></td>
                             <td></td>
@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label fw-bold text-secondary">CPF (Matrícula) <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="cpf_cadastro" name="cpf" placeholder="000.000.000-00" required>
+                                        <input type="tel" class="form-control" id="cpf_cadastro" name="cpf" placeholder="Apenas números" maxlength="11" pattern="\d*" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label fw-bold text-secondary">Setor <span class="text-danger">*</span></label>
@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold text-secondary">Telefone</label>
-                                        <input type="tel" class="form-control" id="telefone_cadastro" name="telefone" placeholder="(00) 00000-0000">
+                                        <input type="tel" class="form-control" id="telefone_cadastro" name="telefone" placeholder="(00) 00000-0000" maxlength="11" pattern="\d*">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold text-secondary">Email</label>

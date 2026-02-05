@@ -520,5 +520,104 @@ $(document).ready(function () {
             width: 220,
             height: 220
         });
-    }); 
+    });
+    
+    $('#formAdicionarEstagiario').on('submit', function (e) {
+        e.preventDefault();
+        
+        const dados = {
+            nome: $('#nome_cadastro').val().toUpperCase(),
+            cpf: $('#cpf_cadastro').val(),
+            setor: $('#setor_cadastro').val().toUpperCase(),
+            telefone: $('#telefone_cadastro').val() || "---",
+            email: $('#email_cadastro').val() || "---"
+        };
+        
+        const tr = document.createElement('tr');
+    
+        const criarColuna = (texto) => {
+            const td = document.createElement('td');
+            td.textContent = texto;
+            return td;
+        };
+        
+        tr.appendChild(criarColuna(dados.nome));
+        tr.appendChild(criarColuna(dados.cpf));
+        tr.appendChild(criarColuna(dados.setor));
+        tr.appendChild(criarColuna(dados.telefone));
+        tr.appendChild(criarColuna(dados.email));
+        
+        const tdAcoes = document.createElement('td');
+        tdAcoes.className = "text-center";
+    
+        const divGroup = document.createElement('div');
+        divGroup.className = "d-flex justify-content-center gap-2";
+    
+        const criarBotao = (classes, icone) => {
+            const btn = document.createElement('button');
+            btn.className = `btn btn-sm border-0 ${classes}`;
+            
+            const i = document.createElement('i');
+            i.className = `bi bi-${icone}`;
+            
+            btn.appendChild(i);
+            return btn;
+        };
+    
+        const btnQr = criarBotao('btn-purple text-white', 'qr-code');
+        btnQr.setAttribute('data-bs-toggle', 'modal');
+        btnQr.setAttribute('data-bs-target', '#qrModalCadastro');
+        btnQr.setAttribute('data-identificador', dados.cpf);
+        btnQr.classList.add('btn-gerar-qr');
+    
+        const btnEdit = criarBotao('btn-primary', 'pencil-square');
+        const btnDel = criarBotao('btn-danger', 'trash');
+    
+        // Montar a estrutura de botões
+        divGroup.appendChild(btnQr);
+        divGroup.appendChild(btnEdit);
+        divGroup.appendChild(btnDel);
+        tdAcoes.appendChild(divGroup);
+        tr.appendChild(tdAcoes);
+    
+        const corpoTabela = $("#tabela-estagiarios");
+        
+        if (corpoTabela.find('tr').first().find('td').first().text().trim() === "") {
+            corpoTabela.empty();
+        }
+        
+        corpoTabela.append(tr);
+        
+        bootstrap.Modal.getInstance(document.getElementById('modalAdicionarEstagiario')).hide();
+        this.reset();
+        
+        alert("Estagiário adicionado com sucesso!");
+    });
+    
+    $('#cpf_cadastro').on('input', function() {
+
+        let valor = $(this).val().replace(/\D/g, '');
+        
+        if (valor.length > 11) {
+            valor = valor.substring(0, 11);
+        }
+        
+        $(this).val(valor);
+    });
+    
+    $('#telefone_cadastro').on('input', function() {
+
+        let valor = $(this).val().replace(/\D/g, '');
+        
+        if (valor.length > 11) {
+            valor = valor.substring(0, 11);
+        }
+        
+        $(this).val(valor);
+    });
+
+    $('#modalAdicionarEstagiario').on('hidden.bs.modal', function () {
+        $(this).find('form')[0].reset();
+        
+    });
 });
