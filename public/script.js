@@ -271,8 +271,8 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     console.log(response);
-                    alert("Success! Now reloading...");
-                    window.location.reload();
+                    // alert("Success! Now reloading...");
+                    // window.location.reload();
                 } else {
                     alert("Erro reportado pelo servidor: " + response.message);
                 }
