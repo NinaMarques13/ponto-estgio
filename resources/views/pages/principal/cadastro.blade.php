@@ -46,10 +46,10 @@
                                         data-identificador="">
                                         <i class="bi bi-qr-code"></i>
                                     </button>
-                                    <button class="btn btn-primary btn-sm border-0">
+                                    <button class="btn btn-primary btn-sm border-0 btn-editar-estagiario">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button class="btn btn-danger btn-sm border-0">
+                                    <button class="btn btn-danger btn-sm border-0 btn-excluir-estagiario">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
@@ -113,6 +113,48 @@
                             <div class="modal-footer bg-light">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <button type="submit" class="btn btn-success px-4">Salvar Cadastro</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal fade" id="modalEditarEstagiario" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title text-primary">Editar Informações do Estagiário</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="formEditarEstagiario">
+                            <div class="modal-body">
+                                <input type="hidden" id="index_edicao" value="">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold text-secondary">Nome <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nome_editar" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold text-secondary">CPF (Matrícula) <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="cpf_editar" maxlength="11" pattern="\d*" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold text-secondary">Setor <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="setor_editar" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold text-secondary">Telefone</label>
+                                        <input type="tel" class="form-control" id="telefone_editar" maxlength="11" pattern="\d*">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold text-secondary">Email</label>
+                                        <input type="email" class="form-control" id="email_editar">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary px-4">Atualizar Cadastro</button>
                             </div>
                         </form>
                     </div>

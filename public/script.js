@@ -570,10 +570,9 @@ $(document).ready(function () {
         btnQr.setAttribute('data-identificador', dados.cpf);
         btnQr.classList.add('btn-gerar-qr');
     
-        const btnEdit = criarBotao('btn-primary', 'pencil-square');
-        const btnDel = criarBotao('btn-danger', 'trash');
-    
-        // Montar a estrutura de botões
+        const btnEdit = criarBotao('btn-primary btn-editar-estagiario', 'pencil-square');
+        const btnDel = criarBotao('btn-danger btn-excluir-estagiario', 'trash');
+
         divGroup.appendChild(btnQr);
         divGroup.appendChild(btnEdit);
         divGroup.appendChild(btnDel);
@@ -592,6 +591,40 @@ $(document).ready(function () {
         this.reset();
         
         alert("Estagiário adicionado com sucesso!");
+    });
+
+    $('#tabela-estagiarios').on('click', '.btn-editar-estagiario', function() {
+        const tr = $(this).closest('tr');
+        const index = tr.index(); 
+        const colunas = tr.find('td');
+
+        $('#nome_editar').val(colunas.eq(0).text());
+        $('#cpf_editar').val(colunas.eq(1).text());
+        $('#setor_editar').val(colunas.eq(2).text());
+        $('#telefone_editar').val(colunas.eq(3).text() === "---" ? "" : colunas.eq(3).text());
+        $('#email_editar').val(colunas.eq(4).text() === "---" ? "" : colunas.eq(4).text());
+
+        $('#index_edicao').val(index);
+
+        const modal = new bootstrap.Modal(document.getElementById('modalEditarEstagiario'));
+        modal.show();
+    });
+
+    $('#formEditarEstagiario').on('submit', function (e) {
+        e.preventDefault();
+        const index = $('#index_edicao').val();
+        
+        const tr = $('#tabela-estagiarios tr').eq(index);
+        const colunas = tr.find('td');
+
+        colunas.eq(0).text($('#nome_editar').val().toUpperCase());
+        colunas.eq(1).text($('#cpf_editar').val());
+        colunas.eq(2).text($('#setor_editar').val().toUpperCase());
+        colunas.eq(3).text($('#telefone_editar').val() || "---");
+        colunas.eq(4).text($('#email_editar').val() || "---");
+
+        bootstrap.Modal.getInstance(document.getElementById('modalEditarEstagiario')).hide();
+        alert("Informações atualizadas com sucesso!");
     });
     
     $('#cpf_cadastro').on('input', function() {
