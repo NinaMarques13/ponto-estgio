@@ -655,17 +655,13 @@ $(document).ready(function () {
     });
     
     $('#tabela-estagiarios').on('click', '.btn-excluir-estagiario', function() {
-        // 1. Confirmar a exclusão
+        
         if (confirm("Tem certeza que deseja excluir permanentemente este estagiário?")) {
             
-            // 2. $(this) é o botão clicado. 
-            // .closest('tr') sobe no HTML até encontrar a linha que envolve esse botão.
             const linhaParaRemover = $(this).closest('tr');
             
-            // 3. Remove a linha inteira (incluindo todas as células de dados e botões)
             linhaParaRemover.remove();
-    
-            // Feedback visual (opcional)
+
             console.log("Estagiário removido da listagem.");
         }
     });
