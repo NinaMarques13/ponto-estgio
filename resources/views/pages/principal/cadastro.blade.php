@@ -10,12 +10,12 @@
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <label class="form-label text-secondary">Nome</label>
-                    <input type="text" class="form-control bg-light" placeholder="Buscar por nome">
+                    <input type="text" id="buscaNome" class="form-control bg-light" placeholder="Buscar por nome">
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label text-secondary">CPF (Matrícula)</label>
-                    <input type="text" class="form-control bg-light" placeholder="Buscar por CPF">
+                    <input type="text" id="buscaCPF" class="form-control bg-light" placeholder="Buscar por CPF">
                 </div>
             </div>
 
