@@ -665,4 +665,25 @@ $(document).ready(function () {
             console.log("Estagiário removido da listagem.");
         }
     });
+    
+    $("#buscaNome").on("keyup", function() {
+        let valor = $(this).val().toLowerCase(); 
+        
+        $("#tabela-estagiarios tr").filter(function() {
+            
+            let nomeEstagiario = $(this).find("td:first").text().toLowerCase();
+            
+            $(this).toggle(nomeEstagiario.indexOf(valor) > -1);
+        });
+    });
+    
+    $("#buscaCPF").on("keyup", function() {
+        let valor = limparCPF($(this).val()); 
+        
+        $("#tabela-estagiarios tr").filter(function() {
+            
+            let cpfTabela = limparCPF($(this).find("td:nth-child(2)").text());
+            $(this).toggle(cpfTabela.indexOf(valor) > -1);
+        });
+    });
 });
