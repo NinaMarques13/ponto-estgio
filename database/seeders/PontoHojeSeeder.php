@@ -18,7 +18,7 @@ class PontoHojeSeeder extends Seeder
 
         foreach ($estagiarios as $estagiario) {
 
-            // 🎲 Sorteia o cenário do dia para este estagiário
+            //  Sorteia o cenário do dia para este estagiário
             // 1 a 70: Veio trabalhar (70% de chance)
             // 71 a 100: Ocorrência especial (30% de chance)
             $sorteio = rand(1, 100);
@@ -50,8 +50,8 @@ class PontoHojeSeeder extends Seeder
         // Cria registro de eNTRADA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo' => 'entrada',
             'hr_registro' => $entrada,
+            'ds_motivo' => 'entrada',
             'ip_registro' => $this->faker->ipv4(),
             'ds_observacao' => 'entrada'
         ]);
@@ -60,10 +60,11 @@ class PontoHojeSeeder extends Seeder
 
         // Cria registro de SAÍDA
         RegistroPonto::create([
-            'estagiario_id' => $estagiario->id,
-            'ds_motivo' => 'Saida', // Sem acento, perfeito!
+            'estagiario_id' => $estagiario->id, 
             'hr_registro' => $saida,
+            'ds_motivo' => 'saida',
             'ip_registro' => $this->faker->ipv4(),
+            'ds_observacao' => 'saida'
         ]);
         // if ($saida->lessThan($agora) && rand(1, 100) > 10) {
         //     RegistroPonto::create([
@@ -92,9 +93,8 @@ class PontoHojeSeeder extends Seeder
 
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo' => $motivo,
-            // Horário zerado (00:00:00) do dia de hoje
             'hr_registro' => Carbon::today()->startOfDay(),
+            'ds_motivo' => $motivo,
             'ip_registro' => $this->faker->ipv4(),
             'ds_observacao' => 'motivos Especiais'
         ]);

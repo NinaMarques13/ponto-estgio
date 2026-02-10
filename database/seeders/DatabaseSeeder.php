@@ -28,11 +28,11 @@ class DatabaseSeeder extends Seeder
 
         // 3. Para cada estagiário, gera 5 dias de histórico
         foreach ($estagiarios as $estagiario) {
-            
+
             // Loop dos últimos 5 dias (incluindo hoje)
             for ($i = 0; $i < 5; $i++) {
                 $dataReferencia = Carbon::today()->subDays($i);
-                
+
                 // Sorteio: 70% chance de trabalho normal, 30% de ocorrência
                 $sorteio = rand(1, 100);
 
@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         // Define hora de entrada aleatória (entre 07:00 e 10:00 daquele dia)
         // O clone é importante para não alterar a variável original $data no loop
         $entrada = (clone $data)->setHour(rand(7, 10))->setMinute(rand(0, 59));
-        
+
         // Calcula a saída baseada na entrada
         $saida = (clone $entrada)->addHours($cargaHoraria);
 
@@ -72,10 +72,10 @@ class DatabaseSeeder extends Seeder
         // Cria registro de SAÍDA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => 'saida', // Motivo fixo para o sistema reconhecer
-            'hr_registro'   => $saida,
-            'ip_registro'   => $faker->ipv4(),
-            'ds_observacao' => 'entrada'
+            'ds_motivo' => 'saida', 
+            'hr_registro' => $saida,
+            'ip_registro' => $faker->ipv4(),
+            'ds_observacao' => 'saida'
         ]);
     }
 
@@ -89,10 +89,9 @@ class DatabaseSeeder extends Seeder
 
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => $motivo,
-            // Define o horário como 00:00 do dia da ocorrência para ficar padronizado
-            'hr_registro'   => (clone $data)->startOfDay(),
-            'ip_registro'   => $faker->ipv4(),
+            'ds_motivo' => ''.$motivo,
+            'hr_registro' => (clone $data)->startOfDay(),
+            'ip_registro' => $faker->ipv4(),
         ]);
     }
 }
