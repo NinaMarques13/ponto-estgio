@@ -509,14 +509,15 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-gerar-qr', function () {
 
-        const idEstagiario = $(this).data('identificador') || "0";
-        const urlUnica = "https://ponto-estagio.pm.pr.gov.br/registrar/" + idEstagiario;
+        const cpfdEstagiario = $(this).attr('data-identificador') || "0";
+
+        const dadoParaOQr = cpfdEstagiario;
     
         const container = document.getElementById("qrcodeCadastro");
         container.innerHTML = "";
     
         new QRCode(container, {
-            text: urlUnica,
+            text: dadoParaOQr,
             width: 220,
             height: 220
         });
@@ -613,15 +614,18 @@ $(document).ready(function () {
     $('#formEditarEstagiario').on('submit', function (e) {
         e.preventDefault();
         const index = $('#index_edicao').val();
+        const novoCpf = $('#cpf_editar').val();
         
         const tr = $('#tabela-estagiarios tr').eq(index);
         const colunas = tr.find('td');
 
         colunas.eq(0).text($('#nome_editar').val().toUpperCase());
-        colunas.eq(1).text($('#cpf_editar').val());
+        colunas.eq(1).text(novoCpf);
         colunas.eq(2).text($('#setor_editar').val().toUpperCase());
         colunas.eq(3).text($('#telefone_editar').val() || "---");
         colunas.eq(4).text($('#email_editar').val() || "---");
+
+        tr.find('.btn-gerar-qr').attr('data-identificador', novoCpf);
 
         bootstrap.Modal.getInstance(document.getElementById('modalEditarEstagiario')).hide();
         alert("Informações atualizadas com sucesso!");
