@@ -595,17 +595,14 @@ $(document).ready(function () {
     });
 
     $('#tabela-estagiarios').on('click', '.btn-editar-estagiario', function() {
-        const tr = $(this).closest('tr');
-        const index = tr.index(); 
+        const tr = $(this).closest('tr'); 
         const colunas = tr.find('td');
 
-        $('#nome_editar').val(colunas.eq(0).text());
-        $('#cpf_editar').val(colunas.eq(1).text());
-        $('#setor_editar').val(colunas.eq(2).text());
-        $('#telefone_editar').val(colunas.eq(3).text() === "---" ? "" : colunas.eq(3).text());
-        $('#email_editar').val(colunas.eq(4).text() === "---" ? "" : colunas.eq(4).text());
-
-        $('#index_edicao').val(index);
+        $('#nome_editar').val(colunas.eq(0).text().trim());
+        $('#cpf_editar').val(colunas.eq(1).text().trim());
+        $('#setor_editar').val(colunas.eq(2).text().trim());
+        $('#telefone_editar').val(colunas.eq(3).text().trim() === "---" ? "" : colunas.eq(3).text().trim());
+        $('#email_editar').val(colunas.eq(4).text().trim() === "---" ? "" : colunas.eq(4).text().trim());
 
         const modal = new bootstrap.Modal(document.getElementById('modalEditarEstagiario'));
         modal.show();
