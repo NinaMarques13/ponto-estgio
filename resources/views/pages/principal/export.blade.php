@@ -25,7 +25,7 @@
                                     @csrf
                                     <label class="form-label">Ano</label>
                                     <input type="number" name="data-ano" id="data-ano" class="form-control" min="2000"
-                                        max="2100" step="1" value="{{ date('Y') }}">
+                                        max="2100" step="1" value="">
                                 </form>
                             </div>
                             <div class="col">
@@ -209,10 +209,6 @@
                             <div class="col">
                                 <label>Hora Saída</label>
                                 <input type="time" id="edit-saida" class="form-control">
-                            </div>
-                            <div class="col">
-                                <label>Total Horas</label>
-                                <input type="text" id="edit-total-horas" class="form-control">
                             </div>
                         </div>
                         <div class="row mb-3">
