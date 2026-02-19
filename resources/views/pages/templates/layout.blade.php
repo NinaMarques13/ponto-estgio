@@ -47,10 +47,15 @@
 
       <div class="d-flex justify-content-between align-items-center p-3 footer-links">
         <div>
-          <a href="#">Ir para Ponto de Registro</a>
+          <a href="{{ route('inicio.index') }}">Ir para Ponto de Registro</a>
         </div>
         <div>
-          <a href="#" style="color: #dc3545;">Sair</a>
+          <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-link p-0" style="color: #dc3545; text-decoration: none;">
+              Sair
+            </button>
+          </form>
         </div>
       </div>
 
