@@ -50,6 +50,7 @@ class PontoHojeSeeder extends Seeder
         // Cria registro de eNTRADA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'entrada',
             'hr_registro' => $entrada,
             'ds_motivo' => 'entrada',
             'ip_registro' => $this->faker->ipv4(),
