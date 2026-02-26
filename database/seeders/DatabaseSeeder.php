@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
     }
 
     /**
-     * Gera um par de Entrada e Saída (4h ou 6h de duração)
+     * Gera um par de entrada e Saída (4h ou 6h de duração)
      */
     private function criarDiaDeTrabalho($estagiario, Carbon $data, $faker)
     {
@@ -60,22 +60,22 @@ class DatabaseSeeder extends Seeder
         // Calcula a saída baseada na entrada
         $saida = (clone $entrada)->addHours($cargaHoraria);
 
-        // Cria registro de ENTRADA
+        // Cria registro de eNTRADA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => 'Entrada', // Motivo fixo para o sistema reconhecer
+            'ds_motivo'     => 'entrada', // Motivo fixo para o sistema reconhecer
             'hr_registro'   => $entrada,
             'ip_registro'   => $faker->ipv4(),
-            'ds_observacao' => 'Entrada'
+            'ds_observacao' => 'entrada'
         ]);
 
         // Cria registro de SAÍDA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo'     => 'Saida', // Motivo fixo para o sistema reconhecer
+            'ds_motivo'     => 'saida', // Motivo fixo para o sistema reconhecer
             'hr_registro'   => $saida,
             'ip_registro'   => $faker->ipv4(),
-            'ds_observacao' => 'Entrada'
+            'ds_observacao' => 'entrada'
         ]);
     }
 
@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
      */
     private function criarOcorrencia($estagiario, Carbon $data, $faker)
     {
-        $motivosEspeciais = ['Falta', 'Dispensa', 'Recesso', 'Folga'];
+        $motivosEspeciais = ['falta', 'dispensa', 'recesso', 'folga'];
         $motivo = $motivosEspeciais[array_rand($motivosEspeciais)];
 
         RegistroPonto::create([

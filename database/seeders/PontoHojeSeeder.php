@@ -47,13 +47,13 @@ class PontoHojeSeeder extends Seeder
         // 3. Calcula a saída baseada na entrada
         $saida = (clone $entrada)->addHours($cargaHoraria);
 
-        // Cria registro de ENTRADA
+        // Cria registro de eNTRADA
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
-            'ds_motivo' => 'Entrada',
+            'ds_motivo' => 'entrada',
             'hr_registro' => $entrada,
             'ip_registro' => $this->faker->ipv4(),
-            'ds_observacao' => 'Entrada'
+            'ds_observacao' => 'entrada'
         ]);
         $saida = (clone $entrada)->addHours($cargaHoraria);
         $agora = Carbon::now();
@@ -61,24 +61,24 @@ class PontoHojeSeeder extends Seeder
         // Cria registro de SAÍDA
         // RegistroPonto::create([
         //         'estagiario_id' => $estagiario->id,
-        //         'ds_motivo' => 'Saida', // Sem acento, perfeito!
+        //         'ds_motivo' => 'saida', // Sem acento, perfeito!
         //         'hr_registro' => $saida,
         //         'ip_registro' => $this->faker->ipv4(),
         // ]);
         if ($saida->lessThan($agora) && rand(1, 100) > 10) {
             RegistroPonto::create([
                 'estagiario_id' => $estagiario->id,
-                'ds_motivo' => 'Saida', // Sem acento, perfeito!
+                'ds_motivo' => 'saida', // Sem acento, perfeito!
                 'hr_registro' => $saida,
                 'ip_registro' => $this->faker->ipv4(),
-                'ds_observacao' => 'Saida'
+                'ds_observacao' => 'saida'
             ]);
         }
     }
 
     private function gerarOcorrencia($estagiario)
     {
-        $motivosEspeciais = ['Falta', 'Dispensa', 'Recesso', 'Folga'];
+        $motivosEspeciais = ['falta', 'dispensa', 'recesso', 'folga'];
 
         // Escolhe um motivo aleatório da lista
         $motivo = $motivosEspeciais[array_rand($motivosEspeciais)];
