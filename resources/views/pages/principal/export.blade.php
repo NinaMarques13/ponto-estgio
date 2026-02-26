@@ -49,10 +49,6 @@
                                     <option value="Recesso">Recesso</option>
                                 </select>
                             </div>
-                            <div class="col">
-                                <button id="excel-btn">Excel</button>
-                                <button id="pdf-btn">PDF</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -151,7 +147,7 @@
                 </div>
             </div>
             <div class="row g-3 mb-2 mt-2">
-                <table class="table">
+                <table id="myTable" class="table">
                     <thead>
                         <tr class="table-primary">
                             <th>Data</th>
