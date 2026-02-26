@@ -17,9 +17,6 @@
   <div class="container home-container">
     <div class="card main-card shadow-lg p-0">
       <div class="card-body p-5 position-relative">
-
-        <img src="{{ asset('img/fundo-pmpr.png') }}" alt="PM PR Fundo" class="bg-watermark">
-
         <div class="text-center mb-4 position-relative">
           <img src="{{ asset('img/dgp.png') }}" alt="Logo DGP" class="img-fluid" style="height: 80px;">
           <h2 class="h6 mt-2 fw-bold" style="color: #0E622F;">Sistema de Estagiários</h2>
