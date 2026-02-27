@@ -43,7 +43,7 @@
                                 Saída</span>
                         </div>
 
-                        <div class="d-grid mb-2">
+                        <div class="d-grid gap-2">
                             <button id="registrarBtn" type="submit" class="btn btn-success btn-lg registrar-btn ">
                                 REGISTRAR
                             </button>
