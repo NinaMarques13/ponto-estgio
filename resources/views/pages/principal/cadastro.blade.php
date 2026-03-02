@@ -4,7 +4,7 @@
         <div class="container my-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="text-success fw-normal">Cadastro de Estagiários</h5>
-                <button class="btn btn-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalAdicionarEstagiario">Adicionar estagiário</button>
+                <button class="btn btn-bd-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalAdicionarEstagiario">Adicionar estagiário</button>
             </div>
 
             <div class="row g-3 mb-4">
@@ -20,7 +20,7 @@
             </div>
 
             <div class="table-responsive shadow-sm">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-bordered align-middle mb-0">
                     <thead class="table-header-custom">
                         <tr>
                             <th>Nome</th>
@@ -46,7 +46,7 @@
                                         data-identificador="">
                                         <i class="bi bi-qr-code"></i>
                                     </button>
-                                    <button class="btn btn-primary btn-sm border-0 btn-editar-estagiario">
+                                    <button class="btn btn-bd-primary btn-sm border-0 btn-editar-estagiario">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button class="btn btn-danger btn-sm border-0 btn-excluir-estagiario">
@@ -82,7 +82,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-light">
-                            <h5 class="modal-title text-success">Cadastrar Novo Estagiário</h5>
+                            <h5 class="modal-title text-pmp-azul">Cadastrar Novo Estagiário</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form id="formAdicionarEstagiario">
@@ -112,7 +112,7 @@
                             </div>
                             <div class="modal-footer bg-light">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-success px-4">Salvar Cadastro</button>
+                                <button type="submit" class="btn btn-bd-primary px-4">Salvar Cadastro</button>
                             </div>
                         </form>
                     </div>

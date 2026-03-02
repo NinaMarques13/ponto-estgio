@@ -14,7 +14,7 @@
 </head>
 
 <body class="home-body">
-  <div class="container home-container">
+  <div class="container home-container mt-5">
     <div class="card main-card shadow-lg p-0">
       <div class="card-body p-5 position-relative">
         <div class="text-center mb-4 position-relative">
@@ -33,7 +33,7 @@
         </nav>
 
         <hr class="mt-2 mb-5">
-        <div class="text-center mt-5 pt-5">
+        <div class="text-center mt-5">
           <div class="container">
             @yield('content')
           </div>
@@ -49,7 +49,7 @@
         <div>
           <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
             @csrf
-            <button type="submit" class="btn btn-link p-0" style="color: #dc3545; text-decoration: none;">
+            <button type="submit" class="btn btn-outline-danger px-2 py-1"; text-decoration: none;">
               Sair
             </button>
           </form>

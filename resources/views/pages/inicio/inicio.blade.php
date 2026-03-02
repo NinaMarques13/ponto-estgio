@@ -16,10 +16,10 @@
                 <i class="bi bi-person-circle me-1"></i>
                 Área Admin
             </a>
-        <div class="card ponto-card">
+        <div class="card ponto-card border-start border-end border-2 px-3">
             <div class="text-center pt-4 pb-3">
-                <img src="{{ asset('img/dgp_transparente.png') }}" alt="Brasão DGP" class="img-fluid brasao-topo">
-                <h1 class="ponto-titulo mt-3 mb-4">PONTO DE REGISTRO<br>DE ESTAGIÁRIOS</h1>
+                <img src="{{ asset('img/dgp_transparente.png') }}" alt="Brasão DGP" class="img-fluid brasao-topo" p->
+                <h1 class="ponto-titulo mt-4 mb-0">PONTO DE REGISTRO<br>DE ESTAGIÁRIOS</h1>
             </div>
             <form action="{{ route('registrar-ponto') }}" method="POST">
                 @csrf <div class="form-group">
@@ -37,10 +37,10 @@
                             <p class="text-intro">Primeiro registro do dia: </p>
                             <span id="entradaTxt" class="registro-link entrada-link active">Entrada</span>
                             |
-                            <span id="saidaTxt" class="registro-link saida-link">Segundo registro. Saída</span>
+                            <span id="saidaTxt" class="registro-link saida-link">Segundo registro: Saída</span>
                         </div>
 
-                        <div class="d-grid gap-2">
+                        <div class="d-grid mb-2">
                             <button id="registrarBtn" type="submit" class="btn btn-success btn-lg registrar-btn ">
                                 REGISTRAR
                             </button>

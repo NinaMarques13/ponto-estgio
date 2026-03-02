@@ -209,7 +209,7 @@ $(document).ready(function () {
                         <td>${motivoRegistro}</td>
                         <td>${setorEstagiario}</td>
                         <td>${observacao}</td>
-                        <td><button class="btn btn-sm btn-primary btn-editar" 
+                        <td><button class="btn btn-sm btn-bd-primary btn-editar" 
                         data-item='${JSON.stringify(item)}'>Editar</button>
                         </td>
                     </tr>
