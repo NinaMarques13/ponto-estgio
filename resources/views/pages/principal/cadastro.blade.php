@@ -35,26 +35,50 @@
                             <th class="text-center" title="Ações">Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabela-estagiarios" class="table">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button class="btn btn-green btn-sm text-white border-0 btn-gerar-qr"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#qrModalCadastro"
+                                        data-identificador="">
+                                        <i class="bi bi-qr-code"></i>
+                                    </button>
+                                    <button class="btn btn-bd-primary btn-sm border-0 btn-editar-estagiario">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm border-0 btn-excluir-estagiario">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="modal fade" id="qrModalCadastro" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-pmp-azul" title="QR code">QR Code do Estagiario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <div id="qrcodeCadastro"></div>
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-bd-primary" onclick="window.print();">
-                            <i class="bi bi-printer"></i> Imprimir QR Code
-                        </button>
+            <div class="modal fade" id="qrModalCadastro" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-pmp-azul">QR Code do Estagiario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body d-flex flex-column align-items-center justify-content-center text-center">
+                            <div id="qrcodeCadastro"></div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-bd-primary" onclick="window.print();">
+                                <i class="bi bi-printer"></i> Imprimir QR Code
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -67,11 +91,18 @@
                         <h5 class="modal-title text-pmp-azul" title="Cadastrar novo estagiário">Cadastrar Novo Estagiário</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Fechar"></button>
                     </div>
-                    <form id="formAdicionarEstagiario">
-                        @csrf
-                        @method('put')
-                        <div class="modal-body">
-                            <div class="row g-3">
+                </div>
+            </div>
+            
+            <div class="modal fade" id="modalEditarEstagiario" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title text-pmp-azul">Editar Informações do Estagiário</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="formEditarEstagiario">
+                            <div class="modal-body">
                                 <input type="hidden" id="index_edicao" value="">
                                 <div class="col-12">
                                     <label class="form-label fw-bold text-secondary" title="Nome">Nome<span
@@ -102,12 +133,12 @@
                                         placeholder="exemplo@pm.pr.gov.br">
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer bg-light">
-                            <button type="button" class="btn btn-excluir-estagiario" data-bs-dismiss="modal" title="Cancelar">Cancelar</button>
-                            <button type="submit" class="btn btn-bd-primary px-4" title="Salvar">Salvar Cadastro</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-bd-primary px-4">Atualizar Cadastro</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

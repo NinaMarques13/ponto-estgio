@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600,700&display=swap');
 
 :root {
     --cor-primaria: #004a22;
@@ -216,8 +216,12 @@ body {
 }
 
 .table-header-custom th {
-    background-color: rgb(191, 231, 200) !important;
+    background-color: rgb(135,206,250) !important;
     color: rgb(0, 0, 0) !important;
+}
+
+.nav-link.active {
+    font-weight: 700;
 }
 
 @media print {
