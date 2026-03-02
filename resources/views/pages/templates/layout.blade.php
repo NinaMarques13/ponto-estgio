@@ -14,7 +14,7 @@
 
 <body class="home-body">
   <div class="container home-container mt-5">
-    <div class="card main-card shadow-lg rounded-3">
+    <div class="card main-card shadow-lg p-0">
       <div class="card-body p-5 position-relative">
         <div class="text-center mb-4 position-relative">
           <img src="{{ asset('img/dgp_transparente.png') }}" alt="Logo DGP" class="img-fluid" style="height: 80px;">
@@ -43,6 +43,22 @@
           <div class="container">
             @yield('content')
           </div>
+
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center p-3 footer-links">
+        <div>
+          <a href="{{ route('inicio.index') }}">Ir para Ponto de Registro</a>
+        </div>
+        <div>
+          <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-outline-danger px-2 py-1"; text-decoration: none;">
+              Sair
+            </button>
+          </form>
         </div>
       </div>
     </div>

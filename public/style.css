@@ -215,17 +215,9 @@ body {
     color: #0091ca !important;
 }
 
-.nav-link.active {
-    font-weight: 700;
-}
-
-.page-item.active .page-link {
-    background-color: rgb(135, 206, 250) !important;
-    border-color: rgb(125, 192, 235) !important;
-}
-
-.page-link {
-    color: #000000 !important;
+.table-header-custom th {
+    background-color: rgb(191, 231, 200) !important;
+    color: rgb(0, 0, 0) !important;
 }
 
 @media print {
