@@ -40,7 +40,7 @@
                             <td></td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-purple btn-sm text-white border-0 btn-gerar-qr"
+                                    <button class="btn btn-green btn-sm text-white border-0 btn-gerar-qr"
                                         data-bs-toggle="modal"
                                         data-bs-target="#qrModalCadastro"
                                         data-identificador="">
@@ -63,14 +63,14 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">QR Code do Estagiario</h5>
+                            <h5 class="modal-title text-pmp-azul">QR Code do Estagiario</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body d-flex flex-column align-items-center justify-content-center text-center">
                             <div id="qrcodeCadastro"></div>
                         </div>
                         <div class="modal-footer justify-content-center">
-                            <button type="button" class="btn btn-success" onclick="window.print();">
+                            <button type="button" class="btn btn-bd-primary" onclick="window.print();">
                                 <i class="bi bi-printer"></i> Imprimir QR Code
                             </button>
                         </div>
@@ -123,7 +123,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-light">
-                            <h5 class="modal-title text-primary">Editar Informações do Estagiário</h5>
+                            <h5 class="modal-title text-pmp-azul">Editar Informações do Estagiário</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form id="formEditarEstagiario">
@@ -154,7 +154,7 @@
                             </div>
                             <div class="modal-footer bg-light">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary px-4">Atualizar Cadastro</button>
+                                <button type="submit" class="btn btn-bd-primary px-4">Atualizar Cadastro</button>
                             </div>
                         </form>
                     </div>

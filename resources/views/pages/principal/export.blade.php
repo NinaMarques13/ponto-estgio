@@ -154,7 +154,7 @@
                         <div class="row g-3 mb-2 mt-2">
                             <table class="table table-bordered">
                                 <thead>
-                                    <tr class="table-primary">
+                                    <tr class="table-header-custom">
                                         <th>Data</th>
                                         <th>Hora Entrada</th>
                                         <th>Hora Saída</th>
