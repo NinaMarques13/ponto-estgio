@@ -39,11 +39,10 @@
                             <p class="text-intro">Primeiro registro do dia: </p>
                             <span id="entradaTxt" class="registro-link entrada-link active">Entrada</span>
                             |
-                            <span id="saidaTxt" class="registro-link saida-link" title="Saida">Segundo registro:
-                                Saída</span>
+                            <span id="saidaTxt" class="registro-link saida-link">Segundo registro: Saída</span>
                         </div>
 
-                        <div class="d-grid gap-2">
+                        <div class="d-grid mb-2">
                             <button id="registrarBtn" type="submit" class="btn btn-success btn-lg registrar-btn ">
                                 REGISTRAR
                             </button>
