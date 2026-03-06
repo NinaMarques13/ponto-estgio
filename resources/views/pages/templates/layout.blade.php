@@ -24,18 +24,15 @@
         <nav class="navbar navbar-expand p-0 navbar-top-menu">
           <div class="container-fluid justify-content-start">
             <div class="navbar-nav">
-              <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" 
-                href="{{ route('dashboard') }}">
+              <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                 Home
               </a>
 
-              <a class="nav-link {{ request()->routeIs('cadastro') ? 'active' : '' }}" 
-                href="{{ route('cadastro') }}">
+              <a class="nav-link {{ request()->routeIs('cadastro') ? 'active' : '' }}" href="{{ route('cadastro') }}">
                 Cadastro de Estagiários
               </a>
 
-              <a class="nav-link {{ request()->routeIs('export') ? 'active' : '' }}" 
-                href="{{ route('export') }}">
+              <a class="nav-link {{ request()->routeIs('export') ? 'active' : '' }}" href="{{ route('export') }}">
                 Planilha de Exportação
               </a>
             </div>
