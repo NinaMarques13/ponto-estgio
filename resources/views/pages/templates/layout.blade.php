@@ -24,18 +24,15 @@
         <nav class="navbar navbar-expand p-0 navbar-top-menu">
           <div class="container-fluid justify-content-start">
             <div class="navbar-nav">
-              <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" 
-                href="{{ route('dashboard') }}">
+              <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                 Home
               </a>
 
-              <a class="nav-link {{ request()->routeIs('cadastro') ? 'active' : '' }}" 
-                href="{{ route('cadastro') }}">
+              <a class="nav-link {{ request()->routeIs('cadastro') ? 'active' : '' }}" href="{{ route('cadastro') }}">
                 Cadastro de Estagiários
               </a>
 
-              <a class="nav-link {{ request()->routeIs('export') ? 'active' : '' }}" 
-                href="{{ route('export') }}">
+              <a class="nav-link {{ request()->routeIs('export') ? 'active' : '' }}" href="{{ route('export') }}">
                 Planilha de Exportação
               </a>
             </div>
@@ -50,7 +47,23 @@
       </div>
     </div>
   </div>
-  @yield('modal')
+
+  <div class="footer-links">
+    <div class="container d-flex justify-content-between aling-itens-center p-3">
+      <div>
+        <a href="{{ route('inicio.index') }}">Ir para Ponto de Registro</a>
+      </div>
+      <div>
+        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+          @csrf
+          <button type="submit" class="btn btn-outline-danger px-2 py-1" ; text-decoration: none;">
+            Sair
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   
         <div class="footer-links">
