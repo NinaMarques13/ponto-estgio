@@ -56,4 +56,6 @@ Route::put('/atualizar-estagiarios/{id}', [EstagiariosController::class, 'update
 Route::get('/estagiarios-cadastrados',[EstagiariosController::class,'listagemCadastrados'])->name('estagiarios-cadastrados');
 Route::post('/cadastrar-estagiario',[EstagiariosController::class,'storeEstagiario'])->name('estagiarios.store');
 Route::put('/atualizar-cadastro/{id}',[EstagiariosController::class,'updateCadastro'])->name('estagiarios.update');
+Route::put('/desativar-estagiario/{id}', [EstagiariosController::class, 'desativarCadastro'])->name('estagiarios.desativar');
+
 

@@ -430,7 +430,7 @@ class EstagiariosController extends Controller
     public function listagemCadastrados(Request $request)
     {
         try {
-            $query = Estagiario::query();
+            $query = Estagiario::query()->where('ds_situacao', 'true');
 
             return DataTables::of($query)
                 ->addColumn('action', function ($row) {
@@ -527,6 +527,16 @@ class EstagiariosController extends Controller
         ]);
 
 
+    }
+
+    public function desativarCadastro (Request $request, $id)
+    {
+        $estagiario = Estagiario::findOrFail($id);
+
+        $estagiario->update([
+            'ds_situacao' => false
+        ]);
+        return response()->json(['message' => 'Estagiário excluído com sucesso!']);
     }
 
 }

@@ -816,6 +816,46 @@ $("#telefone_cadastro").on("input", function () {
     $(this).val(valor);
 });
 
+$(document).on("click", ".btn-excluir-estagiario", function (e) {
+    e.preventDefault();
+
+    let idLimpo = $(this).data("identificador");
+
+    console.log("ID para exclusão:", idLimpo);
+
+    if (!idLimpo) {
+        alert("Erro: Não foi possível recuperar o ID do estagiário.");
+        return;
+    }
+
+    if (confirm("Tem certeza que deseja excluir este estagiário?")) {
+        const payload = {
+            _token: $('input[name="_token"]').val(),
+            _method: "PUT",
+        };
+
+        $.ajax({
+            url: "/desativar-estagiario/" + idLimpo,
+            type: "POST",
+            data: payload,
+
+            success: function (response) {
+                alert(response.message);
+
+                if (typeof tabelaCadastrados !== "undefined") {
+                    tabelaCadastrados.ajax.reload();
+                } else {
+                    location.reload();
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                alert("Erro ao excluir registro.");
+            },
+        });
+    }
+});
+
 // $("#modalAdicionarEstagiario").on("hidden.bs.modal", function () {
 //     $(this).find("form")[0].reset();
 // });
