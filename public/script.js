@@ -1,78 +1,135 @@
 $(document).ready(function () {
-    // Função auxiliar para limpar o CPF, removendo todos os caracteres não-dígitos
-    const limparCPF = (cpf) => {
-        return cpf.replace(/[^\d]/g, "");
-    };
+    if ($.fn.DataTable) {
+        var tabelaCadastrados = $("#tabela-estagiarios-cadastrados").DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "/estagiarios-cadastrados",
+            columns: [
+                { data: "id", name: "id", visible: false },
+                { data: "nm_estagiarios", name: "nm_estagiarios" },
+                { data: "nr_matricula", name: "nr_matricula" },
+                { data: "nm_setor", name: "nm_setor" },
+                { data: "nr_telefone", name: "nr_telefone" },
+                { data: "nm_email", name: "nm_email" },
+                {
+                    data: "action",
+                    name: "action",
+                    orderable: false,
+                    searchable: false,
+                },
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
+            },
+        });
+    } else {
+        console.error("O plugin DataTable não foi carregado corretamente.");
+    }
 
-    
-    const aplicarMascaraCPF = (valor) => {
-        valor = limparCPF(valor); 
-        valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
-        valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
-        valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-        
-        if (valor.length > 14) {
-            valor = valor.substring(0, 14);
-        }
-        return valor;
-    };
+    // var tabelaEstagiarios = $('#tabela-estagiarios-cadastro').DataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     ajax: {
+    //         url: "/estagiarios-cadastrados",
+    //         data: function(d) {
+    //             d.ano = $("#data-ano").val();
+    //             d.mes = $("#data-mes").val();
+    //         }
+    //     },
+    //     columns: [
+    //         {data: 'nm_estagiarios', name: 'nm_estagiarios'},
+    //         {data: 'nr_cpf', name: 'nrcpf'},
+    //         {data: 'nm_setor', name:'nm_setor'},
+    //         {data: 'nr_telefone', name:'nr_telefone'},
+    //         {data: 'nm_email', name: 'nm_email'},
+    //         {
+    //             data: 'action',
+    //             name: 'action',
+    //             orderable: false,
+    //             serchable: false,
+    //             className: "text-center"
+    //         }
+    //     ],
+    //     language: {
+    //         url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+    //     }
+    // });
+    // $("#data-ano, #data-mes").change(function() {
+    //     tabelaEstagiarios.ajax.reload();
+    // })
 
-    // 0. Aplicar Máscara ao Input do CPF
-    $("#cpf").on("keyup", function () {
-        // Aplica a máscara a cada tecla digitada
-        $(this).val(aplicarMascaraCPF($(this).val()));
-    });
+    // $(document).ready(function () {
+    //     // Função auxiliar para limpar o CPF, removendo todos os caracteres não-dígitos
+    //     const limparCPF = (cpf) => {
+    //         return cpf.replace(/[^\d]/g, "");
+    //     };
 
-    // -------------------------------------------
+    //     const aplicarMascaraCPF = (valor) => {
+    //         valor = limparCPF(valor);
+    //         valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+    //         valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+    //         valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 
-    // 1. Alternar seleção Entrada/Saída
-    $(".registro-link").on("click", function (e) {
-        e.preventDefault();
+    //         if (valor.length > 14) {
+    //             valor = valor.substring(0, 14);
+    //         }
+    //         return valor;
+    //     };
 
-        $(".registro-link").removeClass("active");
-        $(this).addClass("active");
+    //     // 0. Aplicar Máscara ao Input do CPF
+    //     $("#cpf").on("keyup", function () {
+    //         // Aplica a máscara a cada tecla digitada
+    //         $(this).val(aplicarMascaraCPF($(this).val()));
+    //     });
 
-        let acao = $(this).text().includes("Entrada") ? "Entrada" : "Saída";
-        console.log("Ação selecionada:", acao);
-    });
+    //     // -------------------------------------------
 
-    // 2. Lógica do botão REGISTRAR
-    $("#registrarBtn").on("click", function () {
-        // Pega o valor do CPF (com máscara) e limpa (apenas números)
-        let cpfBruto = $("#cpf").val().trim();
-        let cpf = limparCPF(cpfBruto);
+    //     // 1. Alternar seleção Entrada/Saída
+    //     $(".registro-link").on("click", function (e) {
+    //         e.preventDefault();
 
-        // Pega a ação selecionada (Entrada ou Saída)
-        let acaoSelecionada = $(".registro-link.active")
-            .text()
-            .includes("Entrada")
-            ? "Entrada"
-            : "Saída";
+    //         $(".registro-link").removeClass("active");
+    //         $(this).addClass("active");
 
-       
-        if (cpf === "") {
-            alert("Por favor, digite o CPF.");
-            $("#cpf").focus();
-            return;
-        }
+    //         let acao = $(this).text().includes("Entrada") ? "Entrada" : "Saída";
+    //         console.log("Ação selecionada:", acao);
+    //     });
 
-        if (cpf.length !== 11) {
-            alert("O CPF deve conter exatamente 11 dígitos.");
-            $("#cpf").focus();
-            return;
-        }
-        
+    //     // 2. Lógica do botão REGISTRAR
+    //     $("#registrarBtn").on("click", function () {
+    //         // Pega o valor do CPF (com máscara) e limpa (apenas números)
+    //         let cpfBruto = $("#cpf").val().trim();
+    //         let cpf = limparCPF(cpfBruto);
 
-        // // Simulação do processamento de registro
-        // console.log(`Registrando ${acaoSelecionada} para o CPF: ${cpf}`);
+    //         // Pega a ação selecionada (Entrada ou Saída)
+    //         let acaoSelecionada = $(".registro-link.active")
+    //             .text()
+    //             .includes("Entrada")
+    //             ? "Entrada"
+    //             : "Saída";
 
-        // // Simulação de sucesso
-        // setTimeout(() => {
-        //      alert(`Ponto de ${acaoSelecionada} para o CPF ${cpf} SIMULADO com sucesso!`);
-        //      $('#cpf').val(''); // Limpa o campo
-        // }, 300);
+    //         if (cpf === "") {
+    //             alert("Por favor, digite o CPF.");
+    //             $("#cpf").focus();
+    //             return;
+    //         }
 
-        /*
+    //         if (cpf.length !== 11) {
+    //             alert("O CPF deve conter exatamente 11 dígitos.");
+    //             $("#cpf").focus();
+    //             return;
+    //         }
+
+    // // Simulação do processamento de registro
+    // console.log(`Registrando ${acaoSelecionada} para o CPF: ${cpf}`);
+
+    // // Simulação de sucesso
+    // setTimeout(() => {
+    //      alert(`Ponto de ${acaoSelecionada} para o CPF ${cpf} SIMULADO com sucesso!`);
+    //      $('#cpf').val(''); // Limpa o campo
+    // }, 300);
+
+    /*
         // Lógica REAL de AJAX para enviar os dados para o servidor:
         // Exemplo:
         // $.ajax({
@@ -85,7 +142,7 @@ $(document).ready(function () {
         //     ...
         // });
         */
-    });
+    // });
 
     // 3. Ação para o ícone da câmera (simulação)
     $(".camera-icon").on("click", function () {
@@ -100,7 +157,7 @@ $(document).ready(function () {
         $(".conteudo-aba." + type).fadeIn();
     });
     carregarSelectEstagiarios();
-    carregarListaEstagiarios();
+    // carregarListaEstagiarios();
     cardEstagiarios();
     cardRegistros();
     cardRecessos();
@@ -507,184 +564,278 @@ $(document).ready(function () {
         });
     }
 
-    $(document).on('click', '.btn-gerar-qr', function () {
-
-        const cpfdEstagiario = $(this).attr('data-identificador') || "0";
+    $(document).on("click", ".btn-gerar-qr", function () {
+        const cpfdEstagiario = $(this).attr("data-identificador") || "0";
 
         const dadoParaOQr = cpfdEstagiario;
-    
+
         const container = document.getElementById("qrcodeCadastro");
         container.innerHTML = "";
-    
+
         new QRCode(container, {
             text: dadoParaOQr,
             width: 220,
-            height: 220
+            height: 220,
         });
     });
-    
-    $('#formAdicionarEstagiario').on('submit', function (e) {
+
+    var tabelaCadastrados = $("#tabela-estagiarios-listagem").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "/estagiarios-cadastrados",
+        columns: [
+            { data: "id", name: "id" },
+            { data: "nm_estagiarios", name: "nm_estagiarios" },
+            { data: "nr_matricula", name: "nr_matricula" },
+            { data: "nm_setor", name: "nm_setor" },
+            { data: "nr_telefone", name: "nr_telefone" },
+            {
+                data: "action",
+                name: "action",
+                orderable: false,
+                serchable: false,
+            },
+        ],
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json",
+        },
+    });
+    $("#formAdicionarEstagiario").on("submit", function (e) {
         e.preventDefault();
-        
-        const dados = {
-            nome: $('#nome_cadastro').val().toUpperCase(),
-            cpf: $('#cpf_cadastro').val(),
-            setor: $('#setor_cadastro').val().toUpperCase(),
-            telefone: $('#telefone_cadastro').val() || "---",
-            email: $('#email_cadastro').val() || "---"
+        let token = $('input[name="_token"]').val();
+
+        let payload = {
+            _token: token,
+            nm_estagiarios: $("#nome_cadastro").val(),
+            nr_matricula: $("#cpf_cadastro").val(),
+            nm_setor: $("#setor_cadastro").val(),
+            nr_telefone: $("#telefone_cadastro").val(),
+            nm_email: $("#email_cadastro").val(),
         };
-        
-        const tr = document.createElement('tr');
-    
-        const criarColuna = (texto) => {
-            const td = document.createElement('td');
-            td.textContent = texto;
-            return td;
-        };
-        
-        tr.appendChild(criarColuna(dados.nome));
-        tr.appendChild(criarColuna(dados.cpf));
-        tr.appendChild(criarColuna(dados.setor));
-        tr.appendChild(criarColuna(dados.telefone));
-        tr.appendChild(criarColuna(dados.email));
-        
-        const tdAcoes = document.createElement('td');
-        tdAcoes.className = "text-center";
-    
-        const divGroup = document.createElement('div');
-        divGroup.className = "d-flex justify-content-center gap-2";
-    
-        const criarBotao = (classes, icone) => {
-            const btn = document.createElement('button');
-            btn.className = `btn btn-sm border-0 ${classes}`;
-            
-            const i = document.createElement('i');
-            i.className = `bi bi-${icone}`;
-            
-            btn.appendChild(i);
-            return btn;
-        };
-    
-        const btnQr = criarBotao('btn-purple text-white', 'qr-code');
-        btnQr.setAttribute('data-bs-toggle', 'modal');
-        btnQr.setAttribute('data-bs-target', '#qrModalCadastro');
-        btnQr.setAttribute('data-identificador', dados.cpf);
-        btnQr.classList.add('btn-gerar-qr');
-    
-        const btnEdit = criarBotao('btn-primary btn-editar-estagiario', 'pencil-square');
-        const btnDel = criarBotao('btn-danger btn-excluir-estagiario', 'trash');
+        console.log(payload);
 
-        divGroup.appendChild(btnQr);
-        divGroup.appendChild(btnEdit);
-        divGroup.appendChild(btnDel);
-        tdAcoes.appendChild(divGroup);
-        tr.appendChild(tdAcoes);
-    
-        const corpoTabela = $("#tabela-estagiarios");
-        
-        if (corpoTabela.find('tr').first().find('td').first().text().trim() === "") {
-            corpoTabela.empty();
-        }
-        
-        corpoTabela.append(tr);
-        
-        bootstrap.Modal.getInstance(document.getElementById('modalAdicionarEstagiario')).hide();
-        this.reset();
-        
-        alert("Estagiário adicionado com sucesso!");
-    });
-
-    $('#tabela-estagiarios').on('click', '.btn-editar-estagiario', function() {
-        const tr = $(this).closest('tr'); 
-        const colunas = tr.find('td');
-
-        $('#nome_editar').val(colunas.eq(0).text().trim());
-        $('#cpf_editar').val(colunas.eq(1).text().trim());
-        $('#setor_editar').val(colunas.eq(2).text().trim());
-        $('#telefone_editar').val(colunas.eq(3).text().trim() === "---" ? "" : colunas.eq(3).text().trim());
-        $('#email_editar').val(colunas.eq(4).text().trim() === "---" ? "" : colunas.eq(4).text().trim());
-
-        const modal = new bootstrap.Modal(document.getElementById('modalEditarEstagiario'));
-        modal.show();
-    });
-
-    $('#formEditarEstagiario').on('submit', function (e) {
-        e.preventDefault();
-        const index = $('#index_edicao').val();
-        const novoCpf = $('#cpf_editar').val();
-        
-        const tr = $('#tabela-estagiarios tr').eq(index);
-        const colunas = tr.find('td');
-
-        colunas.eq(0).text($('#nome_editar').val().toUpperCase());
-        colunas.eq(1).text(novoCpf);
-        colunas.eq(2).text($('#setor_editar').val().toUpperCase());
-        colunas.eq(3).text($('#telefone_editar').val() || "---");
-        colunas.eq(4).text($('#email_editar').val() || "---");
-
-        tr.find('.btn-gerar-qr').attr('data-identificador', novoCpf);
-
-        bootstrap.Modal.getInstance(document.getElementById('modalEditarEstagiario')).hide();
-        alert("Informações atualizadas com sucesso!");
-    });
-    
-    $('#cpf_cadastro').on('input', function() {
-
-        let valor = $(this).val().replace(/\D/g, '');
-        
-        if (valor.length > 11) {
-            valor = valor.substring(0, 11);
-        }
-        
-        $(this).val(valor);
-    });
-    
-    $('#telefone_cadastro').on('input', function() {
-
-        let valor = $(this).val().replace(/\D/g, '');
-        
-        if (valor.length > 11) {
-            valor = valor.substring(0, 11);
-        }
-        
-        $(this).val(valor);
-    });
-
-    $('#modalAdicionarEstagiario').on('hidden.bs.modal', function () {
-        $(this).find('form')[0].reset();
-        
-    });
-    
-    $('#tabela-estagiarios').on('click', '.btn-excluir-estagiario', function() {
-        
-        if (confirm("Tem certeza que deseja excluir permanentemente este estagiário?")) {
-            
-            const linhaParaRemover = $(this).closest('tr');
-            
-            linhaParaRemover.remove();
-
-            console.log("Estagiário removido da listagem.");
-        }
-    });
-    
-    $("#buscaNome").on("keyup", function() {
-        let valor = $(this).val().toLowerCase(); 
-        
-        $("#tabela-estagiarios tr").filter(function() {
-            
-            let nomeEstagiario = $(this).find("td:first").text().toLowerCase();
-            
-            $(this).toggle(nomeEstagiario.indexOf(valor) > -1);
-        });
-    });
-    
-    $("#buscaCPF").on("keyup", function() {
-        let valor = limparCPF($(this).val()); 
-        
-        $("#tabela-estagiarios tr").filter(function() {
-            
-            let cpfTabela = limparCPF($(this).find("td:nth-child(2)").text());
-            $(this).toggle(cpfTabela.indexOf(valor) > -1);
+        $.ajax({
+            url: "/cadastrar-estagiario",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
+                Accept: "application/json",
+            },
+            data: payload,
+            success: function (e) {
+                alert("Cadastro concluído!");
+                $("#modalAdicionarEstagiario").modal("hide");
+                tabelaCadastrados.ajax.reload();
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                alert("Erro ao cadastrar.");
+            },
         });
     });
 });
+
+// $('#formAdicionarEstagiario').on('submit', function (e) {
+//     e.preventDefault();
+
+//     const dados = {
+//         nome: $('#nome_cadastro').val().toUpperCase(),
+//         cpf: $('#cpf_cadastro').val(),
+//         setor: $('#setor_cadastro').val().toUpperCase(),
+//         telefone: $('#telefone_cadastro').val() || "---",
+//         email: $('#email_cadastro').val() || "---"
+//     };
+
+//     const tr = document.createElement('tr');
+
+//     const criarColuna = (texto) => {
+//         const td = document.createElement('td');
+//         td.textContent = texto;
+//         return td;
+//     };
+
+//     tr.appendChild(criarColuna(dados.nome));
+//     tr.appendChild(criarColuna(dados.cpf));
+//     tr.appendChild(criarColuna(dados.setor));
+//     tr.appendChild(criarColuna(dados.telefone));
+//     tr.appendChild(criarColuna(dados.email));
+
+//     const tdAcoes = document.createElement('td');
+//     tdAcoes.className = "text-center";
+
+//     const divGroup = document.createElement('div');
+//     divGroup.className = "d-flex justify-content-center gap-2";
+
+//     const criarBotao = (classes, icone) => {
+//         const btn = document.createElement('button');
+//         btn.className = `btn btn-sm border-0 ${classes}`;
+
+//         const i = document.createElement('i');
+//         i.className = `bi bi-${icone}`;
+
+//         btn.appendChild(i);
+//         return btn;
+//     };
+
+//     const btnQr = criarBotao('btn-purple text-white', 'qr-code');
+//     btnQr.setAttribute('data-bs-toggle', 'modal');
+//     btnQr.setAttribute('data-bs-target', '#qrModalCadastro');
+//     btnQr.setAttribute('data-identificador', dados.cpf);
+//     btnQr.classList.add('btn-gerar-qr');
+
+//     const btnEdit = criarBotao('btn-primary btn-editar-estagiario', 'pencil-square');
+//     const btnDel = criarBotao('btn-danger btn-excluir-estagiario', 'trash');
+
+//     divGroup.appendChild(btnQr);
+//     divGroup.appendChild(btnEdit);
+//     divGroup.appendChild(btnDel);
+//     tdAcoes.appendChild(divGroup);
+//     tr.appendChild(tdAcoes);
+
+//     const corpoTabela = $("#tabela-estagiarios");
+
+//     if (corpoTabela.find('tr').first().find('td').first().text().trim() === "") {
+//         corpoTabela.empty();
+//     }
+
+//     corpoTabela.append(tr);
+
+//     bootstrap.Modal.getInstance(document.getElementById('modalAdicionarEstagiario')).hide();
+//     this.reset();
+
+//     alert("Estagiário adicionado com sucesso!");
+// });
+
+$("#tabela-estagiarios-cadastrados").on(
+    "click",
+    ".btn-editar-estagiario",
+    function (e) {
+        e.preventDefault();
+
+        const idParaEditar =
+            $(this).attr("data-identificador") || $(this).data("identificador");
+        const table = $("#tabela-estagiarios-cadastrados").DataTable();
+        const tr = $(this).closest("tr");
+        const data = table.row(tr).data();
+
+        console.log("DADOS DISPONÍVEIS NA LINHA:", data);
+
+        if (idParaEditar) {
+            $("#id_estagiario_editar").val(idParaEditar);
+
+            $("#nome_editar").val(data.nm_estagiarios || "");
+            $("#cpf_editar").val(data.nr_matricula || "");
+            $("#setor_editar").val(data.nm_setor || "");
+            $("#telefone_editar").val(data.nr_telefone || "");
+            $("#email_editar").val(data.nm_email || "");
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("modalEditarEstagiario"),
+            );
+            modal.show();
+        } else {
+            alert(
+                "Erro: O DataTable não forneceu um ID válido para esta linha.",
+            );
+            console.error("Objeto data não possui ID:", data);
+        }
+    },
+);
+
+$("#formEditarEstagiario").on("submit", function (e) {
+    e.preventDefault();
+
+    const inputId = document.getElementById("id_estagiario_editar");
+    let idLimpo = inputId.value.toString().replace(/\D/g, "");
+
+    console.log("ID RECUPERADO DO INPUT:", inputId.value);
+    console.log("DEBUG - VALOR ENVIADO:", idLimpo);
+
+    if (!idLimpo) {
+        alert("Erro: ID não identificado.");
+        return;
+    }
+
+    const payload = {
+        _token: $('input[name="_token"]').val(),
+        _method: "PUT",
+        nome: $("#nome_editar").val(),
+        cpf: $("#cpf_editar").val(),
+        setor: $("#setor_editar").val(),
+        telefone: $("#telefone_editar").val(),
+        email: $("#email_editar").val(),
+    };
+
+    $.ajax({
+        url: "/atualizar-cadastro/" + idLimpo,
+        type: "POST",
+        data: payload,
+        dataType: "json",
+        success: function (response) {
+            alert("Sucesso: Estagiário atualizado!");
+            location.reload();
+            console.log(response);
+        },
+        error: function (xhr) {
+            let erroMsg = "Erro desconhecido no servidor.";
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                erroMsg = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                try {
+                    const resp = JSON.parse(xhr.responseText);
+                    erroMsg = resp.message || erroMsg;
+                } catch (e) {
+                    erroMsg = "Erro crítico (500) no servidor.";
+                }
+            }
+
+            alert("Falha ao salvar: " + erroMsg);
+            console.error("Detalhes do erro:", xhr);
+        },
+    });
+});
+
+$("#cpf_cadastro").on("input", function () {
+    let valor = $(this).val().replace(/\D/g, "");
+
+    if (valor.length > 11) {
+        valor = valor.substring(0, 11);
+    }
+
+    $(this).val(valor);
+});
+
+$("#telefone_cadastro").on("input", function () {
+    let valor = $(this).val().replace(/\D/g, "");
+
+    if (valor.length > 11) {
+        valor = valor.substring(0, 11);
+    }
+
+    $(this).val(valor);
+});
+
+// $("#modalAdicionarEstagiario").on("hidden.bs.modal", function () {
+//     $(this).find("form")[0].reset();
+// });
+
+// $("#buscaNome").on("keyup", function() {
+//     let valor = $(this).val().toLowerCase();
+
+//     $("#tabela-estagiarios tr").filter(function() {
+
+//         let nomeEstagiario = $(this).find("td:first").text().toLowerCase();
+
+//         $(this).toggle(nomeEstagiario.indexOf(valor) > -1);
+//     });
+// });
+
+// $("#buscaCPF").on("keyup", function () {
+//     let valor = limparCPF($(this).val());
+
+//     $("#tabela-estagiarios tr").filter(function () {
+//         let cpfTabela = limparCPF($(this).find("td:nth-child(2)").text());
+//         $(this).toggle(cpfTabela.indexOf(valor) > -1);
+//     });
+// });

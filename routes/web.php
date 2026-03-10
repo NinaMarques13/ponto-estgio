@@ -3,18 +3,22 @@
 // use Illuminate\Support\Facades\App;
 
 use App\Models\Estagiario;
+use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\EstagiariosController;
-use app\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\LoginController;
 use League\Uri\Http;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Yajra\DataTables\DataTables;
 
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('views/pages/inicio', function () {
-    return view('pages.inicio.inicio');
-});
+// Route::get('views/pages/inicio', function () {
+//     return view('pages.inicio.inicio');
+// });
 
 // Rotas para o admin.
 Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
@@ -24,9 +28,7 @@ Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.log
 Route::get('views/login/adm', function () {
     return view('pages.login.adm');
 });
-Route::get('views/principal/export', function () {
-    return view('pages.principal.export');
-});
+
 Route::get('views/templates/layout', function () {
     return view('pages.templates.layout');
 })->name('layout');
@@ -40,7 +42,7 @@ Route::get('views/principal/export', function () {
     return view('pages.principal.export');
 })->name('export');
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
-route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
+Route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
 Route::get('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
 Route::get('/relatorio-registros', [EstagiariosController::class, 'relatorioRegistros'])->name('relatorio-registros');
 Route::get('/relatorio-recessos', [EstagiariosController::class, 'relatorioRecesso'])->name('relatorio-recessos');
@@ -51,3 +53,7 @@ Route::get('/relatorio-faltas', [EstagiariosController::class, 'relatorioFalta']
 Route::any('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::get('/pesquisar-estagiarios', [EstagiariosController::class, 'pesquisarEstagiarios'])->name('filtrar.estagiarios');
 Route::put('/atualizar-estagiarios/{id}', [EstagiariosController::class, 'update'])->name('atualizar-estagiarios');
+Route::get('/estagiarios-cadastrados',[EstagiariosController::class,'listagemCadastrados'])->name('estagiarios-cadastrados');
+Route::post('/cadastrar-estagiario',[EstagiariosController::class,'storeEstagiario'])->name('estagiarios.store');
+Route::put('/atualizar-cadastro/{id}',[EstagiariosController::class,'updateCadastro'])->name('estagiarios.update');
+

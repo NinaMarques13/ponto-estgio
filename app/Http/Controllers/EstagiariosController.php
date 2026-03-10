@@ -10,6 +10,8 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Log;
 
 
 class EstagiariosController extends Controller
@@ -208,12 +210,12 @@ class EstagiariosController extends Controller
             $query->where('estagiario_id', $request->estagiario_id);
         }
         $qtdFolgas = $query->count();
-        return response()->json(['total' => $qtdFolgas]);
+        // return response()->json(['total' => $qtdFolgas]);
 
 
-        $qtdFolgas = RegistroPonto::whereDate('hr_registro', Carbon::today())
-            ->where('ds_motivo', 'Folga')
-            ->count();
+        // $qtdFolgas = RegistroPonto::whereDate('hr_registro', Carbon::today())
+        //     ->where('ds_motivo', 'Folga')
+        //     ->count();
         return response()->json(['total' => $qtdFolgas]);
     }
     public function relatorioDispensa(Request $request): JsonResponse
@@ -369,8 +371,7 @@ class EstagiariosController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'id' => 'required|exists:estagiarios,id',
-            'data' => 'date',
+            'data' => 'required|date',
             'entrada' => 'nullable',
             'saida' => 'nullable',
             'matricula' => 'required|max:14',
@@ -379,39 +380,153 @@ class EstagiariosController extends Controller
             'setor' => 'required',
             'observacao' => 'nullable|string'
         ]);
+
         $estagiario = Estagiario::findOrFail($id);
-        $estagiario->nm_estagiarios = $request->nome;
-        $estagiario->nr_matricula = $request->matricula;
-        $estagiario->nm_setor = $request->setor;
-        $estagiario->save();
-        $timestampEntrada = $request->data . ' ' . $request->entrada;
-        $timestampSaida = $request->data . ' ' . $request->saida;
+
+        $estagiario->update([
+            'nm_estagiarios' => $request->nome,
+            'nr_matricula' => $request->matricula,
+            'nm_setor' => $request->setor
+        ]);
+
+        $data = $request->data;
+
         $estagiario->registroPonto()
-            ->whereDate('hr_registro', $request->data)
+            ->whereDate('hr_registro', $data)
             ->update([
                 'ds_motivo' => $request->motivo,
                 'ds_observacao' => $request->observacao
             ]);
-        if ($request->filled('Entrada')) {
+
+        if ($request->filled('entrada')) {
+            $timestampEntrada = $data . ' ' . $request->entrada;
+
             $estagiario->registroPonto()
                 ->where('ds_motivo', 'Entrada')
-                ->whereDate('hr_registro', $request->data)
+                ->whereDate('hr_registro', $data)
                 ->update([
                     'hr_registro' => $timestampEntrada
                 ]);
         }
-        if ($request->filled('Saida')) {
+
+        if ($request->filled('saida')) {
+            $timestampSaida = $data . ' ' . $request->saida;
+
             $estagiario->registroPonto()
                 ->where('ds_motivo', 'Saida')
-                ->whereDate('hr_registro', $request->data)
+                ->whereDate('hr_registro', $data)
                 ->update([
                     'hr_registro' => $timestampSaida
                 ]);
         }
+
         return response()->json([
             'success' => true,
-            'message' => 'Estagiário cadastrado com sucesso',
+            'message' => 'Estagiário atualizado com sucesso',
             'data' => $estagiario
         ]);
     }
+
+    public function listagemCadastrados(Request $request)
+    {
+        try {
+            $query = Estagiario::query();
+
+            return DataTables::of($query)
+                ->addColumn('action', function ($row) {
+                    return '
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-sm btn-success btn-gerar-qr" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#qrModalCadastro" title="Gerar QR Code">
+                            <i class="bi bi-qr-code"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary btn-editar-estagiario" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+
+        } catch (\Exception $e) {
+            Log::error("Erro na listagem de cadastrados: " . $e->getMessage());
+
+            return response()->json([
+                'error' => 'Erro interno ao carregar a listagem.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function storeEstagiario(Request $request)
+    {
+
+        try {
+            $request->validate([
+
+                'nm_estagiarios' => 'required|string|max:100',
+                'nr_matricula' => 'required|string|max:14|unique:estagiarios,nr_matricula',
+                'nm_setor' => 'required|string|max:255',
+                'nr_telefone' => 'required|string|max:11|unique:estagiarios,nr_telefone',
+                'nm_email' => 'required|email|max:255|unique:estagiarios,nm_email',
+            ]);
+
+            $estagiario = Estagiario::create($request->all());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Estagiario cadastrado com sucesso!',
+                'dados' => $estagiario
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro de validação!',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro',
+                'data' => $th
+            ]);
+        }
+    }
+
+
+    public function updateCadastro(Request $request, $id)
+    {
+
+        $estagiario = Estagiario::where('id', $id)->firstOrFail();
+
+        if (!$estagiario) {
+            return response()->json(['message' => 'Estagiário não encontrado'], 404);
+        }
+
+        $request->validate([
+            'nome' => 'required|string|max:100,' . $estagiario->id,
+            'cpf' => 'required|string|max:14|unique:estagiarios,nr_matricula,' . $estagiario->id,
+            'setor' => 'required|string|max:255,' . $estagiario->id,
+            'telefone' => 'required|string|max:11|unique:estagiarios,nr_telefone,' . $estagiario->id,
+            'email' => 'required|email|max:255|unique:estagiarios,nm_email,' . $estagiario->id,
+        ]);
+
+        $estagiario->update([
+            'nm_estagiarios' => $request->nome,
+            'nr_matricula' => $request->cpf,
+            'nm_setor' => $request->setor,
+            'nr_telefone' => $request->telefone,
+            'nm_email' => $request->email
+        ]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Estagiario atualizado com sucesso!'
+        ]);
+
+
+    }
+
 }

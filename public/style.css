@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600&display=swap');
 
 :root {
     --cor-primaria: #0e4c25; 
@@ -208,6 +208,14 @@ body {
     --bs-btn-hover-bg: #027dad;
 }
 
+.btn-primary {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: #0091ca;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #027dad;
+}
+
 .text-pmp-azul {
     color: #0091ca !important;
 }
@@ -219,6 +227,15 @@ body {
 
 .nav-link.active {
     font-weight: 700;
+}
+
+.page-item.active .page-link {
+    background-color: rgb(135,206,250) !important;
+    border-color: rgb(125, 192, 235) !important;
+}
+
+.page-link {
+    color: #000000 !important;
 }
 
 @media print {
@@ -244,6 +261,5 @@ body {
         border: none !important;
         box-shadow: none !important;
     }
-
 
 }
