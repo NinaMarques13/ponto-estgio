@@ -24,7 +24,7 @@ class Estagiario extends Model
     {
         // 1º parâmetro: Model filho
         // 2º parâmetro: Chave estrangeira na tabela registro_ponto
-        return $this->hasMany(RegistroPonto::class, 'estagiario_id');
+        return $this->hasMany(RegistroPonto::class, 'estagiarios_id');
     }
 
     /**

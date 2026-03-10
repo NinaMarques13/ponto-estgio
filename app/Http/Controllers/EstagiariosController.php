@@ -12,10 +12,9 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Dflydev\DotAccessData\Data;
-use GuzzleHttp\Psr7\Query;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Log;
-use Yajra\DataTables\Facades\DataTables;
+
 
 class EstagiariosController extends Controller
 {
@@ -53,7 +52,230 @@ class EstagiariosController extends Controller
         ]);
         return redirect()->back()->with('sucesso', "Ponto de {$motivo} registrado com sucesso!");
     }
-    public function listaEstagiariosDia(Request $request)
+    public function relatorioEstagiarios(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $query = Estagiario::query();
+        if ($request->filled('estagiario_id') && $request->estagiario_id != '') {
+            $query->where('id', $request->estagiario_id);
+        }
+        $motivoAlvo = $request->filled('motivo') ? $request->motivo : 'Entrada';
+        if ($motivoAlvo === 'Presente') {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Entrada');
+            });
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Saida');
+            });
+        } elseif ($motivoAlvo === 'Em Andamento') {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Entrada');
+            });
+            $query->whereDoesntHave('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', 'Saida');
+            });
+        } elseif ($motivoAlvo === 'Todos' || $motivoAlvo === 'todos') {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
+                $q->whereBetween('hr_registro', [$inicio, $fim]);
+            });
+        } else {
+            $query->whereHas('registroPonto', function ($q) use ($inicio, $fim, $motivoAlvo) {
+                $q->whereBetween('hr_registro', [$inicio, $fim])
+                    ->where('ds_motivo', $motivoAlvo);
+            });
+        }
+        $qtdPresentes = $query->count();
+        return response()->json(['total' => $qtdPresentes]);
+    }
+    public function relatorioRegistros(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $tabela = (new RegistroPonto)->getTable();
+        $query = RegistroPonto::query()->from("$tabela as main");
+        $query->whereBetween('main.hr_registro', [$inicio, $fim]);
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('estagiario_id', $request->estagiario_id);
+        }
+        $motivoAlvo = $request->filled('motivo') && $request->motivo !== 'todos' ? $request->motivo : null;
+        if ($motivoAlvo === 'Presente') {
+            $query->whereIn('ds_motivo', ['Entrada', 'Saida']);
+        } else if ($motivoAlvo === 'Em Andamento') {
+            $query->where('main.ds_motivo', 'Entrada')
+                ->whereNotExists(function ($q) use ($inicio, $fim, $tabela) {
+                    $q->select(DB::raw(1))
+                        ->from("$tabela as rp2")
+                        ->whereColumn('rp2.estagiario_id', 'main.estagiario_id')
+                        ->where('rp2.ds_motivo', 'Saida')
+                        ->whereBetween('rp2.hr_registro', [$inicio, $fim]);
+                });
+        } elseif (!empty($motivoAlvo)) {
+            $query->where('main.ds_motivo', $motivoAlvo);
+        }
+        $qtdRegistros = $query->count();
+        return response()->json(['total' => $qtdRegistros]);
+    }
+    public function relatorioRecesso(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $query = RegistroPonto::query();
+        $query->whereBetween('hr_registro', [$inicio, $fim])
+            ->where('ds_motivo', 'Recesso');
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('estagiario_id', $request->estagiario_id);
+        }
+        $qtdRecessos = $query->count();
+        return response()->json(['total' => $qtdRecessos]);
+    }
+    public function relatorioAtestado(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $query = RegistroPonto::query();
+        $query->whereBetween('hr_registro', [$inicio, $fim])
+            ->where('ds_motivo', 'Atestado');
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('estagiario_id', $request->estagiario_id);
+        }
+        $qtdAtestados = $query->count();
+        return response()->json(['total' => $qtdAtestados]);
+    }
+    public function relatorioFolga(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $query = RegistroPonto::query();
+        $query->whereBetween('hr_registro', [$inicio, $fim])
+            ->where('ds_motivo', 'Folga');
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('estagiario_id', $request->estagiario_id);
+        }
+        $qtdFolgas = $query->count();
+        return response()->json(['total' => $qtdFolgas]);
+    }
+    public function relatorioDispensa(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $query = RegistroPonto::query();
+        $query->whereBetween('hr_registro', [$inicio, $fim])
+            ->where('ds_motivo', 'Dispensa');
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('estagiario_id', $request->estagiario_id);
+        }
+        $qtdDispensas = $query->count();
+        return response()->json(['total' => $qtdDispensas]);
+    }
+    public function relatorioFalta(Request $request): JsonResponse
+    {
+        if ($request->filled('data')) {
+            $inicio = Carbon::parse($request->data)->startOfDay();
+            $fim = Carbon::parse($request->data)->endOfDay();
+        } elseif ($request->filled('mes')) {
+            $inicio = Carbon::parse($request->mes)->startOfMonth();
+            $fim = Carbon::parse($request->mes)->endOfMonth();
+        } elseif ($request->filled('ano')) {
+            $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
+            $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
+        } else {
+            $inicio = Carbon::today()->startOfDay();
+            $fim = Carbon::today()->endOfDay();
+        }
+        $query = RegistroPonto::query();
+        $query->whereBetween('hr_registro', [$inicio, $fim])
+            ->where('ds_motivo', 'Falta');
+        if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
+            $query->where('estagiario_id', $request->estagiario_id);
+        }
+        $qtdFaltas = $query->count();
+        return response()->json(['total' => $qtdFaltas]);
+    }
+    public function pesquisarEstagiarios(): JsonResponse
+    {
+        try {
+            $estagiarios = Estagiario::select('id', 'nm_estagiarios')
+                ->orderBy('nm_estagiarios', 'ASC')
+                ->get();
+
+            return response()->json(['data' => $estagiarios]);
+        } catch (\Exception $e) {
+            // Se der erro, retorna o motivo para aparecer no console do navegador
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function listaEstagiariosDia(Request $request): JsonResponse
     {
         try {
             if ($request->filled('data')) {
@@ -198,324 +420,70 @@ class EstagiariosController extends Controller
         ]);
 
         $estagiario = Estagiario::findOrFail($id);
-        $estagiario->nm_estagiarios = $request->nome;
-        $estagiario->nr_matricula = $request->matricula;
-        $estagiario->nm_setor = $request->setor;
-        $estagiario->save();
-        $result = false;
-        if ($request->input('motivo') === 'entrada' || $request->input('motivo') === 'saida') {
-            $result = $this->processarPontoDiario($estagiario, $request);
-        } else if ($request->input('motivo') === 'presente') {
-            $result = $this->processarPontoDiario($estagiario, $request);
-        } elseif ($request->input('motivo') === 'recesso') {
-            $result = $this->processarRecesso($estagiario, $request);
-        } elseif ($request->input('motivo') === 'falta') {
-            $result = $this->processarFalta($estagiario, $request);
-        } elseif ($request->input('motivo') === 'dispensa') {
-            $result = $this->processarDispensa($estagiario, $request);
-        } else if ($request->input('motivo') === 'folga') {
-            $result = $this->processarFolga($estagiario, $request);
-        } else if ($request->input('motivo') === 'atestado') {
-            $result = $this->processarAtestado($estagiario, $request);
-        }
-        if ($result === true) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Operação realizada com sucesso!',
-                'data' => $request->all()
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => $result,
-                'data' => $request->all()
-            ]);
-        }
-    }
-    private function processarPontoDiario($estagiario, $request)
-    {
-        try {
-            $dataDoPonto = $request->data;
-            if ($request->filled('entrada') && $request->entrada !== ('00:00')) {
-                $timestampEntrada = $dataDoPonto . ' ' . $request->entrada;
-                $ip = $request->ip();
-                $registroExistente = $estagiario->registroPonto()
-                    ->where('ds_motivo', 'entrada')
-                    ->whereDate('hr_registro', $request->inicio)
-                    ->first();
-                $estagiario->registroPonto()->updateOrCreate(
-                    ['id' => $registroExistente?->id],
-                    [
-                        'ds_motivo' => 'entrada',
-                        'hr_registro' => $timestampEntrada,
-                        'ds_observacao' => $request->observacao,
-                        'ip_registro' => $ip
-                    ]
-                );
-            }
-            if ($request->filled('saida') && $request->saida !== ('00:00')) {
-                $timestampSaida = $dataDoPonto . ' ' . $request->saida;
-                $ip = $request->ip();
-                $registroExistente = $estagiario->registroPonto()
-                    ->where('ds_motivo', 'saida')
-                    ->whereDate('hr_registro', $request->fim)
-                    ->first();
-                $estagiario->registroPonto()->updateOrCreate(
-                    ['id' => $registroExistente?->id],
-                    [
-                        'ds_motivo' => 'saida',
-                        'hr_registro' => $timestampSaida,
-                        'ds_observacao' => $request->observacao,
-                        'ip_registro' => $ip
-                    ]
-                );
-            }
-            return true;
-        } catch (\Exception $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            return $th->getMessage();
-        }
-    }
-    private function processarRecesso($estagiario, $request)
-    {
-        try {
-            $ip = $request->ip();
-            $inicioPeriodo = Carbon::parse($request->inicio);
-            $fimPeriodo = Carbon::parse($request->fim);
-            $periodo = collect($inicioPeriodo->daysUntil($fimPeriodo));
-            $estagiario->registroPonto()
-                ->whereBetween('hr_registro', [$inicioPeriodo->startOfDay(), $fimPeriodo->endOfDay()])
-                ->delete();
-            $periodo->each(function (Carbon $data) use ($estagiario, $request, $ip) {
-                $entrada = $data->copy()->setTimeFromTimeString($request->entrada);
-                $saida = $data->copy()->setTimeFromTimeString($request->saida);
-                $this->salvarRecesso($estagiario, $entrada, $request, $ip);
-                $this->salvarRecesso($estagiario, $saida, $request, $ip);
-            });
-            return true;
-        } catch (\Exception $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            return $th->getMessage();
-        }
-    }
-    private function salvarRecesso($estagiario, $horario, $request, $ip)
-    {
-        $registro = $estagiario->registroPonto()
-            ->where('hr_registro', $horario->format('Y-m-d H:i:s'))
-            ->first();
-        $estagiario->RegistroPonto()->updateOrCreate(
-            ['id' => $registro?->id],
-            [
-                'ds_motivo' => 'recesso',
-                'hr_registro' => $horario->format('Y-m-d H:i:s'),
-                'ds_observacao' => $request->observacao,
-                'ip_registro' => $ip
-            ]
-        );
-    }
-    private function processarFalta($estagiario, $request)
-    {
-        try {
-            $ip = $request->ip();
-            $inicioPeriodo = Carbon::parse($request->inicio);
-            $fimPeriodo = Carbon::parse($request->fim);
-            $periodo = collect($inicioPeriodo->daysUntil($fimPeriodo));
-            $estagiario->registroPonto()
-                ->whereBetween('hr_registro', [$inicioPeriodo->startOfDay(), $fimPeriodo->endOfDay()])
-                ->delete();
-            $periodo->each(function (Carbon $data) use ($estagiario, $inicioPeriodo, $fimPeriodo, $request, $ip) {
-                $entrada = $data->copy()->$inicioPeriodo . " " . $request->entrada;
-                $saida = $data->copy()->$fimPeriodo . " " . $request->saida;
-                $this->salvarFalta($estagiario, $entrada, $request, $ip);
-                $this->salvarFalta($estagiario, $saida, $request, $ip);
-            });
-            return true;
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            return $th->getMessage();
-        }
-    }
-    private function salvarFalta($estagiario, $horario, $request, $ip)
-    {
-        try {
-            $registro = $estagiario->registroPonto()
-                ->where('hr_registro', $horario->format('Y-m-d H:i:s'))
-                ->first();
-            $estagiario->RegistroPonto()->updateOrCreate(
-                ['id' => $registro?->id],
-                [
-                    'ds_motivo' => 'folga',
-                    'hr_registro' => $horario->format('Y-m-d H:i:s'),
-                    'ds_observacao' => $request->observacao,
-                    'ip_registro' => $ip
-                ]
-            );
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            return $th->getMessage();
-        }
-    }
-    private function processarDispensa($estagiario, $request)
-    {
-        try {
-            if ($request->filled('fim') && $request->fim !== '00:00') {
-                $ip = $request->ip();
-                $inicioPeriodo = Carbon::parse($request->inicio);
-                $fimPeriodo = Carbon::parse($request->fim);
-                $periodo = collect($inicioPeriodo->daysUntil($fimPeriodo));
-                $estagiario->registroPonto()
-                    ->whereBetween('hr_registro', [$inicioPeriodo->startOfDay(), $fimPeriodo->endOfDay()])
-                    ->get();
-                $periodo->each(function (Carbon $data) use ($estagiario, $request, $ip) {
-                    $dataString = $data->format('Y-m-d');
-                    $entrada = Carbon::parse($dataString . " " . $request->entrada);
-                    $saida = Carbon::parse($dataString . " " . $request->saida);
-                    $this->salvarDispensa($estagiario, $entrada, $request, $ip);
-                    $this->salvarDispensa($estagiario, $saida, $request, $ip);
-                });
-            } else {
-                $ip = $request->ip();
-                $inicioPeriodo = Carbon::parse($request->inicio);
-                $fimPeriodo = Carbon::parse($request->fim);
-                $periodo = collect($inicioPeriodo->daysUntil($fimPeriodo));
-                $estagiario->registroPonto()
-                    ->whereBetween('hr_registro', [$inicioPeriodo->startOfDay(), $fimPeriodo->endOfDay()])
-                    ->get();
-                $periodo->each(function (Carbon $data) use ($estagiario, $request, $ip) {
-                    $dataString = $data->format('Y-m-d');
-                    $entrada = Carbon::parse($dataString . " " . $request->entrada);
-                    $saida = Carbon::parse($dataString . " " . $request->saida);
-                    $this->salvarDispensa($estagiario, $entrada, $request, $ip);
-                });
-            }
-            return true;
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            return $th->getMessage();
-        }
-    }
-    private function salvarDispensa($estagiario, $horario, $request, $ip)
-    {
-        try {
-            $registro = $estagiario->registroPonto()
-                ->where('hr_registro', $horario->format('Y-m-d H:i:s'))
-                ->first();
-            $estagiario->RegistroPonto()->updateOrCreate(
-                ['id' => $registro?->id],
-                [
-                    'ds_motivo' => 'dispensa',
-                    'hr_registro' => $horario->format('Y-m-d H:i:s'),
-                    'ds_observacao' => $request->observacao,
-                    'ip_registro' => $ip
-                ]
-            );
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            throw $th;
-        }
-    }
-    private function processarFolga($estagiario, $request)
-    {
-        try {
-            $ip = $request->ip();
-            $inicioPeriodo = Carbon::parse($request->inicio);
-            $fimPeriodo = Carbon::parse($request->fim);
-            $periodo = collect($inicioPeriodo->daysUntil($fimPeriodo));
-            $estagiario->registroPonto()
-                ->whereBetween('hr_registro', [$inicioPeriodo->startOfDay(), $fimPeriodo->endOfDay()])
-                ->get();
-            $periodo->each(function (Carbon $data) use ($estagiario, $request, $ip) {
-                $dataString = $data->format('Y-m-d');
-                $entrada = Carbon::parse($dataString . " " . $request->entrada);
-                $saida = Carbon::parse($dataString . " " . $request->saida);
-                $this->salvarFolga($estagiario, $entrada, $request, $ip);
-                $this->salvarFolga($estagiario, $saida, $request, $ip);
-            });
-            return true;
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            throw $th;
-        }
-    }
-    private function salvarFolga($estagiario, $horario, $request, $ip)
-    {
-        try {
-            $registro = $estagiario->registroPonto()
-                ->where('hr_registro', $horario->format('Y-m-d H:i:s'))
-                ->first();
-            $estagiario->RegistroPonto()->updateOrCreate(
-                ['id' => $registro?->id],
-                [
-                    'ds_motivo' => 'folga',
-                    'hr_registro' => $horario->format('Y-m-d H:i:s'),
-                    'ds_observacao' => $request->observacao,
-                    'ip_registro' => $ip
-                ]
-            );
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            throw $th;
-        }
-    }
-    private function processarAtestado($estagiario, $request)
-    {
-        $ip = $request->ip();
-        $inicioPeriodo = Carbon::parse($request->inicio);
-        $fimPeriodo = Carbon::parse($request->fim);
-        $periodo = collect($inicioPeriodo->daysUntil($fimPeriodo));
+
+        $estagiario->update([
+            'nm_estagiarios' => $request->nome,
+            'nr_matricula' => $request->matricula,
+            'nm_setor' => $request->setor
+        ]);
+
+        $data = $request->data;
+
         $estagiario->registroPonto()
-            ->whereBetween('hr_registro', [$inicioPeriodo->startOfDay(), $fimPeriodo->endOfDay()])
-            ->get();
-        $periodo->each(function (Carbon $data) use ($estagiario, $request, $ip) {
-            $dataString = $data->format('Y-m-d');
-            $entrada = Carbon::parse($dataString . " " . $request->entrada);
-            $saida = Carbon::parse($dataString . " " . $request->saida);
-            $this->salvarAtestado($estagiario, $entrada, $request, $ip);
-            $this->salvarAtestado($estagiario, $saida, $request, $ip);
-        });
-        return true;
-    }
-    private function salvarAtestado($estagiario, $horario, $request, $ip)
-    {
-        try {
-            $registro = $estagiario->registroPonto()
-                ->where('hr_registro', $horario->format('Y-m-d H:i:s'))
-                ->first();
-            $estagiario->RegistroPonto()->updateOrCreate(
-                ['id' => $registro?->id],
-                [
-                    'ds_motivo' => 'atestado',
-                    'hr_registro' => $horario->format('Y-m-d H:i:s'),
-                    'ds_observacao' => $request->observacao,
-                    'ip_registro' => $ip
-                ]
-            );
-            return true;
-        } catch (\Throwable $th) {
-            Log::error("Erro ao processar ponto: " . $th->getMessage());
-            throw $th;
+            ->whereDate('hr_registro', $data)
+            ->update([
+                'ds_motivo' => $request->motivo,
+                'ds_observacao' => $request->observacao
+            ]);
+
+        if ($request->filled('entrada')) {
+            $timestampEntrada = $data . ' ' . $request->entrada;
+
+            $estagiario->registroPonto()
+                ->where('ds_motivo', 'Entrada')
+                ->whereDate('hr_registro', $data)
+                ->update([
+                    'hr_registro' => $timestampEntrada
+                ]);
         }
+
+        if ($request->filled('saida')) {
+            $timestampSaida = $data . ' ' . $request->saida;
+
+            $estagiario->registroPonto()
+                ->where('ds_motivo', 'Saida')
+                ->whereDate('hr_registro', $data)
+                ->update([
+                    'hr_registro' => $timestampSaida
+                ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Estagiário atualizado com sucesso',
+            'data' => $estagiario
+        ]);
     }
+
     public function listagemCadastrados(Request $request)
     {
         try {
-            $query = Estagiario::query()->where('ds_situacao', 'true');
+            $query = Estagiario::query();
 
             return DataTables::of($query)
                 ->addColumn('action', function ($row) {
                     return '
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-success btn-gerar-qr" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#qrModalCadastro" title="Gerar QR Code">
-                            <img src="' . asset('icons/qr-code.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <i class="bi bi-qr-code"></i>
                         </button>
                         <button class="btn btn-sm btn-primary btn-editar-estagiario" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
-                            <img src="' . asset('icons/square-pen.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-sm btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
-                            <img src="' . asset('icons/trash.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                        <button class="btn btn-sm btn-danger btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </div>';
-
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -529,31 +497,23 @@ class EstagiariosController extends Controller
             ], 500);
         }
     }
+
+
     public function storeEstagiario(Request $request)
     {
 
         try {
             $request->validate([
+
                 'nm_estagiarios' => 'required|string|max:100',
-                'nr_matricula' => 'required|string|max:14|' . Rule::unique('estagiarios')->where('ds_situacao', 1),
+                'nr_matricula' => 'required|string|max:14|unique:estagiarios,nr_matricula',
                 'nm_setor' => 'required|string|max:255',
-                'nr_telefone' => 'required|string|max:11|' . Rule::unique('estagiarios')->where('ds_situacao', 1),
-                'nm_email' => 'required|email|max:255|' . Rule::unique('estagiarios')->where('ds_situacao', 1),
+                'nr_telefone' => 'required|string|max:11|unique:estagiarios,nr_telefone',
+                'nm_email' => 'required|email|max:255|unique:estagiarios,nm_email',
             ]);
 
-            $estagiario = Estagiario::updateOrCreate(
+            $estagiario = Estagiario::create($request->all());
 
-                ['nr_matricula' => $request->nr_matricula],
-
-                [
-                    'nm_estagiarios' => $request->nm_estagiarios,
-                    'nm_setor' => $request->nm_setor,
-                    'nr_telefone' => $request->nr_telefone,
-                    'nm_email' => $request->nm_email,
-                    'ds_situacao' => 1
-                ]
-            );
-            dd($estagiario);
             return response()->json([
                 'success' => true,
                 'message' => 'Estagiario cadastrado com sucesso!',
@@ -573,6 +533,8 @@ class EstagiariosController extends Controller
             ]);
         }
     }
+
+
     public function updateCadastro(Request $request, $id)
     {
 
@@ -604,29 +566,5 @@ class EstagiariosController extends Controller
 
 
     }
-    public function desativarCadastro(Request $request, $id)
-    {
-        $estagiario = Estagiario::findOrFail($id);
 
-        $estagiario->update([
-            'ds_situacao' => false
-        ]);
-        return response()->json(['message' => 'Estagiário excluído com sucesso!']);
-    }
-    public function processarQrcode(Request $request): JsonResponse
-    {
-        $cpf = $request->input('cpf');
-        // Exemplo: buscar estagiário pelo CPF
-        $estagiario = Estagiario::where('nr_matricula', $cpf)->first();
-        if (!$estagiario) {
-            return response()->json([
-                'status' => 'erro',
-                'mensagem' => 'Estagiário não encontrado com a matrícula: ' . $cpf
-            ], 404);
-        }
-        return response()->json([
-            'status' => 'sucesso',
-            'data' => 'Estagiário: ' . $estagiario->nome . ' | CPF: ' . $cpf
-        ]);
-    }
 }

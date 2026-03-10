@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600&display=swap');
 
 :root {
     --cor-primaria: #004a22;
@@ -200,16 +200,6 @@ body {
     --bs-btn-hover-bg: #027dad;
 }
 
-.btn-excluir-estagiario {
-    background-color: #f10000;
-    color: white;
-}
-
-.btn-excluir-estagiario:hover {
-    background-color: #da0101;
-    color: white;
-}
-
 .text-pmp-azul {
     color: #0091ca !important;
 }
@@ -219,7 +209,7 @@ body {
 }
 
 .page-item.active .page-link {
-    background-color: rgb(135, 206, 250) !important;
+    background-color: rgb(135,206,250) !important;
     border-color: rgb(125, 192, 235) !important;
 }
 
