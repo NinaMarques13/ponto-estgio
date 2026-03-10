@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600&display=swap');
 
 :root {
     --cor-primaria: #004a22;
@@ -224,6 +224,15 @@ body {
     font-weight: 700;
 }
 
+.page-item.active .page-link {
+    background-color: rgb(135,206,250) !important;
+    border-color: rgb(125, 192, 235) !important;
+}
+
+.page-link {
+    color: #000000 !important;
+}
+
 @media print {
     body * {
         visibility: hidden;
@@ -306,7 +315,6 @@ body {
 .dt-search label {
     padding-inline: 4px;
 }
-
 
 
 
