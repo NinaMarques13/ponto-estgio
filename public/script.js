@@ -582,7 +582,7 @@ $(document).ready(function () {
     var tabelaCadastrados = $("#tabela-estagiarios-listagem").DataTable({
         processing: true,
         serverSide: true,
-        ajax: "/estagiarios-cadastrados",
+        ajax: "/estagiariosCadastrados",
         columns: [
             { data: "id", name: "id" },
             { data: "nm_estagiarios", name: "nm_estagiarios" },
@@ -625,7 +625,7 @@ $(document).ready(function () {
             success: function (e) {
                 alert("Cadastro concluído!");
                 $("#modalAdicionarEstagiario").modal("hide");
-                tabelaCadastrados.ajax.reload();
+                location.reload();
             },
             error: function (xhr) {
                 console.error(xhr.responseText);
@@ -774,7 +774,6 @@ $("#formEditarEstagiario").on("submit", function (e) {
         success: function (response) {
             alert("Sucesso: Estagiário atualizado!");
             location.reload();
-            console.log(response);
         },
         error: function (xhr) {
             let erroMsg = "Erro desconhecido no servidor.";

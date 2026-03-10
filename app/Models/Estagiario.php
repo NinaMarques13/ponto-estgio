@@ -19,6 +19,7 @@ class Estagiario extends Model
         'nm_email',
         'ds_situacao',      
     ];
+    
     public function registroPonto()
     {
         // 1º parâmetro: Model filho
