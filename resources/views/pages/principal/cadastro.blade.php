@@ -9,18 +9,18 @@
             </div>
 
             <!-- <div class="row g-3 mb-4">
-                                    <div class="col-md-6">
-                                        <label class="form-label text-secondary">Nome</label>
-                                        <input type="text" id="buscaNome" class="form-control bg-light mb-3" placeholder="Buscar por nome">
-                                        <button type="button" class="btn btn-primary">Buscar</button>
-                                    </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-secondary">Nome</label>
+                                            <input type="text" id="buscaNome" class="form-control bg-light mb-3" placeholder="Buscar por nome">
+                                            <button type="button" class="btn btn-primary">Buscar</button>
+                                        </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label text-secondary">CPF (Matrícula)</label>
-                                        <input type="text" id="buscaCPF" class="form-control bg-light mb-3" placeholder="Buscar por CPF">
-                                        <button type="button" class="btn btn-primary">Buscar</button>
-                                    </div>
-                                </div> -->
+                                        <div class="col-md-6">
+                                            <label class="form-label text-secondary">CPF (Matrícula)</label>
+                                            <input type="text" id="buscaCPF" class="form-control bg-light mb-3" placeholder="Buscar por CPF">
+                                            <button type="button" class="btn btn-primary">Buscar</button>
+                                        </div>
+                                    </div> -->
 
             <div class="table-responsive shadow-sm">
                 <table id="tabela-estagiarios-cadastrados" class="table table-bordered align-middle mb-4 mt-4 w-100">
@@ -122,8 +122,8 @@
                     <form id="formEditarEstagiario">
                         @csrf
                         <div class="modal-body">
-                            <input type="hidden" id="id_estagiario_editar" name="id_estagiario_editar">
                             <div class="row g-3">
+                                <input type="hidden" id="id_estagiario_editar" name="id_estagiario_editar">
                                 <div class="col-12">
                                     <label class="form-label fw-bold text-secondary">Nome <span
                                             class="text-danger">*</span></label>
@@ -161,5 +161,6 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
     </div>
 @endsection

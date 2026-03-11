@@ -729,10 +729,6 @@ $("#tabela-estagiarios-cadastrados").on(
             $("#telefone_editar").val(data.nr_telefone || "");
             $("#email_editar").val(data.nm_email || "");
 
-            const modal = new bootstrap.Modal(
-                document.getElementById("modalEditarEstagiario"),
-            );
-            modal.show();
         } else {
             alert(
                 "Erro: O DataTable não forneceu um ID válido para esta linha.",
