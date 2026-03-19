@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;600&display=swap');
 
 :root {
-    --cor-primaria: #0e4c25; 
+    --cor-primaria: #004A22; 
     --cor-fundo: #f2f8ff; 
-    --cor-texto-link: #0e4c25; 
+    --cor-texto-link: #004A22; 
     --cor-input-borda: #ccc;
     --cor-input-fundo: #fff;
     --fonte-principal: 'Roboto', sans-serif; 
@@ -17,7 +17,7 @@
     right: 20px; 
     
     
-    background-color: var(--cor-primaria); 
+    background-color: #004A22; 
     color: white !important; 
     padding: 8px 15px;
     border-radius: 8px;
@@ -29,7 +29,7 @@
     
     z-index: 9999; 
     
-    
+
     transition: background-color 0.3s ease;
 }
 .admin-access-btn:hover {
@@ -81,7 +81,7 @@ body {
 .ponto-titulo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--cor-primaria); 
+    color: #004A22; 
     line-height: 1.2;
 }
 
@@ -114,7 +114,7 @@ body {
     padding: 0.5rem 1rem;
 }
 .camera-icon i {
-    color: var(--cor-primaria);
+    color: #004A22;
     font-size: 1.5rem;
 }
 
@@ -125,13 +125,13 @@ body {
     display: flex;
 }
 .text-intro{
-    color: var(--cor-primaria);
+    color: #004A22;
     font-weight: bold;
     text-decoration: none; 
     padding: 0 0.2rem;
 }
 .registro-link {
-    color: var(--cor-primaria);
+    color: #004A22;
     font-weight: bold;
     text-decoration: none; 
     padding: 0 0.2rem;
@@ -139,7 +139,7 @@ body {
 
 
 .registrar-btn {
-    /* background-color: var(--cor-primaria); */
+    background-color: #00843D;
     color: #ffffff;
     font-weight: bold;
     font-size: 1.2rem;
@@ -150,22 +150,17 @@ body {
 }
 
 .registrar-btn:hover {
-    background-color: #09381c; 
+    background-color: #037034; 
     color: #fff;
 }
 .img-exp{
     align-items: center;
 }
 .admin-access-btn {
-   
+    background-color: #00843D;   
     position: fixed;
-    
-    
     top: 20px; 
     right: 20px; 
-    
-    
-    background-color: var(--cor-primaria); 
     color: white !important; 
     padding: 8px 15px;
     border-radius: 8px;
@@ -173,15 +168,12 @@ body {
     text-decoration: none; 
     font-weight: bold;
     font-size: 0.9rem;
-    
-    
     z-index: 9999; 
-    
-    
     transition: background-color 0.3s ease;
 }
+
 .admin-access-btn:hover {
-    background-color: #0b4e25; 
+    background-color: #037034; 
     color: white;
 }
 
@@ -199,6 +191,17 @@ body {
 .bi-qr-code {
     font-size: 1.1rem;
 }
+
+#btn_entrar {
+    background-color: #00843D;
+    color: white;
+}
+
+#btn_entrar:hover {
+    background-color: #037034; 
+    color: #fff;
+}
+
 
 .btn-bd-primary {
     --bs-btn-font-weight: 600;
