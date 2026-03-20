@@ -38,7 +38,7 @@ $(document).ready(function () {
         $(".conteudo-aba." + type).fadeIn();
     });
     carregarSelectEstagiarios();
-    // carregarListaEstagiarios();
+    carregarListaEstagiarios();
     cardEstagiarios();
     cardRegistros();
     cardRecessos();

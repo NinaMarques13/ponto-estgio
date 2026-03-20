@@ -38,9 +38,9 @@ class EstagiariosController extends Controller
             ->whereDate('hr_registro', Carbon::today())
             ->orderBy('hr_registro', 'desc')
             ->first();
-        $motivo = 'Entrada';
-        if ($ultimoRegistro && $ultimoRegistro->ds_motivo == 'Entrada') {
-            $motivo = 'Saida';
+        $motivo = 'entrada';
+        if ($ultimoRegistro && $ultimoRegistro->ds_motivo == 'entrada') {
+            $motivo = 'saida';
         }
         RegistroPonto::create([
             'estagiario_id' => $estagiario->id,
@@ -70,24 +70,24 @@ class EstagiariosController extends Controller
         if ($request->filled('estagiario_id') && $request->estagiario_id != '') {
             $query->where('id', $request->estagiario_id);
         }
-        $motivoAlvo = $request->filled('motivo') ? $request->motivo : 'Entrada';
+        $motivoAlvo = $request->filled('motivo') ? $request->motivo : 'entrada';
         if ($motivoAlvo === 'Presente') {
             $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
                 $q->whereBetween('hr_registro', [$inicio, $fim])
-                    ->where('ds_motivo', 'Entrada');
+                    ->where('ds_motivo', 'entrada');
             });
             $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
                 $q->whereBetween('hr_registro', [$inicio, $fim])
-                    ->where('ds_motivo', 'Saida');
+                    ->where('ds_motivo', 'saida');
             });
         } elseif ($motivoAlvo === 'Em Andamento') {
             $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
                 $q->whereBetween('hr_registro', [$inicio, $fim])
-                    ->where('ds_motivo', 'Entrada');
+                    ->where('ds_motivo', 'entrada');
             });
             $query->whereDoesntHave('registroPonto', function ($q) use ($inicio, $fim) {
                 $q->whereBetween('hr_registro', [$inicio, $fim])
-                    ->where('ds_motivo', 'Saida');
+                    ->where('ds_motivo', 'saida');
             });
         } elseif ($motivoAlvo === 'Todos' || $motivoAlvo === 'todos') {
             $query->whereHas('registroPonto', function ($q) use ($inicio, $fim) {
@@ -125,14 +125,14 @@ class EstagiariosController extends Controller
         }
         $motivoAlvo = $request->filled('motivo') && $request->motivo !== 'todos' ? $request->motivo : null;
         if ($motivoAlvo === 'Presente') {
-            $query->whereIn('ds_motivo', ['Entrada', 'Saida']);
+            $query->whereIn('ds_motivo', ['entrada', 'saida']);
         } else if ($motivoAlvo === 'Em Andamento') {
-            $query->where('main.ds_motivo', 'Entrada')
+            $query->where('main.ds_motivo', 'entrada')
                 ->whereNotExists(function ($q) use ($inicio, $fim, $tabela) {
                     $q->select(DB::raw(1))
                         ->from("$tabela as rp2")
                         ->whereColumn('rp2.estagiario_id', 'main.estagiario_id')
-                        ->where('rp2.ds_motivo', 'Saida')
+                        ->where('rp2.ds_motivo', 'saida')
                         ->whereBetween('rp2.hr_registro', [$inicio, $fim]);
                 });
         } elseif (!empty($motivoAlvo)) {
@@ -158,7 +158,7 @@ class EstagiariosController extends Controller
         }
         $query = RegistroPonto::query();
         $query->whereBetween('hr_registro', [$inicio, $fim])
-            ->where('ds_motivo', 'Recesso');
+            ->where('ds_motivo', 'recesso');
         if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
             $query->where('estagiario_id', $request->estagiario_id);
         }
@@ -182,7 +182,7 @@ class EstagiariosController extends Controller
         }
         $query = RegistroPonto::query();
         $query->whereBetween('hr_registro', [$inicio, $fim])
-            ->where('ds_motivo', 'Atestado');
+            ->where('ds_motivo', 'atestado');
         if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
             $query->where('estagiario_id', $request->estagiario_id);
         }
@@ -206,7 +206,7 @@ class EstagiariosController extends Controller
         }
         $query = RegistroPonto::query();
         $query->whereBetween('hr_registro', [$inicio, $fim])
-            ->where('ds_motivo', 'Folga');
+            ->where('ds_motivo', 'folga');
         if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
             $query->where('estagiario_id', $request->estagiario_id);
         }
@@ -236,7 +236,7 @@ class EstagiariosController extends Controller
         }
         $query = RegistroPonto::query();
         $query->whereBetween('hr_registro', [$inicio, $fim])
-            ->where('ds_motivo', 'Dispensa');
+            ->where('ds_motivo', 'dispensa');
         if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
             $query->where('estagiario_id', $request->estagiario_id);
         }
@@ -260,7 +260,7 @@ class EstagiariosController extends Controller
         }
         $query = RegistroPonto::query();
         $query->whereBetween('hr_registro', [$inicio, $fim])
-            ->where('ds_motivo', 'Falta');
+            ->where('ds_motivo', 'falta');
         if ($request->filled('estagiario_id') && $request->estagiario_id != 'todos') {
             $query->where('estagiario_id', $request->estagiario_id);
         }
@@ -307,18 +307,18 @@ class EstagiariosController extends Controller
                         ->orderBy('hr_registro', 'asc');
                 }
             ])->get();
-
-            $dadosFormatados = $estagiarios->flatMap(function ($estagiario) use ($periodo) {
+            $dadosFormatados = $estagiarios->flatMap(function ($estagiario) use ($estagiarios, $periodo) {
                 $registrosPorDia = [];
-                $pontosAgrupados = $estagiario->registroPonto->groupBy(function ($ponto) {
+                $pontos = $estagiario->registroPonto ?: collect();
+                $pontosAgrupados = $pontos->groupBy(function ($ponto) {
                     return Carbon::parse($ponto->hr_registro)->format('Y-m-d');
                 });
                 foreach ($periodo as $dataLoop) {
                     $dataFormatada = $dataLoop->format('Y-m-d');
                     $registrosNoDia = $pontosAgrupados->get($dataFormatada, collect());
-                    $entrada = $registrosNoDia->where('ds_motivo', 'Entrada')->first();
-                    $saida = $registrosNoDia->where('ds_motivo', 'Saida')->first();
-                    $ocorrencia = $registrosNoDia->whereNotIn('ds_motivo', ['Entrada', 'Saida'])->first();
+                    $entrada = $registrosNoDia->where('ds_motivo', 'entrada')->first();
+                    $saida = $registrosNoDia->where('ds_motivo', 'saida')->first();
+                    $ocorrencia = $registrosNoDia->whereNotIn('ds_motivo', ['entrada', 'saida'])->first();
 
                     if ($ocorrencia) {
                         $textoMotivo = $ocorrencia->ds_motivo;
@@ -400,24 +400,24 @@ class EstagiariosController extends Controller
             ]);
 
         if ($request->filled('entrada')) {
-            $timestampEntrada = $data . ' ' . $request->entrada;
+            $timestampentrada = $data . ' ' . $request->entrada;
 
             $estagiario->registroPonto()
-                ->where('ds_motivo', 'Entrada')
+                ->where('ds_motivo', 'entrada')
                 ->whereDate('hr_registro', $data)
                 ->update([
-                    'hr_registro' => $timestampEntrada
+                    'hr_registro' => $timestampentrada
                 ]);
         }
 
         if ($request->filled('saida')) {
-            $timestampSaida = $data . ' ' . $request->saida;
+            $timestampsaida = $data . ' ' . $request->saida;
 
             $estagiario->registroPonto()
-                ->where('ds_motivo', 'Saida')
+                ->where('ds_motivo', 'saida')
                 ->whereDate('hr_registro', $data)
                 ->update([
-                    'hr_registro' => $timestampSaida
+                    'hr_registro' => $timestampsaida
                 ]);
         }
 
@@ -427,7 +427,6 @@ class EstagiariosController extends Controller
             'data' => $estagiario
         ]);
     }
-
     public function listagemCadastrados(Request $request)
     {
         try {
@@ -460,8 +459,6 @@ class EstagiariosController extends Controller
             ], 500);
         }
     }
-
-
     public function storeEstagiario(Request $request)
     {
 
@@ -505,8 +502,6 @@ class EstagiariosController extends Controller
             ]);
         }
     }
-
-
     public function updateCadastro(Request $request, $id)
     {
 
@@ -538,7 +533,6 @@ class EstagiariosController extends Controller
 
 
     }
-
     public function desativarCadastro (Request $request, $id)
     {
         $estagiario = Estagiario::findOrFail($id);
@@ -548,5 +542,4 @@ class EstagiariosController extends Controller
         ]);
         return response()->json(['message' => 'Estagiário excluído com sucesso!']);
     }
-
 }
