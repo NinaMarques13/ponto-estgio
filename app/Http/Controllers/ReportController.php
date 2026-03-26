@@ -8,15 +8,15 @@ use Illuminate\Http\Request;
 class ReportController extends Controller
 {
     public function exportExcel()
-{
-    
-    return Excel::download(new FolhaPontoExport, 'folha-ponto.xlsx');
-}
+    {
 
-public function exportPdf()
-{
-    $pontos = CheckIn::all(); 
-    $pdf = Pdf::loadView('pdf.folha', compact('pontos'));
-    return $pdf->download('relatorio.pdf');
-}
+        return Excel::download(new FolhaPontoExport, 'folha-ponto.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $pontos = CheckIn::all();
+        $pdf = Pdf::loadView('pdf.folha', compact('pontos'));
+        return $pdf->download('relatorio.pdf');
+    }
 }
