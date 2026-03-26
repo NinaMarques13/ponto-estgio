@@ -442,7 +442,7 @@ class EstagiariosController extends Controller
                         <button class="btn btn-sm btn-primary btn-editar-estagiario" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
+                        <button class="btn btn-sm btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>';

@@ -106,7 +106,7 @@ body {
 
 
 .camera-icon {
-    background-color: #dae9d175;
+    background-color: #e8f1e5;
     border: 1px solid var(--cor-input-borda);
     border-left: none;
     border-radius: 0 0.5rem 0.5rem 0;
@@ -219,12 +219,22 @@ body {
     --bs-btn-hover-bg: #027dad;
 }
 
+.btn-excluir-estagiario {
+    background-color: #f10000;
+    color: white;
+}
+
+.btn-excluir-estagiario:hover {
+    background-color: #da0101;
+    color: white;
+}
+
 .text-pmp-azul {
     color: #0091ca !important;
 }
 
 .table-header-custom th {
-    background-color: rgb(135,206,250) !important;
+    background-color: #87cefa !important;
     color: rgb(0, 0, 0) !important;
 }
 
