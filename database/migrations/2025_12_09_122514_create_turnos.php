@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('turnos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('estagiarios_id')->constrained(  'estagiarios')->cascadeOnDelete();
+            $table->foreignId('estagiario_id')->constrained('estagiarios')->cascadeOnDelete();
             $table->string('ds_tipo', 8);
             $table->time('hr_entrada');
             $table->time('hr_saida');
