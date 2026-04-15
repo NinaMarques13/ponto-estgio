@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ADM - Home</title>
-
   <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('style.css') }}">
   <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
