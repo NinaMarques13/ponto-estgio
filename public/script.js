@@ -467,27 +467,6 @@ $(document).ready(function () {
         });
     });
 
-    var tabelaCadastrados = $("#tabela-estagiarios-listagem").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "/estagiariosCadastrados",
-        columns: [
-            { data: "id", name: "id" },
-            { data: "nm_estagiarios", name: "nm_estagiarios" },
-            { data: "nr_matricula", name: "nr_matricula" },
-            { data: "nm_setor", name: "nm_setor" },
-            { data: "nr_telefone", name: "nr_telefone" },
-            {
-                data: "action",
-                name: "action",
-                orderable: false,
-                serchable: false,
-            },
-        ],
-        language: {
-            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json",
-        },
-    });
     $("#formAdicionarEstagiario").on("submit", function (e) {
         e.preventDefault();
         let token = $('input[name="_token"]').val();
