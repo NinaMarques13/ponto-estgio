@@ -257,14 +257,12 @@ body {
 
 
 
-
-
-
-
+/* ----------------------DataTables------------------------------------ */
 
 .tela-cadastro .dt-container {
     padding: 0;
     font-family: inherit;
+    overflow-x: hidden !important;
 }
 
 .dt-layout-row {
@@ -291,6 +289,7 @@ body {
     color: black !important;
     border: 1px solid #87cefa !important;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .tela-cadastro .dt-container .dt-paging .dt-paging-button:hover {
