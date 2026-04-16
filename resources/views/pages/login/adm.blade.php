@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Área Administrativa</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 
@@ -41,26 +39,14 @@
                     @endif
                     <div class="mb-3">
                         <div class="icon-wrapper">
-                            <svg class="mx-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
+                            <img src="{{ asset('icons/user.svg') }}" class="mx-2" alt="Ícone de Usuário">
                             <label for="email" class="form-label fw-bold" title="Usuário">Usuário</label>
                             <input type="email" id="usuario" name="email" class="form-control"
                                 placeholder="Digite seu e-mail" title="Digite seu e-mail">
                         </div>
 
                         <div class="mb-4 mt-4">
-                            <svg class="mx-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="lucide lucide-lock-keyhole-icon lucide-lock-keyhole">
-                                <circle cx="12" cy="16" r="1" />
-                                <rect x="3" y="10" width="18" height="12" rx="2" />
-                                <path d="M7 10V7a5 5 0 0 1 10 0v3" />
-                            </svg>
+                            <img src="{{ asset('icons/lock-keyhole.svg') }}" class="mx-2" alt="Ícone de Senha">
                             <label for="senha" class="form-label fw-bold" title="Senha">Senha</label>
                             <input type="password" id="senha" name="password" class="form-control"
                                 placeholder="Digite sua senha" title="Digite sua senha">

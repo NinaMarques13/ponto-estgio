@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ponto de Registro de Estagiários</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{asset('style.css')}}">
 </head>
 
@@ -14,15 +13,8 @@
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0 ponto-container">
         <a href="{{ asset('views/login/adm') }}" class="admin-access-btn" title="Acessar Área Administrativa"
             style="align-content: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-circle-user-icon lucide-circle-user">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="10" r="3" />
-                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-            </svg>
-            <circle cx="12" cy="7" r="4"></circle>
-            </svg><text>Área Admin</text>
+                <img src="{{ asset('icons/circle-user.svg') }}" class="mx-1" alt="Ícone de ADM" style="filter: invert();">
+            <text>Área Admin</text>
         </a>
         <div class="card ponto-card border-start border-end border-2 px-3">
             <div class="text-center pt-4 pb-3">
@@ -39,14 +31,7 @@
                                 <input type="text" class="form-control cpf-input" name="cpf" id="cpf"
                                     placeholder="Digite o CPF" title="Digite o CPF">
                                 <span class="input-group-text camera-icon" title="Câmera">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-camera-icon lucide-camera">
-                                        <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2
-                                       2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0
-                                        0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path>
-                                        <circle cx="12" cy="13" r="3"></circle>
-                                    </svg></span>
+                                    <img src="{{ asset('icons/camera.svg') }}" class="mx-2" alt="Ícone de Câmera" width="30px"></span>
                             </div>
                         </div>
 

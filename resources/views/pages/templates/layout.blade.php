@@ -8,7 +8,6 @@
 
   <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('style.css') }}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
 
 </head>
