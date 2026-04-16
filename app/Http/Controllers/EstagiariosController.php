@@ -474,13 +474,13 @@ class EstagiariosController extends Controller
                     return '
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-success btn-gerar-qr" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#qrModalCadastro" title="Gerar QR Code">
-                            <i class="bi bi-qr-code"></i>
+                            <img src="' . asset('icons/qr-code.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                         <button class="btn btn-sm btn-primary btn-editar-estagiario" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
-                            <i class="bi bi-pencil-square"></i>
+                            <img src="' . asset('icons/square-pen.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
-                        <button class="btn btn-sm btn-danger btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
-                            <i class="bi bi-trash"></i>
+                        <button class="btn btn-sm btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
+                            <img src="' . asset('icons/trash.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                     </div>';
                 })
