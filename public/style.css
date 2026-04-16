@@ -278,6 +278,7 @@ body {
     border: 1px solid #dee2e6 !important;
     border-radius: 0.375rem !important;
     padding: 0.375rem 0.75rem !important;
+    margin: 4px;
 }
 
 .dt-input:focus {
@@ -285,7 +286,7 @@ body {
 }
 
 .dt-paging .dt-paging-button.current {
-    background-color: #87cefa !important; /* O azul claro que você usou no header */
+    background-color: #87cefa !important;
     color: black !important;
     border: 1px solid #87cefa !important;
     font-weight: bold;
