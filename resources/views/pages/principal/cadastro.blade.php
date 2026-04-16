@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         <div class="modal-footer bg-light">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cancelar">Cancelar</button>
+                            <button type="button" class="btn btn-excluir-estagiario" data-bs-dismiss="modal" title="Cancelar">Cancelar</button>
                             <button type="submit" class="btn btn-bd-primary px-4" title="Salvar">Salvar Cadastro</button>
                         </div>
                     </form>
