@@ -74,7 +74,7 @@
                             <div class="row g-3">
                                 <input type="hidden" id="index_edicao" value="">
                                 <div class="col-12">
-                                    <label class="form-label fw-bold text-secondary" title="Nome">Nome <span
+                                    <label class="form-label fw-bold text-secondary" title="Nome">Nome<span
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="nome_cadastro" name="nome"
                                         placeholder="Nome completo" required>

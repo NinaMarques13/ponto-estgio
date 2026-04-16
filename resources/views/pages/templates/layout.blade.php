@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ADM - Home</title>
 
-  <link rel="stylesheet" href="{{ asset('js/vendor/bootstrap.min.css')}}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="{{ asset('js/vendor/datatables.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
 
 </head>
 

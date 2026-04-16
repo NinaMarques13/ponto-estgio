@@ -19,7 +19,14 @@ $(document).ready(function () {
                 },
             ],
             language: {
-                url: "https://cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
+                url: "",
+                lengthMenu: "Exibir _MENU_ por página",
+                search: "Pesquisar Estagiário",
+                searchPlaceholder: "Digite a informação",
+                zeroRecords: "Nenhum registro encontrado",
+                info: "Mostrando página _PAGE_ de _PAGES_",
+                infoEmpty: "Nenhum registro disponível",
+                infoFiltered: "(filtrado de _MAX_ registros no total)"
             },
         });
     } else {
