@@ -43,7 +43,6 @@ Route::get('views/principal/export', function () {
 })->name('export');
 Route::get('/views/pages/inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 Route::any('/registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
-Route::get('/relatorio-estagiarios', [EstagiariosController::class, 'relatorioEstagiarios'])->name('relatorio.estagiarios');
 Route::any('/lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::put('/atualizar-estagiarios/{id}', [EstagiariosController::class, 'update'])->name('atualizar-estagiarios');
 Route::get('/estagiarios-cadastrados',[EstagiariosController::class,'listagemCadastrados'])->name('estagiarios-cadastrados');
