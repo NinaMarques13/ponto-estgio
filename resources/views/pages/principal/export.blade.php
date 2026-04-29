@@ -1,163 +1,174 @@
 @extends('pages.templates.layout')
 @section('content')
-    <div class="d-flex gap-3">
-        <div class="conteudo-aba plan">
+    <div class="conteudo-aba plan">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <form action="/lista-estagiarios" method="post">
+                                @csrf
+                                <label class="form-label">Data</label>
+                                <input type="date" name="data-completa" id="data-completa" class="form-control">
+                            </form>
+                        </div>
+                        <div class="col">
+                            <form action="/lista-estagiarios" method="post">
+                                @csrf
+                                <label class="form-label">Mês</label>
+                                <input type="month" name="data-mes" id="data-mes" class="form-control">
+                            </form>
+                        </div>
+                        <div class="col">
+                            <form action="/lista-estagiarios" method="post">
+                                @csrf
+                                <label class="form-label">Ano</label>
+                                <select name="data-ano" id="data-ano" class="form-control">
+                                    @php
+                                        $anoAtual = date('Y');
+                                        $anoInicio = 2000;
+                                        $anoFim = 2100;
+                                    @endphp
+
+                                    @for ($i = $anoInicio; $i <= $anoFim; $i++)
+                                        <option value="{{ $i }}" {{ $i == $anoAtual ? 'selected' : '' }}>
+                                            {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+
+                            </form>
+                        </div>
+                        <div class="col">
+                            <label for="filtro-motivo" class="form-label">Filtrar por Motivo</label>
+                            <select id="filtro-motivo" class="form-select">
+                                <option value="">Todos</option>
+                                <option value="presente">Presente (Registros Completos)</option>
+                                <option value="entrada">Em Andamento (Só Entrada)</option>
+                                <option value="falta">Falta</option>
+                                <option value="dispensa">Dispensa</option>
+                                <option value="folga">Folga</option>
+                                <option value="atestado">Atestado</option>
+                                <option value="recesso">Recesso</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3 mb-2 mt-2">
             <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <form action="/lista-estagiarios" method="post">
-                                    @csrf
-                                    <label class="form-label">Data</label>
-                                    <input type="date" name="data-completa" id="data-completa" class="form-control">
-                                </form>
-                            </div>
-                            <div class="col">
-                                <form action="/lista-estagiarios" method="post">
-                                    @csrf
-                                    <label class="form-label">Mês</label>
-                                    <input type="month" name="data-mes" id="data-mes" class="form-control">
-                                </form>
-                            </div>
-                            <div class="col">
-                                <form action="/lista-estagiarios" method="post">
-                                    @csrf
-                                    <label class="form-label">Ano</label>
-                                    <input type="number" name="data-ano" id="data-ano" class="form-control">
-                                </form>
-                            </div>
-                            <div class="col">
-                                <label for="filtro-motivo" class="form-label">Filtrar por Motivo</label>
-                                <select id="filtro-motivo" class="form-select">
-                                    <option value="">Todos</option>
-                                    <option value="Presente">Presente (Registros Completos)</option>
-                                    <option value="Em Andamento">Em Andamento (Só Entrada)</option>
-                                    <option value="Falta">Falta</option>
-                                    <option value="Dispensa">Dispensa</option>
-                                    <option value="Folga">Folga</option>
-                                    <option value="Atestado">Atestado</option>
-                                    <option value="Recesso">Recesso</option>
-                                </select>
+                                <div class="small">Estagiários</div>
+                                <div class="h3 fw-bold my-1" id="contador-presentes">...</div>
+                                <div class="small">Total</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row g-3 mb-2 mt-2">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Estagiários</div>
-                                    <div class="h3 fw-bold my-1" id="contador-presentes">...</div>
-                                    <div class="small">Total</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Registros</div>
-                                    <div class="h3 fw-bold my-1" id="registros-dia">...</div>
-                                    <div class="small">Total</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Recesso</div>
-                                    <div class="h3 fw-bold my-1" id="recesso-dia">...</div>
-                                    <div class="small">Total</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Atestados</div>
-                                    <div class="h3 fw-bold my-1" id="atestados-dia">...</div>
-                                    <div class="small">Total</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Folga</div>
-                                    <div class="h3 fw-bold my-1" id="folgas-dia">...</div>
-                                    <div class="small">Total</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Dispensa</div>
-                                    <div class="h3 fw-bold my-1" id="dispensas-dia">...</div>
-                                    <div class="small">Total</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="small">Falta</div>
-                                    <div class="h3 fw-bold my-1" id="faltas-dia">...</div>
-                                    <div class="small">Total</div>
-                                </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="small">Registros</div>
+                                <div class="h3 fw-bold my-1" id="registros-dia">...</div>
+                                <div class="small">Total</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row g-3 mb-2 mt-2">
-                <table id="myTable" class="table table-bordered">
-                    <thead>
-                        <tr class="table-header-custom">
-                            <th>Data</th>
-                            <th>Hora Entrada</th>
-                            <th>Hora Saída</th>
-                            <th>Total Horas</th>
-                            <th>Matrícula (CPF)</th>
-                            <th>Nome</th>
-                            <th>Motivo</th>
-                            <th>Setor</th>
-                            <th>Observação</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-secundary" id="tabela-estagiarios-corpo">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="small">Recesso</div>
+                                <div class="h3 fw-bold my-1" id="recesso-dia">...</div>
+                                <div class="small">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="small">Atestados</div>
+                                <div class="h3 fw-bold my-1" id="atestados-dia">...</div>
+                                <div class="small">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="small">Folga</div>
+                                <div class="h3 fw-bold my-1" id="folgas-dia">...</div>
+                                <div class="small">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="small">Dispensa</div>
+                                <div class="h3 fw-bold my-1" id="dispensas-dia">...</div>
+                                <div class="small">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="small">Falta</div>
+                                <div class="h3 fw-bold my-1" id="faltas-dia">...</div>
+                                <div class="small">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3 mb-2 mt-2">
+            <table id="myTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr class="table-header-custom">
+                        <th>Data</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Saída</th>
+                        <th>Total Horas</th>
+                        <th>Matrícula (CPF)</th>
+                        <th>Nome</th>
+                        <th>Motivo</th>
+                        <th>Setor</th>
+                        <th>Observação</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="table-secundary" id="tabela-estagiarios-corpo">
 
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
     </div>
