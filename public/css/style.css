@@ -215,11 +215,6 @@ body {
     color: #0091ca !important;
 }
 
-.table-header-custom th {
-    background-color: #87cefa !important;
-    color: rgb(0, 0, 0) !important;
-}
-
 .nav-link.active {
     font-weight: 700;
 }

@@ -7,7 +7,7 @@
   <title>ADM - Home</title>
 
   <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css')}}">
   <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
 
 </head>
@@ -47,7 +47,6 @@
       </div>
     </div>
   </div>
-
   <div class="footer-links">
     <div class="container d-flex justify-content-between aling-itens-center p-3">
       <div>
@@ -63,30 +62,11 @@
       </div>
     </div>
   </div>
-
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  
-        <div class="footer-links">
-          <div class="container d-flex justify-content-between aling-itens-center p-3">
-            <div>
-              <a href="{{ route('inicio.index') }}">Ir para Ponto de Registro</a>
-            </div>
-            <div>
-              <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn-outline-danger px-2 py-1"; text-decoration: none;">
-                  Sair
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
   <script src="{{ asset('js/vendor/jquery-4.0.0.min.js') }}"></script>
   <script src="{{ asset('js/vendor/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
   <script src="{{ asset('js/vendor/dataTables.bootstrap5.min.js') }}"></script>
-  <script src="{{ asset('script.js') }}"></script>
+  <script src="{{ asset('js/script.js') }}"></script>
 </body>
 
 </html>

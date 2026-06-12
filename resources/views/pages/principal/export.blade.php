@@ -150,7 +150,7 @@
             </div>
         </div>
         <div class="row g-3 mb-2 mt-2">
-            <table id="myTable" class="table table-striped table-bordered" style="width:100%">
+            <table id="myTable" class="table table-bordered align-middle mb-4 mt-4 w-100" style="width:100%">
                 <thead>
                     <tr class="table-header-custom">
                         <th>Data</th>

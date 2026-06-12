@@ -2,6 +2,7 @@
 .DS_Store
 .env.backup
 .env.production
+.npmrc
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -21,3 +22,5 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+
