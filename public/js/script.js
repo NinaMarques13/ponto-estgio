@@ -112,19 +112,6 @@ $(document).ready(function () {
         // });
         */
     });
-
-    // 3. Ação para o ícone da câmera (simulação)
-    $(".camera-icon").on("click", function () {
-        alert("Ação de Leitura de CPF/QR Code ativada (Simulação)");
-    });
-
-    $(".nav-link").on("click", function () {
-        $(".nav-link").removeClass("active");
-        $(this).addClass("active");
-        let type = $(this).attr("id");
-        $(".conteudo-aba").hide();
-        $(".conteudo-aba." + type).fadeIn();
-    });
     $(
         "#data-mes, #data-ano, #filtro-motivo, #filtro-estagiario, #data-completa",
     ).on("change", function () {
@@ -456,4 +443,38 @@ $(document).on("click", ".btn-excluir-estagiario", function (e) {
             });
         });
     }
+});
+$(document).ready(function () {
+    // Inicializa o leitor apenas uma vez
+    const html5QrCode = new Html5Qrcode("reader");
+    $("#btn-abrir-camera").on("click", function () {
+        html5QrCode
+            .start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                (decodedText) => {
+                    html5QrCode.stop().then(() => {
+                        $.ajax({
+                            url: "/processar-qrcode",
+                            type: "POST",
+                            data: {
+                                _token: $('input[name="_token"]').val(),
+                                cpf: decodedText,
+                            },
+                            success: function (xhr) {
+                                console.log("Sucesso: ", xhr);
+                                alert("CPF processado com sucesso!");
+                            },
+                            error: function (xhr) {
+                                console.error("Erro no processamento", xhr);
+                            },
+                        });
+                    });
+                },
+            )
+            .catch((err) => {
+                // <--- O .catch correto fica aqui
+                console.error("Erro na câmera: ", err);
+            });
+    });
 });

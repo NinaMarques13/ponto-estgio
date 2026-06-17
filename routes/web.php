@@ -14,12 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Yajra\DataTables\DataTables;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.inicio.inicio');
 });
-// Route::get('views/pages/inicio', function () {
-//     return view('pages.inicio.inicio');
-// });
-
 // Rotas para o admin.
 Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
 Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
@@ -49,5 +45,4 @@ Route::get('/estagiarios-cadastrados',[EstagiariosController::class,'listagemCad
 Route::post('/cadastrar-estagiario',[EstagiariosController::class,'storeEstagiario'])->name('estagiarios.store');
 Route::put('/atualizar-cadastro/{id}',[EstagiariosController::class,'updateCadastro'])->name('estagiarios.update');
 Route::put('/desativar-estagiario/{id}', [EstagiariosController::class, 'desativarCadastro'])->name('estagiarios.desativar');
-
-
+Route::post('/processar-qrcode', [EstagiariosController::class, 'processarQrcode'])->name('processar.qrcode');
