@@ -41,8 +41,8 @@
                         <div class="icon-wrapper">
                             <img src="{{ asset('icons/user.svg') }}" class="mx-2" alt="Ícone de Usuário">
                             <label for="email" class="form-label fw-bold" title="Usuário">Usuário</label>
-                            <input type="email" id="usuario" name="email" class="form-control"
-                                placeholder="Digite seu e-mail" title="Digite seu e-mail">
+                            <input type="text" id="usuario" name="login" class="form-control"
+                                placeholder="Digite seu e-mail ou CPF" title="Digite seu e-mail">
                         </div>
 
                         <div class="mb-4 mt-4">
@@ -60,7 +60,7 @@
 
                 <p class="text-muted mt-4 mx-2 small">
                     Credenciais padrão: <br>
-                    Usuário: **admin@admin.com** | Senha: **admin123**
+                    Usuário: **admin@admin.com** | Senha: **adm123**
                 </p>
             </div>
         </div>

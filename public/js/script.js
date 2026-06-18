@@ -88,29 +88,6 @@ $(document).ready(function () {
             $("#cpf").focus();
             return;
         }
-
-        // // Simulação do processamento de registro
-        // console.log(`Registrando ${acaoSelecionada} para o CPF: ${cpf}`);
-
-        // // Simulação de sucesso
-        // setTimeout(() => {
-        //      alert(`Ponto de ${acaoSelecionada} para o CPF ${cpf} SIMULADO com sucesso!`);
-        //      $('#cpf').val(''); // Limpa o campo
-        // }, 300);
-
-        /*
-        // Lógica REAL de AJAX para enviar os dados para o servidor:
-        // Exemplo:
-        // $.ajax({
-        //     url: 'seu_endpoint_de_registro.php', 
-        //     method: 'POST',
-        //     data: { 
-        //         cpf: cpf, // Envia o CPF limpo (somente dígitos)
-        //         acao: acaoSelecionada 
-        //     },
-        //     ...
-        // });
-        */
     });
     $(
         "#data-mes, #data-ano, #filtro-motivo, #filtro-estagiario, #data-completa",
@@ -302,179 +279,179 @@ $(document).ready(function () {
             const urlUnica =
                 "https://ponto-estagio.pm.pr.gov.br/registrar/" + idEstagiario;
 
-        const idParaEditar =
-            $(this).attr("data-identificador") || $(this).data("identificador");
-        const table = $("#tabela-estagiarios-cadastrados").DataTable();
-        const tr = $(this).closest("tr");
-        const data = table.row(tr).data();
+            const idParaEditar =
+                $(this).attr("data-identificador") ||
+                $(this).data("identificador");
+            const table = $("#tabela-estagiarios-cadastrados").DataTable();
+            const tr = $(this).closest("tr");
+            const data = table.row(tr).data();
 
-        console.log("DADOS DISPONÍVEIS NA LINHA:", data);
+            console.log("DADOS DISPONÍVEIS NA LINHA:", data);
 
-        if (idParaEditar) {
-            $("#id_estagiario_editar").val(idParaEditar);
+            if (idParaEditar) {
+                $("#id_estagiario_editar").val(idParaEditar);
 
-            $("#nome_editar").val(data.nm_estagiarios || "");
-            $("#cpf_editar").val(data.nr_matricula || "");
-            $("#setor_editar").val(data.nm_setor || "");
-            $("#telefone_editar").val(data.nr_telefone || "");
-            $("#email_editar").val(data.nm_email || "");
-        } else {
-            alert(
-                "Erro: O DataTable não forneceu um ID válido para esta linha.",
-            );
-            console.error("Objeto data não possui ID:", data);
-        }
-    },
-);
+                $("#nome_editar").val(data.nm_estagiarios || "");
+                $("#cpf_editar").val(data.nr_matricula || "");
+                $("#setor_editar").val(data.nm_setor || "");
+                $("#telefone_editar").val(data.nr_telefone || "");
+                $("#email_editar").val(data.nm_email || "");
+            } else {
+                alert(
+                    "Erro: O DataTable não forneceu um ID válido para esta linha.",
+                );
+                console.error("Objeto data não possui ID:", data);
+            }
+        });
 
-$("#formEditarEstagiario").on("submit", function (e) {
-    e.preventDefault();
+        $("#formEditarEstagiario").on("submit", function (e) {
+            e.preventDefault();
 
-    const inputId = document.getElementById("id_estagiario_editar");
-    let idLimpo = inputId.value.toString().replace(/\D/g, "");
+            const inputId = document.getElementById("id_estagiario_editar");
+            let idLimpo = inputId.value.toString().replace(/\D/g, "");
 
-    console.log("ID RECUPERADO DO INPUT:", inputId.value);
-    console.log("DEBUG - VALOR ENVIADO:", idLimpo);
+            console.log("ID RECUPERADO DO INPUT:", inputId.value);
+            console.log("DEBUG - VALOR ENVIADO:", idLimpo);
 
-    if (!idLimpo) {
-        alert("Erro: ID não identificado.");
-        return;
-    }
-
-    const payload = {
-        _token: $('input[name="_token"]').val(),
-        _method: "PUT",
-        nome: $("#nome_editar").val(),
-        cpf: $("#cpf_editar").val(),
-        setor: $("#setor_editar").val(),
-        telefone: $("#telefone_editar").val(),
-        email: $("#email_editar").val(),
-    };
-
-    $.ajax({
-        url: "/atualizar-cadastro/" + idLimpo,
-        type: "POST",
-        data: payload,
-        dataType: "json",
-        success: function (response) {
-            alert("Sucesso: Estagiário atualizado!");
-            location.reload();
-        },
-        error: function (xhr) {
-            let erroMsg = "Erro desconhecido no servidor.";
-
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-                erroMsg = xhr.responseJSON.message;
-            } else if (xhr.responseText) {
-                try {
-                    const resp = JSON.parse(xhr.responseText);
-                    erroMsg = resp.message || erroMsg;
-                } catch (e) {
-                    erroMsg = "Erro crítico (500) no servidor.";
-                }
+            if (!idLimpo) {
+                alert("Erro: ID não identificado.");
+                return;
             }
 
-            alert("Falha ao salvar: " + erroMsg);
-            console.error("Detalhes do erro:", xhr);
-        },
-    });
-});
+            const payload = {
+                _token: $('input[name="_token"]').val(),
+                _method: "PUT",
+                nome: $("#nome_editar").val(),
+                cpf: $("#cpf_editar").val(),
+                setor: $("#setor_editar").val(),
+                telefone: $("#telefone_editar").val(),
+                email: $("#email_editar").val(),
+            };
 
-$("#cpf_cadastro").on("input", function () {
-    let valor = $(this).val().replace(/\D/g, "");
-
-    if (valor.length > 11) {
-        valor = valor.substring(0, 11);
-    }
-
-    $(this).val(valor);
-});
-
-$("#telefone_cadastro").on("input", function () {
-    let valor = $(this).val().replace(/\D/g, "");
-
-    if (valor.length > 11) {
-        valor = valor.substring(0, 11);
-    }
-
-    $(this).val(valor);
-});
-
-$(document).on("click", ".btn-excluir-estagiario", function (e) {
-    e.preventDefault();
-
-    let idLimpo = $(this).data("identificador");
-
-    console.log("ID para exclusão:", idLimpo);
-
-    if (!idLimpo) {
-        alert("Erro: Não foi possível recuperar o ID do estagiário.");
-        return;
-    }
-
-    if (confirm("Tem certeza que deseja excluir este estagiário?")) {
-        const payload = {
-            _token: $('input[name="_token"]').val(),
-            _method: "PUT",
-        };
-
-        $.ajax({
-            url: "/desativar-estagiario/" + idLimpo,
-            type: "POST",
-            data: payload,
-
-            success: function (response) {
-                alert(response.message);
-
-                if (typeof tabelaCadastrados !== "undefined") {
-                    tabelaCadastrados.ajax.reload();
-                } else {
+            $.ajax({
+                url: "/atualizar-cadastro/" + idLimpo,
+                type: "POST",
+                data: payload,
+                dataType: "json",
+                success: function (response) {
+                    alert("Sucesso: Estagiário atualizado!");
                     location.reload();
-                }
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-                alert("Erro ao excluir registro.");
-            },
-            new QRCode(container, {
-                text: urlUnica,
-                width: 220,
-                height: 220,
+                },
+                error: function (xhr) {
+                    let erroMsg = "Erro desconhecido no servidor.";
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        erroMsg = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        try {
+                            const resp = JSON.parse(xhr.responseText);
+                            erroMsg = resp.message || erroMsg;
+                        } catch (e) {
+                            erroMsg = "Erro crítico (500) no servidor.";
+                        }
+                    }
+
+                    alert("Falha ao salvar: " + erroMsg);
+                    console.error("Detalhes do erro:", xhr);
+                },
+            });
+        });
+
+        $("#cpf_cadastro").on("input", function () {
+            let valor = $(this).val().replace(/\D/g, "");
+
+            if (valor.length > 11) {
+                valor = valor.substring(0, 11);
+            }
+
+            $(this).val(valor);
+        });
+
+        $("#telefone_cadastro").on("input", function () {
+            let valor = $(this).val().replace(/\D/g, "");
+
+            if (valor.length > 11) {
+                valor = valor.substring(0, 11);
+            }
+
+            $(this).val(valor);
+        });
+
+        $(document).on("click", ".btn-excluir-estagiario", function (e) {
+            e.preventDefault();
+
+            let idLimpo = $(this).data("identificador");
+
+            console.log("ID para exclusão:", idLimpo);
+
+            if (!idLimpo) {
+                alert("Erro: Não foi possível recuperar o ID do estagiário.");
+                return;
+            }
+
+            if (confirm("Tem certeza que deseja excluir este estagiário?")) {
+                const payload = {
+                    _token: $('input[name="_token"]').val(),
+                    _method: "PUT",
+                };
+
+                $.ajax({
+                    url: "/desativar-estagiario/" + idLimpo,
+                    type: "POST",
+                    data: payload,
+
+                    success: function (response) {
+                        alert(response.message);
+
+                        if (typeof tabelaCadastrados !== "undefined") {
+                            tabelaCadastrados.ajax.reload();
+                        } else {
+                            location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error(xhr.responseText);
+                        alert("Erro ao excluir registro.");
+                    },
+                });
+            }
+        });
+        $(document).ready(function () {
+            // Inicializa o leitor apenas uma vez
+            const html5QrCode = new Html5Qrcode("reader");
+            $("#btn-abrir-camera").on("click", function () {
+                html5QrCode
+                    .start(
+                        { facingMode: "environment" },
+                        { fps: 10, qrbox: 250 },
+                        (decodedText) => {
+                            html5QrCode.stop().then(() => {
+                                $.ajax({
+                                    url: "/processar-qrcode",
+                                    type: "POST",
+                                    data: {
+                                        _token: $('input[name="_token"]').val(),
+                                        cpf: decodedText,
+                                    },
+                                    success: function (xhr) {
+                                        console.log("Sucesso: ", xhr);
+                                        alert("CPF processado com sucesso!");
+                                    },
+                                    error: function (xhr) {
+                                        console.error(
+                                            "Erro no processamento",
+                                            xhr,
+                                        );
+                                    },
+                                });
+                            });
+                        },
+                    )
+                    .catch((err) => {
+                        // <--- O .catch correto fica aqui
+                        console.error("Erro na câmera: ", err);
+                    });
             });
         });
     }
-});
-$(document).ready(function () {
-    // Inicializa o leitor apenas uma vez
-    const html5QrCode = new Html5Qrcode("reader");
-    $("#btn-abrir-camera").on("click", function () {
-        html5QrCode
-            .start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: 250 },
-                (decodedText) => {
-                    html5QrCode.stop().then(() => {
-                        $.ajax({
-                            url: "/processar-qrcode",
-                            type: "POST",
-                            data: {
-                                _token: $('input[name="_token"]').val(),
-                                cpf: decodedText,
-                            },
-                            success: function (xhr) {
-                                console.log("Sucesso: ", xhr);
-                                alert("CPF processado com sucesso!");
-                            },
-                            error: function (xhr) {
-                                console.error("Erro no processamento", xhr);
-                            },
-                        });
-                    });
-                },
-            )
-            .catch((err) => {
-                // <--- O .catch correto fica aqui
-                console.error("Erro na câmera: ", err);
-            });
-    });
 });

@@ -28,20 +28,28 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'=> 'required|email',
-            'password'=> 'required',
+        $request->validate([
+            'login' => 'required|string',
+            'password' => 'required|string',
         ]);
-        
-        if (Auth::guard('admin')->attempt($credentials,$request->has('remember'))){
+
+        $fieldType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'cpf';
+
+        $loginValue = $fieldType === 'cpf' ? preg_replace('/\D/', '', $request->login) : $request->login;
+
+        $credentials = [
+            $fieldType => $loginValue,
+            'password' => $request->password,
+        ];
+        if (Auth::guard('admin')->attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended('admin/inicio');
+            return redirect()->intended('/dashboard');
         }
 
         return back()
-            ->withInput($request ->only('email'))
-            ->withErrors(['email' => 'As informações não coincidem com nossos registros.']);
+            ->withInput($request->only('login'))
+            ->withErrors(['login' => 'As informações não coincidem com nossos registros.']);
     }
 
 
@@ -49,7 +57,7 @@ class LoginController extends Controller
     {
         Auth::guard('admin')->logout();
         return redirect('/');
-    
+
     }
 
 

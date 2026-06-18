@@ -10,7 +10,7 @@ class Turno extends Model
     use HasFactory;
 
     protected $fillable = [
-        'estagiarios_id', // Note o plural aqui para bater com sua migration
+        'estagiario_id',
         'ds_tipo',
         'hr_entrada',
         'hr_saida',
@@ -18,7 +18,6 @@ class Turno extends Model
 
     public function estagiario()
     {
-        // Relacionamento inverso: Turno PERTENCE A um Estagiario
-        return $this->belongsTo(Estagiario::class, 'estagiarios_id');
+        return $this->belongsTo(Estagiario::class, 'estagiario_id');
     }
 }
