@@ -175,16 +175,6 @@ body {
     font-size: 1.1rem;
 }
 
-#btn_entrar {
-    background-color: #00843d;
-    color: white;
-}
-
-#btn_entrar:hover {
-    background-color: #037034;
-    color: #fff;
-}
-
 .btn-bd-primary {
     --bs-btn-font-weight: 600;
     --bs-btn-color: #ffffff;
@@ -301,4 +291,3 @@ body {
 .dt-column-order {
     display: none !important;
 }
-

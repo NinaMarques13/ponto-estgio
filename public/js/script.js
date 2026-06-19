@@ -90,7 +90,7 @@ $(document).ready(function () {
         }
     });
     $(
-        "#data-mes, #data-ano, #filtro-motivo, #filtro-estagiario, #data-completa",
+        "#data-mes, #data-ano, #filtro-motivo, #filtro-estagiario, #data-completa, #data-semana-inicio, #data-semana-fim"
     ).on("change", function () {
         console.log("Filtro alterado: " + $(this).val());
         tabelaPontos.draw();
@@ -108,6 +108,8 @@ $(document).ready(function () {
                 d.motivo = $("#filtro-motivo").val() || "";
                 d.estagiario_id = $("#filtro-estagiario").val() || "";
                 d.data = $("#data-completa").val() || "";
+                d.inicioSemana = $("#data-semana-inicio").val() || "";
+                d.fimSemana = $("#data-semana-fim").val() || "";
             },
         },
         columns: [

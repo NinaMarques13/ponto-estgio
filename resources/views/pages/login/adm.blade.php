@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
-                            <button id="btn_entrar" type="submit" class="btn btn-lg fw-bold"
+                            <button id="btn_entrar" type="submit" class="btn btn-success btn-lg fw-bold"
                                 title="Entrar">ENTRAR</button>
                         </div>
                 </form>

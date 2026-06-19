@@ -59,9 +59,15 @@ class EstagiariosController extends Controller
             if ($request->filled('data')) {
                 $inicio = Carbon::parse($request->data)->startOfDay();
                 $fim = Carbon::parse($request->data)->endOfDay();
+            } elseif ($request->filled('inicioSemana') && $request->filled('fimSemana')) {
+                $ano = $request->filled('ano') ? $request->ano : now()->year;
+                $mes = $request->filled('mes') ? $request->mes : now()->month;
+
+                $inicio = Carbon::create($ano, $mes, $request->inicioSemana)->startOfDay();
+                $fim = Carbon::create($ano, $mes, $request->fimSemana)->endOfDay();
             } elseif ($request->filled('mes') && $request->filled('ano')) {
-                $inicio = Carbon::parse($request->mes)->startOfMonth();
-                $fim = Carbon::parse($request->mes)->endOfMonth();
+                $inicio = Carbon::createFromDate($request->ano, $request->mes, 1)->startOfMonth();
+                $fim = Carbon::createFromDate($request->ano, $request->mes, 1)->endOfMonth();
             } elseif ($request->filled('ano')) {
                 $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
                 $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();

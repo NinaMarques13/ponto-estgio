@@ -22,6 +22,38 @@
                         <div class="col">
                             <form action="/lista-estagiarios" method="post">
                                 @csrf
+                                <div class="d-flex gap-2">
+                                    <div class="d-flex flex-column w-100">
+                                        <label class="form-label mb-2">Dia:</label>
+                                        <select name="data-ano" id="data-semana-inicio" class="form-control">
+                                            @php
+                                                $semanaAtual = date('D-m-Y');
+                                                $semanaInicio = 01;
+                                                $semanaFim = 31;
+                                            @endphp
+                                            @for ($i = $semanaInicio; $i <= $semanaFim; $i++)
+                                                <option value="{{ $i }}" {{ $i == $semanaAtual ? 'selected' : '' }}>
+                                                    {{ $i }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="d-flex flex-column w-100">
+                                        <label class="form-label mb-2">Até dia:</label>
+                                        <select name="data-ano" id="data-semana-fim" class="form-control">
+                                            @for ($i = $semanaFim; $i >= $semanaInicio; $i--)
+                                                <option value="{{ $i }}" {{ $i == $semanaAtual ? 'selected' : '' }}>
+                                                    {{ $i }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col">
+                            <form action="/lista-estagiarios" method="post">
+                                @csrf
                                 <label class="form-label">Ano</label>
                                 <select name="data-ano" id="data-ano" class="form-control">
                                     @php
