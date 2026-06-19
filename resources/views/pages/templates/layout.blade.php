@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ADM - Home</title>
   <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
 
 </head>
@@ -70,7 +70,7 @@
   <script src="{{ asset('js/vendor/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
   <script src="{{ asset('js/vendor/dataTables.bootstrap5.min.js') }}"></script>
-  <script src="{{ asset('script.js') }}"></script>
+  <script src="{{ asset('js/script.js') }}"></script>
 </body>
 
 </html>

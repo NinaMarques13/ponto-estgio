@@ -153,16 +153,16 @@
             <table id="myTable" class="table table-bordered align-middle mb-4 mt-4 w-100" style="width:100%">
                 <thead>
                     <tr class="table-header-custom">
-                        <th>Data</th>
-                        <th>Hora Entrada</th>
-                        <th>Hora Saída</th>
-                        <th>Total Horas</th>
-                        <th>Matrícula (CPF)</th>
-                        <th>Nome</th>
-                        <th>Motivo</th>
-                        <th>Setor</th>
-                        <th>Observação</th>
-                        <th></th>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">Hora Entrada</th>
+                        <th class="text-center">Hora Saída</th>
+                        <th class="text-center">Total Horas</th>
+                        <th class="text-center">Matrícula (CPF)</th>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Motivo</th>
+                        <th class="text-center">Setor</th>
+                        <th class="text-center">Observação</th>
+                        <th class="text-center"></th>
                     </tr>
                 </thead>
                 <tbody class="table-secundary" id="tabela-estagiarios-corpo">
@@ -204,19 +204,19 @@
                             </div>
                             <div class="col">
                                 <label>Total Horas</label>
-                                <input type="text" id="edit-total-horas" class="form-control">
+                                <input type="text" id="edit-total-horas" class="form-control" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Matricula</label>
-                                <input type="text" id="edit-matricula" class="form-control">
+                                <input type="text" id="edit-matricula" class="form-control" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Nome</label>
-                                <input type="text" id="edit-nome" class="form-control">
+                                <input type="text" id="edit-nome" class="form-control" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -228,7 +228,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Setor</label>
-                                <input type="text" id="edit-setor" class="form-control">
+                                <input type="text" id="edit-setor" class="form-control" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">

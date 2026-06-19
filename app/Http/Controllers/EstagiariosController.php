@@ -53,20 +53,6 @@ class EstagiariosController extends Controller
         ]);
         return redirect()->back()->with('sucesso', "Ponto de {$motivo} registrado com sucesso!");
     }
-
-    public function pesquisarEstagiarios(): JsonResponse
-    {
-        try {
-            $estagiarios = Estagiario::select('id', 'nm_estagiarios')
-                ->orderBy('nm_estagiarios', 'ASC')
-                ->get();
-
-            return response()->json(['data' => $estagiarios]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
     public function listaEstagiariosDia(Request $request)
     {
         try {
@@ -199,7 +185,7 @@ class EstagiariosController extends Controller
         return sprintf('%02dh%02dm', $horas, $minutos);
     }
 
-    public function update(Request $request, $id)
+    public function atualizarEstagiario(Request $request, $id)
     {
         $request->validate([
             'data' => 'required|date',
@@ -267,13 +253,13 @@ class EstagiariosController extends Controller
                 ->addColumn('action', function ($row) {
                     return '
                     <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-sm btn-success btn-gerar-qr" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#qrModalCadastro" title="Gerar QR Code">
+                        <button class="btn btn-sm btn-success btn-gerar-qr rounded-3" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#qrModalCadastro" title="Gerar QR Code">
                             <img src="' . asset('icons/qr-code.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
-                        <button class="btn btn-sm btn-primary btn-editar-estagiario" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
+                        <button class="btn btn-sm btn-primary btn-editar-estagiario rounded-3" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
                             <img src="' . asset('icons/square-pen.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
-                        <button class="btn btn-sm btn-excluir-estagiario" data-identificador="' . $row->id . '" title="Excluir">
+                        <button class="btn btn-sm btn-danger btn-excluir-estagiario rounded-3" data-identificador="' . $row->id . '" title="Excluir">
                             <img src="' . asset('icons/trash.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                     </div>';

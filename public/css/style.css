@@ -38,6 +38,7 @@ body {
 }
 
 .ponto-container {
+    background-image: url("img/fundo-pmpr.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 52vh;
@@ -200,6 +201,16 @@ body {
     --bs-btn-hover-bg: #027dad;
 }
 
+.btn-excluir-estagiario {
+    background-color: #f10000;
+    color: white;
+}
+
+.btn-excluir-estagiario:hover {
+    background-color: #da0101;
+    color: white;
+}
+
 .text-pmp-azul {
     color: #0091ca !important;
 }
@@ -243,13 +254,9 @@ body {
         box-shadow: none !important;
     }
 }
-
-/* ----------------------DataTables------------------------------------ */
-
 .tela-cadastro .dt-container {
     padding: 0;
     font-family: inherit;
-    overflow-x: hidden !important;
 }
 
 .dt-layout-row {
@@ -265,7 +272,6 @@ body {
     border: 1px solid #dee2e6 !important;
     border-radius: 0.375rem !important;
     padding: 0.375rem 0.75rem !important;
-    margin: 4px;
 }
 
 .dt-input:focus {
@@ -273,11 +279,10 @@ body {
 }
 
 .dt-paging .dt-paging-button.current {
-    background-color: #87cefa !important;
+    background-color: #87cefa !important; /* O azul claro que você usou no header */
     color: black !important;
     border: 1px solid #87cefa !important;
     font-weight: bold;
-    margin-bottom: 10px;
 }
 
 .tela-cadastro .dt-container .dt-paging .dt-paging-button:hover {
@@ -293,62 +298,7 @@ body {
     border-color: #dee2e6 !important;
     cursor: not-allowed;
 }
-
-
-
-/* ----------------------DataTables------------------------------------ */
-
-.tela-cadastro .dt-container {
-    padding: 0;
-    font-family: inherit;
-    overflow-x: hidden !important;
+.dt-column-order {
+    display: none !important;
 }
-
-.dt-layout-row {
-    margin-bottom: 1rem !important;
-}
-
-.table-header-custom th {
-    background-color: #87cefa !important;
-    color: rgb(0, 0, 0) !important;
-}
-
-.dt-input {
-    border: 1px solid #dee2e6 !important;
-    border-radius: 0.375rem !important;
-    padding: 0.375rem 0.75rem !important;
-    margin: 4px;
-}
-
-.dt-input:focus {
-    outline: solid 1px #87cefa;
-}
-
-.dt-paging .dt-paging-button.current {
-    background-color: #87cefa !important;
-    color: black !important;
-    border: 1px solid #87cefa !important;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.tela-cadastro .dt-container .dt-paging .dt-paging-button:hover {
-    background: none !important;
-    background-color: #ddeaf3 !important;
-    border: 1px solid #ddeaf3 !important;
-    color: #000000 !important;
-}
-
-.dt-paging .dt-paging-button.disabled {
-    color: #adb5bd !important;
-    background: #f8f9fa !important;
-    border-color: #dee2e6 !important;
-    cursor: not-allowed;
-}
-
-.dt-search label {
-    padding-inline: 4px;
-}
-
-
 

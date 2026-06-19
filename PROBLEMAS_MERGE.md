@@ -10,6 +10,7 @@ Sistema Laravel para gestão de pontos de estagiários com estrutura incompleta 
 - Rotas padronizadas (removido /views/)
 - Páginas de erro customizadas criadas (403, 404, 500)
 - LoginController corrigido para usar CPF
+- **NOVO:** Suíte completa de testes automatizados adicionada (30 testes cobrindo Cadastro, Ponto e Exportação)
 
 ❌ **PENDENTE:**
 - 3 controladores duplicados para deletar
@@ -411,6 +412,7 @@ abort(500);  // Renderiza 500.blade.php
 | ✅ 2 | Criar páginas de erro customizadas | `resources/views/errors/` | FEITO |
 | ✅ 3 | Corrigir validação LoginController (cpf vs email) | `app/Http/Controllers/Admin/` | FEITO |
 | ✅ 4 | Adicionar middleware de autenticação | `routes/web.php` | FEITO |
+| ✅ 5 | Implementar e validar suíte de testes de Feature | `tests/Feature/` | FEITO |
 
 ### 🔴 CRÍTICO (Deve fazer imediatamente)
 
@@ -449,13 +451,14 @@ abort(500);  // Renderiza 500.blade.php
 2. ✅ Páginas de erro customizadas (403, 404, 500)
 3. ✅ LoginController corrigido (agora usa CPF)
 4. ✅ Middleware de autenticação adicionado
+5. ✅ Suíte com 30 testes documentada e adicionada com sucesso
 
 ### Próximo ⏭️
-1. **HOJE:** Deletar 3 arquivos duplicados (ReportController, CadastroController, Estagiariocontroller-2)
-2. **HOJE:** Corrigir campos em RelatorioController e pdf.blade.php
-3. **HOJE:** Adicionar rotas para RelatorioController
-4. **AMANHÃ:** Padronizar nomes em Turno model
-5. **SEMANA:** Implementar middleware de permissões (level)
+Se você ainda não realizou os passos críticos, verifique e foque neles **AGORA**:
+1. **Limpeza:** Deletar os 3 arquivos de controllers soltos/duplicados (`ReportController`, `CadastroController`, `Estagiariocontroller-2`).
+2. **Correção de Exportação:** Ajustar os campos de relatório (`nm_estagiarios`) no `RelatorioController` e em `pdf.blade.php`, em seguida expor as rotas de Excel/PDF.
+3. **Banco e Relacionamentos:** Ajustar o rollback na migration de pontos e arrumar a FK no modelo `Turno.php` (`estagiario_id` no singular).
+4. **Middlewares (Próxima Fase):** Criar um sistema de permissões baseado na coluna `level` do `Admin` (Super Admin vs Admin Comum).
 
 ### Debug Test
 Para testar as alterações:
@@ -468,4 +471,3 @@ curl -X POST http://localhost/admin/login \
 curl http://localhost/nao-existe  # 404
 curl http://localhost/admin/login  # 200 (sem auth, mostra form)
 ```
-

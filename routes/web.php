@@ -31,7 +31,7 @@ Route::middleware('auth:admin')->group(function () {
 Route::get('inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 Route::any('registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
 Route::any('lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
-Route::put('atualizar-estagiarios/{id}', [EstagiariosController::class, 'update'])->name('atualizar-estagiarios');
+Route::put('atualizar-estagiarios/{id}', [EstagiariosController::class, 'atualizarEstagiario'])->name('atualizar-estagiarios');
 Route::get('estagiarios-cadastrados', [EstagiariosController::class, 'listagemCadastrados'])->name('estagiarios-cadastrados');
 Route::post('cadastrar-estagiario', [EstagiariosController::class, 'storeEstagiario'])->name('estagiarios.store');
 Route::put('atualizar-cadastro/{id}', [EstagiariosController::class, 'updateCadastro'])->name('estagiarios.update');
