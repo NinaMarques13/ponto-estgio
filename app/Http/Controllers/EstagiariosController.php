@@ -138,9 +138,6 @@ class EstagiariosController extends Controller
                     ->addColumn('observacao', function ($row) {
                         return $row->ds_observacao;
                     })
-                    ->addColumn('action', function ($row) {
-                        return '<button class="btn btn-primary btn-sm editar-btn" data-id="' . $row->id . '">Editar</button>';
-                    })
                     ->with('cards', [
                         'presentes' => Estagiario::whereHas('registroPonto', function ($q) use ($inicio, $fim) {
                             $q->whereBetween('hr_registro', [$inicio, $fim])->where('ds_motivo', 'entrada');
@@ -152,7 +149,6 @@ class EstagiariosController extends Controller
                         'dispensa' => (clone $baseQuery)->where('ds_motivo', 'dispensa')->count(),
                         'falta' => (clone $baseQuery)->where('ds_motivo', 'falta')->count(),
                     ])
-                    ->rawColumns(['action'])
                     ->make(true);
             }
             return response()->json(['success' => true]);

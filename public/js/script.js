@@ -112,6 +112,7 @@ $(document).ready(function () {
                 d.fimSemana = $("#data-semana-fim").val() || "";
             },
         },
+        "order": [[ 5, "asc" ]],
         columns: [
             { data: "data", name: "hr_registro" },
             {
@@ -149,12 +150,6 @@ $(document).ready(function () {
             {
                 data: "observacao",
                 name: "ds_observacao",
-                orderable: false,
-                searchable: false,
-            },
-            {
-                data: "action",
-                name: "action",
                 orderable: false,
                 searchable: false,
             },

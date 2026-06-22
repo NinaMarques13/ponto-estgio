@@ -26,13 +26,13 @@
                                     <div class="d-flex flex-column w-100">
                                         <label class="form-label mb-2">Dia:</label>
                                         <select name="data-ano" id="data-semana-inicio" class="form-control">
+                                            <option value="" selected disabled>...</option>
                                             @php
-                                                $semanaAtual = date('D-m-Y');
                                                 $semanaInicio = 01;
                                                 $semanaFim = 31;
                                             @endphp
                                             @for ($i = $semanaInicio; $i <= $semanaFim; $i++)
-                                                <option value="{{ $i }}" {{ $i == $semanaAtual ? 'selected' : '' }}>
+                                                <option value="{{ $i }}">
                                                     {{ $i }}
                                                 </option>
                                             @endfor
@@ -41,8 +41,9 @@
                                     <div class="d-flex flex-column w-100">
                                         <label class="form-label mb-2">Até dia:</label>
                                         <select name="data-ano" id="data-semana-fim" class="form-control">
+                                            <option value="" selected disabled>...</option>
                                             @for ($i = $semanaFim; $i >= $semanaInicio; $i--)
-                                                <option value="{{ $i }}" {{ $i == $semanaAtual ? 'selected' : '' }}>
+                                                <option value="{{ $i }}">
                                                     {{ $i }}
                                                 </option>
                                             @endfor
@@ -56,14 +57,14 @@
                                 @csrf
                                 <label class="form-label">Ano</label>
                                 <select name="data-ano" id="data-ano" class="form-control">
+                                    <option value="" selected disabled>Selecione um ano...</option>
                                     @php
-                                        $anoAtual = date('Y');
                                         $anoInicio = 2000;
                                         $anoFim = 2100;
                                     @endphp
 
                                     @for ($i = $anoInicio; $i <= $anoFim; $i++)
-                                        <option value="{{ $i }}" {{ $i == $anoAtual ? 'selected' : '' }}>
+                                        <option value="{{ $i }}">
                                             {{ $i }}
                                         </option>
                                     @endfor
@@ -194,7 +195,6 @@
                         <th class="text-center">Motivo</th>
                         <th class="text-center">Setor</th>
                         <th class="text-center">Observação</th>
-                        <th class="text-center"></th>
                     </tr>
                 </thead>
                 <tbody class="table-secundary" id="tabela-estagiarios-corpo">
@@ -203,80 +203,5 @@
             </table>
         </div>
     </div>
-    </div>
-    <!--Modal-->
-    <div class="modal fade" id="modalEditarEstagiario" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="text-pmp-azul fs-5" id="staticBackdropLabel">Editar
-                        Estagiário
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarEstagiario">
-                        @csrf
-                        @method('put')
-                        <input type="hidden" id="edit-id">
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Data</label>
-                                <input type="date" id="edit-data" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Hora Entrada</label>
-                                <input type="time" id="edit-entrada" class="form-control">
-                            </div>
-                            <div class="col">
-                                <label>Hora Saída</label>
-                                <input type="time" id="edit-saida" class="form-control">
-                            </div>
-                            <div class="col">
-                                <label>Total Horas</label>
-                                <input type="text" id="edit-total-horas" class="form-control" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Matricula</label>
-                                <input type="text" id="edit-matricula" class="form-control" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Nome</label>
-                                <input type="text" id="edit-nome" class="form-control" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Motivo</label>
-                                <input type="text" id="edit-motivo" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Setor</label>
-                                <input type="text" id="edit-setor" class="form-control" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label>Observação</label>
-                                <input type="text" id="edit-obs" class="form-control">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btn-cancelar"
-                        data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-bd-primary" id="btn-salvar">Salvar</button>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection

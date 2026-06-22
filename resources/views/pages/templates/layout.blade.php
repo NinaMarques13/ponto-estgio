@@ -25,7 +25,7 @@
             <div class="navbar-nav">
               <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" 
                 href="{{ route('dashboard') }}">
-                Home
+                Eventos
               </a>
 
               <a class="nav-link {{ request()->routeIs('cadastro') ? 'active' : '' }}" 
@@ -35,7 +35,7 @@
 
               <a class="nav-link {{ request()->routeIs('export') ? 'active' : '' }}" 
                 href="{{ route('export') }}">
-                Planilha de Exportação
+                Registros 
               </a>
             </div>
           </div>
