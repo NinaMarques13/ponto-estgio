@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EstagiariosController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\CadastroController;
 
 Route::get('/', function () {
     return view('pages.inicio.inicio');
@@ -27,13 +28,12 @@ Route::middleware('auth:admin')->group(function () {
     })->name('export');
 });
 
-// Rotas de estagiários (públicas/sem autenticação por enquanto)
 Route::get('inicio', [EstagiariosController::class, 'index'])->name('inicio.index');
 Route::any('registrar-ponto', [EstagiariosController::class, 'store'])->name('registrar-ponto');
 Route::any('lista-estagiarios', [EstagiariosController::class, 'listaEstagiariosDia'])->name('lista.estagiarios');
 Route::put('atualizar-estagiarios/{id}', [EstagiariosController::class, 'atualizarEstagiario'])->name('atualizar-estagiarios');
-Route::get('estagiarios-cadastrados', [EstagiariosController::class, 'listagemCadastrados'])->name('estagiarios-cadastrados');
-Route::post('cadastrar-estagiario', [EstagiariosController::class, 'storeEstagiario'])->name('estagiarios.store');
-Route::put('atualizar-cadastro/{id}', [EstagiariosController::class, 'updateCadastro'])->name('estagiarios.update');
-Route::put('desativar-estagiario/{id}', [EstagiariosController::class, 'desativarCadastro'])->name('estagiarios.desativar');
+Route::get('estagiarios-cadastrados', [CadastroController::class, 'listagemCadastrados'])->name('estagiarios-cadastrados');
+Route::post('cadastrar-estagiario', [CadastroController::class, 'storeEstagiario'])->name('estagiarios.store');
+Route::put('atualizar-cadastro/{id}', [CadastroController::class, 'updateCadastro'])->name('estagiarios.update');
+Route::put('desativar-estagiario/{id}', [CadastroController::class, 'desativarCadastro'])->name('estagiarios.desativar');
 Route::post('processar-qrcode', [EstagiariosController::class, 'processarQrcode'])->name('processar.qrcode');
