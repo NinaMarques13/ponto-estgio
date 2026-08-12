@@ -1,0 +1,94 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Estagiario;
+use App\Models\RegistroPonto;
+use App\Models\Turno;
+use Illuminate\Database\Seeder;
+use Carbon\Carbon;
+use Faker\Factory as Faker;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        $faker = Faker::create('pt_BR');
+
+        // 1. Cria o Admin (para você poder logar)
+        $this->call(AdminSeeder::class);
+
+        // 2. Cria 5 Estagiários com seus Turnos
+        $estagiarios = Estagiario::factory(5)
+            ->has(Turno::factory()->count(1)) // Garante que tenham um turno definido
+            ->create();
+
+        // 3. Para cada estagiário, gera histórico de pontos nos dias úteis do mês
+        $inicioMes = Carbon::today()->startOfMonth();
+        $fimMes = Carbon::today()->endOfMonth();
+
+        foreach ($estagiarios as $estagiario) {
+            for ($dia = $inicioMes->copy(); $dia->lte($fimMes); $dia->addDay()) {
+                if (!$dia->isWeekend()) {
+                    $this->criarDiaDeTrabalho($estagiario, $dia, $faker);
+                }
+            }
+        }
+    }
+
+    /**
+     * Gera um par de entrada e Saída (4h ou 6h de duração)
+     */
+    private function criarDiaDeTrabalho($estagiario, Carbon $data, $faker)
+    {
+        // Define carga horária (4h ou 6h)
+        $cargaHoraria = rand(0, 1) ? 4 : 6;
+
+        // Define hora de entrada aleatória (entre 07:00 e 10:00 daquele dia)
+        // O clone é importante para não alterar a variável original $data no loop
+        $entrada = (clone $data)->setHour(rand(7, 10))->setMinute(rand(0, 59));
+
+        // Calcula a saída baseada na entrada
+        $saida = (clone $entrada)->addHours($cargaHoraria);
+
+        // Cria registro de eNTRADA
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo'     => 'entrada', // Motivo fixo para o sistema reconhecer
+            'hr_registro'   => $entrada,
+            'ip_registro'   => $faker->ipv4(),
+            'ds_observacao' => 'entrada'
+        ]);
+
+        // Cria registro de SAÍDA
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'saida', 
+            'hr_registro' => $saida,
+            'ip_registro' => $faker->ipv4(),
+            'ds_observacao' => 'saida'
+        ]);
+    }
+
+    /**
+     * Gera um registro único de falta/dispensa/recesso
+     * Comentado a pedido do usuário
+     */
+    /*
+    private function criarOcorrencia($estagiario, Carbon $data, $faker)
+    {
+        $motivosEspeciais = ['falta', 'dispensa', 'recesso', 'folga'];
+        $motivo = $motivosEspeciais[array_rand($motivosEspeciais)];
+
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => ''.$motivo,
+            'hr_registro' => (clone $data)->startOfDay(),
+            'ip_registro' => $faker->ipv4(),
+        ]);
+    }
+    */
+}
