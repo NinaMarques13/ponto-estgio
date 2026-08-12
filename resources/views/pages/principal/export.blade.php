@@ -26,7 +26,7 @@
                                     <div class="d-flex flex-column w-100">
                                         <label class="form-label mb-2">Dia:</label>
                                         <select name="data-ano" id="data-semana-inicio" class="form-control">
-                                            <option value="" selected disabled>...</option>
+                                            <option value="" selected>...</option>
                                             @php
                                                 $semanaInicio = 01;
                                                 $semanaFim = 31;
@@ -41,7 +41,7 @@
                                     <div class="d-flex flex-column w-100">
                                         <label class="form-label mb-2">Até dia:</label>
                                         <select name="data-ano" id="data-semana-fim" class="form-control">
-                                            <option value="" selected disabled>...</option>
+                                            <option value="" selected>...</option>
                                             @for ($i = $semanaFim; $i >= $semanaInicio; $i--)
                                                 <option value="{{ $i }}">
                                                     {{ $i }}
@@ -57,7 +57,7 @@
                                 @csrf
                                 <label class="form-label">Ano</label>
                                 <select name="data-ano" id="data-ano" class="form-control">
-                                    <option value="" selected disabled>Selecione um ano...</option>
+                                    <option value="" selected>Selecione um ano...</option>
                                     @php
                                         $anoInicio = 2000;
                                         $anoFim = 2100;

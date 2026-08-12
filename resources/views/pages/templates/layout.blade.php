@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
 </head>
 
@@ -23,8 +25,8 @@
         <nav class="navbar navbar-expand p-0 navbar-top-menu">
           <div class="container-fluid justify-content-start">
             <div class="navbar-nav">
-              <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" 
-                href="{{ route('dashboard') }}">
+              <a class="nav-link {{ request()->routeIs('eventos') ? 'active' : '' }}" 
+                href="{{ route('eventos') }}">
                 Eventos
               </a>
 
@@ -70,6 +72,15 @@
   <script src="{{ asset('js/vendor/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
   <script src="{{ asset('js/vendor/dataTables.bootstrap5.min.js') }}"></script>
+  
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
   <script src="{{ asset('js/script.js') }}"></script>
 </body>
 

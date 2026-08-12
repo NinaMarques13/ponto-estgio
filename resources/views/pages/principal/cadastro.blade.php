@@ -7,21 +7,6 @@
                 <button class="btn btn-bd-primary px-4 py-2" data-bs-toggle="modal"
                     data-bs-target="#modalAdicionarEstagiario" title="Cadastrar estagiário">Cadastrar estagiário</button>
             </div>
-
-            <!-- <div class="row g-3 mb-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-secondary">Nome</label>
-                                            <input type="text" id="buscaNome" class="form-control bg-light mb-3" placeholder="Buscar por nome">
-                                            <button type="button" class="btn btn-primary">Buscar</button>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label text-secondary">CPF (Matrícula)</label>
-                                            <input type="text" id="buscaCPF" class="form-control bg-light mb-3" placeholder="Buscar por CPF">
-                                            <button type="button" class="btn btn-primary">Buscar</button>
-                                        </div>
-                                    </div> -->
-
             <div class="table-responsive shadow-sm">
                 <table id="tabela-estagiarios-cadastrados" class="table table-bordered align-middle mb-4 mt-4 w-100" title="Tabela de estagiários">
                     <thead class="table-header-custom">

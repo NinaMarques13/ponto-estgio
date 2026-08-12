@@ -616,4 +616,215 @@ class EstagiariosTest extends TestCase
         $estagiario->refresh();
         $this->assertEquals('Ana Costa Silva', $estagiario->nm_estagiarios);
     }
+
+    /** @test */
+    public function test_fluxo_gerar_evento_atestado_abonado()
+    {
+        $estagiario = Estagiario::factory()->create();
+
+        // 1. Salvar evento atestado abonado
+        $response = $this->postJson('/salvar-evento', [
+            'estagiario_id' => $estagiario->id,
+            'data_inicio' => Carbon::today()->format('Y-m-d'),
+            'data_fim' => Carbon::today()->format('Y-m-d'),
+            'motivo' => 'atestado',
+            'is_abonado' => true,
+            'observacao' => 'Atestado médico de teste'
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('registro_ponto', [
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'atestado',
+            'is_abonado' => true
+        ]);
+    }
+
+    /** @test */
+    public function test_fluxo_gerar_evento_correcao_dia()
+    {
+        $estagiario = Estagiario::factory()->create();
+
+        // 1. Salvar evento correção dia (deve gerar entrada e saída)
+        $response = $this->postJson('/salvar-evento', [
+            'estagiario_id' => $estagiario->id,
+            'data_inicio' => Carbon::today()->format('Y-m-d'),
+            'data_fim' => Carbon::today()->format('Y-m-d'),
+            'motivo' => 'correcao',
+            'hora_entrada' => '08:00',
+            'hora_saida' => '12:00',
+            'observacao' => 'Correção de teste'
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('registro_ponto', [
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'entrada',
+            'hr_registro' => Carbon::today()->setTime(8, 0)->format('Y-m-d H:i:s')
+        ]);
+
+        $this->assertDatabaseHas('registro_ponto', [
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'saida',
+            'hr_registro' => Carbon::today()->setTime(12, 0)->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    /** @test */
+    public function test_calculo_horas_com_recesso_e_atestado_abonado()
+    {
+        $estagiario = Estagiario::factory()->create();
+        
+        // Cria um turno de 6 horas (08:00 a 14:00)
+        \App\Models\Turno::factory()->create([
+            'estagiario_id' => $estagiario->id,
+            'hr_entrada' => '08:00',
+            'hr_saida' => '14:00',
+        ]);
+
+        // 1. Cria um recesso no primeiro dia
+        $dia1 = Carbon::today()->startOfMonth();
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'recesso',
+            'hr_registro' => $dia1->copy()->startOfDay(),
+            'ip_registro' => '127.0.0.1',
+            'is_abonado' => true,
+        ]);
+
+        // 2. Cria um atestado abonado no segundo dia
+        $dia2 = $dia1->copy()->addDay();
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'atestado',
+            'hr_registro' => $dia2->copy()->startOfDay(),
+            'ip_registro' => '127.0.0.1',
+            'is_abonado' => true,
+        ]);
+
+        // 3. Cria um atestado NÃO abonado (descontado) no terceiro dia
+        $dia3 = $dia1->copy()->addDays(2);
+        RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'atestado',
+            'hr_registro' => $dia3->copy()->startOfDay(),
+            'ip_registro' => '127.0.0.1',
+            'is_abonado' => false,
+        ]);
+
+        // 4. Executa a listagem e verifica se o total de horas é 12h00m (6h do recesso + 6h do atestado abonado)
+        $response = $this->postJson('/lista-estagiarios', [
+            'mes' => $dia1->format('Y-m')
+        ], ['X-Requested-With' => 'XMLHttpRequest']);
+
+        $response->assertStatus(200);
+        $dados = $response->json('data');
+
+        // Encontra a linha referente ao estagiário e verifica a coluna total_horas
+        $row = collect($dados)->firstWhere('estagiario_id', $estagiario->id);
+        $this->assertNotNull($row);
+        $this->assertEquals('12h00m', $row['total_horas']);
+    }
+
+    /** @test */
+    public function test_correcao_dia_apenas_entrada_preserva_saida()
+    {
+        $estagiario = Estagiario::factory()->create();
+        $hoje = Carbon::today();
+
+        // Cria registros pré-existentes de entrada e saída
+        $entradaOriginal = RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'entrada',
+            'hr_registro' => $hoje->copy()->setTime(8, 0, 0),
+            'ip_registro' => '127.0.0.1'
+        ]);
+
+        $saidaOriginal = RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'saida',
+            'hr_registro' => $hoje->copy()->setTime(12, 0, 0),
+            'ip_registro' => '127.0.0.1'
+        ]);
+
+        // Executa correção de dia apenas para a entrada (altera para 07:30)
+        $response = $this->postJson('/salvar-evento', [
+            'estagiario_id' => $estagiario->id,
+            'data_inicio' => $hoje->format('Y-m-d'),
+            'data_fim' => $hoje->format('Y-m-d'),
+            'motivo' => 'correcao',
+            'hora_entrada' => '07:30',
+            'hora_saida' => null,
+            'observacao' => 'Corrigindo entrada'
+        ]);
+
+        $response->assertStatus(200);
+
+        // Verifica que a entrada foi atualizada
+        $this->assertDatabaseHas('registro_ponto', [
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'entrada',
+            'hr_registro' => $hoje->copy()->setTime(7, 30, 0)->format('Y-m-d H:i:s')
+        ]);
+
+        // E a entrada original de 08:00 foi removida logicamente
+        $this->assertSoftDeleted('registro_ponto', [
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'entrada',
+            'hr_registro' => $hoje->copy()->setTime(8, 0, 0)->format('Y-m-d H:i:s')
+        ]);
+
+        // E a saída original (12:00) continua existindo intacta
+        $this->assertDatabaseHas('registro_ponto', [
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'saida',
+            'hr_registro' => $hoje->copy()->setTime(12, 0, 0)->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    /** @test */
+    public function test_exclusao_eventos_lote()
+    {
+        $estagiario = Estagiario::factory()->create();
+        $hoje = Carbon::today();
+
+        // 1. Cria 3 registros de recesso
+        $r1 = RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'recesso',
+            'hr_registro' => $hoje->copy()->startOfDay(),
+            'ip_registro' => '127.0.0.1'
+        ]);
+
+        $r2 = RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'recesso',
+            'hr_registro' => $hoje->copy()->addDay()->startOfDay(),
+            'ip_registro' => '127.0.0.1'
+        ]);
+
+        $r3 = RegistroPonto::create([
+            'estagiario_id' => $estagiario->id,
+            'ds_motivo' => 'recesso',
+            'hr_registro' => $hoje->copy()->addDays(2)->startOfDay(),
+            'ip_registro' => '127.0.0.1'
+        ]);
+
+        // 2. Chama a rota de exclusão em lote para r1 e r2
+        $response = $this->postJson('/excluir-eventos-lote', [
+            'ids' => [$r1->id, $r2->id]
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true]);
+
+        // 3. Verifica que r1 e r2 foram deletados logicamente, mas r3 continua ativo lá
+        $this->assertSoftDeleted('registro_ponto', ['id' => $r1->id]);
+        $this->assertSoftDeleted('registro_ponto', ['id' => $r2->id]);
+        $this->assertDatabaseHas('registro_ponto', ['id' => $r3->id]);
+    }
 }

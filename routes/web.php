@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EstagiariosController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\CadastroController;
+use App\Http\Controllers\EventosController;
 
 Route::get('/', function () {
     return view('pages.inicio.inicio');
@@ -17,9 +18,9 @@ Route::middleware('guest:admin')->group(function () {
 
 Route::middleware('auth:admin')->group(function () {
     Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
-    Route::get('dashboard', function () {
-        return view('pages.principal.dashboard');
-    })->name('dashboard');
+    Route::get('eventos', function () {
+        return view('pages.principal.eventos');
+    })->name('eventos');
     Route::get('cadastro', function () {
         return view('pages.principal.cadastro');
     })->name('cadastro');
@@ -37,3 +38,9 @@ Route::post('cadastrar-estagiario', [CadastroController::class, 'storeEstagiario
 Route::put('atualizar-cadastro/{id}', [CadastroController::class, 'updateCadastro'])->name('estagiarios.update');
 Route::put('desativar-estagiario/{id}', [CadastroController::class, 'desativarCadastro'])->name('estagiarios.desativar');
 Route::post('processar-qrcode', [EstagiariosController::class, 'processarQrcode'])->name('processar.qrcode');
+Route::get('estagiarios-eventos', [EventosController::class, 'ListaEstagiariosEventos'])->name('estagiarios-eventos');
+Route::post('salvar-evento', [EventosController::class, 'storeEvento'])->name('eventos.store');
+Route::get('estagiarios/{id}/listar-eventos', [EventosController::class, 'getEventosEstagiario'])->name('eventos.listar');
+Route::get('estagiarios/{id}/verificar-periodo', [EventosController::class, 'verificarPeriodo'])->name('eventos.verificar');
+Route::delete('excluir-evento/{id}', [EventosController::class, 'destroyEvento'])->name('eventos.destroy');
+Route::post('excluir-eventos-lote', [EventosController::class, 'destroyEventosLote'])->name('eventos.destroyLote');

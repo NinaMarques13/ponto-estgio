@@ -8,6 +8,7 @@
     --cor-input-fundo: #fff;
     --fonte-principal: "Roboto", sans-serif;
 }
+
 .admin-access-btn {
     position: fixed;
 
@@ -27,6 +28,7 @@
 
     transition: background-color 0.3s ease;
 }
+
 .admin-access-btn:hover {
     background-color: #0b4e25;
     color: white;
@@ -86,6 +88,7 @@ body {
     box-shadow: none !important;
     font-size: 1.2rem;
 }
+
 .cpf-input::placeholder {
     color: #999;
 }
@@ -98,6 +101,7 @@ body {
     cursor: pointer;
     padding: 0.5rem 1rem;
 }
+
 .camera-icon i {
     color: #004a22;
     font-size: 1.5rem;
@@ -108,12 +112,14 @@ body {
     color: #6c757d;
     display: flex;
 }
+
 .text-intro {
     color: #004a22;
     font-weight: bold;
     text-decoration: none;
     padding: 0 0.2rem;
 }
+
 .registro-link {
     color: #004a22;
     font-weight: bold;
@@ -136,9 +142,11 @@ body {
     background-color: #037034;
     color: #fff;
 }
+
 .img-exp {
     align-items: center;
 }
+
 .admin-access-btn {
     background-color: #00843d;
     position: fixed;
@@ -244,6 +252,7 @@ body {
         box-shadow: none !important;
     }
 }
+
 .tela-cadastro .dt-container {
     padding: 0;
     font-family: inherit;
@@ -269,7 +278,8 @@ body {
 }
 
 .dt-paging .dt-paging-button.current {
-    background-color: #87cefa !important; /* O azul claro que você usou no header */
+    background-color: #87cefa !important;
+    /* O azul claro que você usou no header */
     color: black !important;
     border: 1px solid #87cefa !important;
     font-weight: bold;
@@ -288,6 +298,22 @@ body {
     border-color: #dee2e6 !important;
     cursor: not-allowed;
 }
+
 .dt-column-order {
     display: none !important;
+}
+
+/* Correção agressiva para botões do DataTables */
+div.dt-buttons .btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.2rem !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 0.25rem 0 0 !important;
+    box-shadow: none !important;
+}
+div.dt-buttons .btn i {
+    font-size: 0.875rem !important;
 }

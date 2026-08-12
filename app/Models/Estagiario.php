@@ -19,6 +19,10 @@ class Estagiario extends Model
         'nm_email',
         'ds_situacao',    
     ];
+
+    protected $casts = [
+        'ds_situacao' => 'boolean',
+    ];
     
     public function registroPonto()
     {

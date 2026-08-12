@@ -28,13 +28,27 @@ class EstagiariosController extends Controller
         $cpf = $request->input('cpf');
         $estagiario = Estagiario::where('nr_matricula', $cpf)->first();
         if (!$estagiario) {
-            return redirect()->back()->with('erro', "Estagiário não encontrado com o CPF: {$cpf}");
+            session()->flash('erro', "Estagiário não encontrado com o CPF: {$cpf}");
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Estagiário não encontrado com o CPF: {$cpf}"
+                ], 302);
+            }
+            return redirect()->back();
         }
         $agora = Carbon::now();
         $inicioPermitido = Carbon::today()->setTime(5, 0, 0);
         $fimPermitido = Carbon::today()->setTime(23, 59, 59);
         if (!$agora->between($inicioPermitido, $fimPermitido)) {
-            return redirect()->back()->with('Ponto fechado');
+            session()->flash('erro', 'Ponto fechado');
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Ponto fechado'
+                ], 403);
+            }
+            return redirect()->back();
         }
         $ultimoRegistro = RegistroPonto::where('estagiario_id', $estagiario->id)
             ->whereDate('hr_registro', Carbon::today())
@@ -51,23 +65,42 @@ class EstagiariosController extends Controller
             'ip_registro' => $request->ip(),
             'ds_observacao' => $motivo
         ]);
-        return redirect()->back()->with('sucesso', "Ponto de {$motivo} registrado com sucesso!");
+        session()->flash('sucesso', "Ponto de {$motivo} registrado com sucesso!");
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Ponto de {$motivo} registrado com sucesso!"
+            ]);
+        }
+        return redirect()->back();
     }
     public function listaEstagiariosDia(Request $request)
     {
         try {
+            // Extrai ano e mês do campo 'mes' se ele vier formatado como YYYY-MM
+            $ano = $request->input('ano');
+            $mes = $request->input('mes');
+            if ($mes && strpos($mes, '-') !== false) {
+                $partes = explode('-', $mes);
+                $ano = $partes[0];
+                $mes = $partes[1];
+            }
+            if (!$ano) {
+                $ano = now()->year;
+            }
+            if (!$mes) {
+                $mes = now()->month;
+            }
+
             if ($request->filled('data')) {
                 $inicio = Carbon::parse($request->data)->startOfDay();
                 $fim = Carbon::parse($request->data)->endOfDay();
             } elseif ($request->filled('inicioSemana') && $request->filled('fimSemana')) {
-                $ano = $request->filled('ano') ? $request->ano : now()->year;
-                $mes = $request->filled('mes') ? $request->mes : now()->month;
-
                 $inicio = Carbon::create($ano, $mes, $request->inicioSemana)->startOfDay();
                 $fim = Carbon::create($ano, $mes, $request->fimSemana)->endOfDay();
-            } elseif ($request->filled('mes') && $request->filled('ano')) {
-                $inicio = Carbon::createFromDate($request->ano, $request->mes, 1)->startOfMonth();
-                $fim = Carbon::createFromDate($request->ano, $request->mes, 1)->endOfMonth();
+            } elseif ($request->filled('mes')) {
+                $inicio = Carbon::createFromDate($ano, $mes, 1)->startOfMonth();
+                $fim = Carbon::createFromDate($ano, $mes, 1)->endOfMonth();
             } elseif ($request->filled('ano')) {
                 $inicio = Carbon::createFromDate($request->ano, 1, 1)->startOfYear();
                 $fim = Carbon::createFromDate($request->ano, 12, 31)->endOfYear();
@@ -81,9 +114,25 @@ class EstagiariosController extends Controller
                 })
                 ->when($request->filled('motivo'), function ($q) use ($request) {
                     if ($request->motivo === 'presente') {
-                        $q->whereIn('ds_motivo', ['entrada', 'saida']);
+                        // Registro completo: tem Entrada com Saída correspondente no mesmo dia
+                        $q->where('ds_motivo', 'entrada')
+                          ->whereExists(function ($query) {
+                              $query->select(DB::raw(1))
+                                    ->from('registro_ponto as rp_saida')
+                                    ->whereColumn('rp_saida.estagiario_id', 'registro_ponto.estagiario_id')
+                                    ->where('rp_saida.ds_motivo', 'saida')
+                                    ->whereRaw('DATE(rp_saida.hr_registro) = DATE(registro_ponto.hr_registro)');
+                          });
                     } elseif ($request->motivo === 'andamento') {
-                        $q->where('ds_motivo', 'entrada');
+                        // Em andamento: tem Entrada SEM Saída correspondente no mesmo dia
+                        $q->where('ds_motivo', 'entrada')
+                          ->whereNotExists(function ($query) {
+                              $query->select(DB::raw(1))
+                                    ->from('registro_ponto as rp_saida')
+                                    ->whereColumn('rp_saida.estagiario_id', 'registro_ponto.estagiario_id')
+                                    ->where('rp_saida.ds_motivo', 'saida')
+                                    ->whereRaw('DATE(rp_saida.hr_registro) = DATE(registro_ponto.hr_registro)');
+                          });
                     } else {
                         $q->where('ds_motivo', $request->motivo);
                     }
@@ -97,6 +146,7 @@ class EstagiariosController extends Controller
                             ->from('registro_ponto')
                             ->whereBetween('hr_registro', [$inicio, $fim])
                             ->where('ds_motivo', '!=', 'saida')
+                            ->whereNull('deleted_at')
                             ->groupBy('estagiario_id', DB::raw('DATE(hr_registro)'));
                     });
                 return DataTables::of($queryDoPonto)
@@ -169,20 +219,47 @@ class EstagiariosController extends Controller
             ->groupBy(function ($item) {
                 return Carbon::parse($item->hr_registro)->format('Y-m-d');
             });
-        $totalHoras = 0;
-        foreach ($pontos as $registros) {
-            $entrada = $registros->filter(fn($r) => in_array($r->ds_motivo, ['entrada', 'recesso', 'dispensa', 'folga']))->first();
-            $saida = $registros->filter(fn($r) => in_array($r->ds_motivo, ['saida', 'recesso', 'dispensa', 'folga']))->last();
-            if ($entrada && $saida) {
-                $inicioPonto = Carbon::parse($entrada->hr_registro);
-                $fimPonto = Carbon::parse($saida->hr_registro);
-                if ($fimPonto->gt($inicioPonto)) {
-                    $totalHoras += $inicioPonto->diffInMinutes($fimPonto);
+
+        // Obtém o turno do estagiário para saber a carga horária diária padrão (em minutos)
+        $turno = Turno::where('estagiario_id', $id)->first();
+        $minutosPadrao = 360; // 6 horas padrão se não houver turno
+        if ($turno) {
+            $entradaTurno = Carbon::parse($turno->hr_entrada);
+            $saidaTurno = Carbon::parse($turno->hr_saida);
+            if ($saidaTurno->gt($entradaTurno)) {
+                $minutosPadrao = $entradaTurno->diffInMinutes($saidaTurno);
+            }
+        }
+
+        $totalMinutos = 0;
+
+        foreach ($pontos as $dia => $registros) {
+            // Verifica se há alguma ocorrência que abone o dia inteiro
+            $ocorrenciaAbonada = $registros->first(function ($r) {
+                return in_array($r->ds_motivo, ['recesso', 'folga']) || 
+                       (in_array($r->ds_motivo, ['atestado', 'dispensa']) && $r->is_abonado);
+            });
+
+            if ($ocorrenciaAbonada) {
+                // Adiciona o tempo padrão do turno para esse dia
+                $totalMinutos += $minutosPadrao;
+            } else {
+                // Caso contrário, calcula com base nas marcações de entrada e saída normais
+                $entrada = $registros->firstWhere('ds_motivo', 'entrada');
+                $saida = $registros->firstWhere('ds_motivo', 'saida');
+
+                if ($entrada && $saida) {
+                    $inicioPonto = Carbon::parse($entrada->hr_registro);
+                    $fimPonto = Carbon::parse($saida->hr_registro);
+                    if ($fimPonto->gt($inicioPonto)) {
+                        $totalMinutos += $inicioPonto->diffInMinutes($fimPonto);
+                    }
                 }
             }
         }
-        $horas = floor($totalHoras / 60);
-        $minutos = $totalHoras % 60;
+
+        $horas = floor($totalMinutos / 60);
+        $minutos = $totalMinutos % 60;
 
         return sprintf('%02dh%02dm', $horas, $minutos);
     }

@@ -22,24 +22,18 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
 
         // 2. Cria 5 Estagiários com seus Turnos
-        $estagiarios = Estagiario::factory(15)
+        $estagiarios = Estagiario::factory(5)
             ->has(Turno::factory()->count(1)) // Garante que tenham um turno definido
             ->create();
 
-        // 3. Para cada estagiário, gera 5 dias de histórico
+        // 3. Para cada estagiário, gera histórico de pontos nos dias úteis do mês
+        $inicioMes = Carbon::today()->startOfMonth();
+        $fimMes = Carbon::today()->endOfMonth();
+
         foreach ($estagiarios as $estagiario) {
-
-            // Loop dos últimos 5 dias (incluindo hoje)
-            for ($i = 0; $i < 5; $i++) {
-                $dataReferencia = Carbon::today()->subDays($i);
-
-                // Sorteio: 70% chance de trabalho normal, 30% de ocorrência
-                $sorteio = rand(1, 100);
-
-                if ($sorteio <= 70) {
-                    $this->criarDiaDeTrabalho($estagiario, $dataReferencia, $faker);
-                } else {
-                    $this->criarOcorrencia($estagiario, $dataReferencia, $faker);
+            for ($dia = $inicioMes->copy(); $dia->lte($fimMes); $dia->addDay()) {
+                if (!$dia->isWeekend()) {
+                    $this->criarDiaDeTrabalho($estagiario, $dia, $faker);
                 }
             }
         }
@@ -81,7 +75,9 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Gera um registro único de falta/dispensa/recesso
+     * Comentado a pedido do usuário
      */
+    /*
     private function criarOcorrencia($estagiario, Carbon $data, $faker)
     {
         $motivosEspeciais = ['falta', 'dispensa', 'recesso', 'folga'];
@@ -94,4 +90,5 @@ class DatabaseSeeder extends Seeder
             'ip_registro' => $faker->ipv4(),
         ]);
     }
+    */
 }

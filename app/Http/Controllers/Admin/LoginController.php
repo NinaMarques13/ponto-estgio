@@ -19,7 +19,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::guard('admin')->check()) {
-            return redirect('/dashboard');
+            return redirect('/eventos');
         }
 
         return view('pages.login.adm');

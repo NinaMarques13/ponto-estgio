@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Log;
 
 class CadastroController extends Controller
 {
-        public function listagemCadastrados(Request $request)
+    public function listagemCadastrados(Request $request)
     {
         try {
-            $query = Estagiario::query()->where('ds_situacao', 'true');
+            $query = Estagiario::query()->where('ds_situacao', true);
 
             return DataTables::of($query)
                 ->addColumn('action', function ($row) {
