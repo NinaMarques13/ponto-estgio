@@ -12,18 +12,31 @@
 
 <body>
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0 ponto-container">
-        <a href="{{ asset('/admin/login') }}" class="admin-access-btn" title="Acessar Área Administrativa"
-            style="align-content: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-circle-user-icon lucide-circle-user">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="10" r="3" />
-                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-            </svg>
-            <circle cx="12" cy="7" r="4"></circle>
-            </svg><text>Área Admin</text>
-        </a>
+        @if(auth()->guard('admin')->check())
+            <a href="{{ route('cadastro') }}" class="admin-access-btn" title="Acessar Área Administrativa"
+                style="align-content: center; display: flex; gap: 8px; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-circle-user">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="10" r="3" />
+                    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                </svg>
+                <span style="font-weight: 600;">Painel Admin</span>
+            </a>
+        @else
+            <a href="{{ route('admin.login') }}" class="admin-access-btn" title="Acessar Área Administrativa"
+                style="align-content: center; display: flex; gap: 8px; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-circle-user">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="10" r="3" />
+                    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                </svg>
+                <span style="font-weight: 600;">Área Admin</span>
+            </a>
+        @endif
         <div class="card ponto-card border-start border-end border-2 px-3">
             <div class="text-center pt-4 pb-3">
                 <img src="{{ asset('img/dgp_transparente.png') }}" alt="Brasão DGP" class="img-fluid brasao-topo" p->

@@ -487,7 +487,9 @@ $(document).ready(function () {
         "#data-mes, #data-ano, #filtro-motivo, #filtro-estagiario, #data-completa, #data-semana-inicio, #data-semana-fim"
     ).on("change", function () {
         console.log("Filtro alterado: " + $(this).val());
-        tabelaPontos.draw();
+        if (typeof tabelaPontos !== "undefined") {
+            tabelaPontos.ajax.reload();
+        }
     });
     tabelaPontos = $("#myTable").DataTable({
         processing: true,
