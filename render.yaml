@@ -1,0 +1,30 @@
+databases:
+  - name: ponto-estagio-db
+    databaseName: ponto_estagio
+    user: ponto_user
+    plan: free
+
+services:
+  - type: web
+    name: ponto-estagio-web
+    env: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ponto-estagio-db
+          property: connectionString
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        value: "base64:pvWhIAHfEQJOKLr41IAjGkbxFiKGX64/7KwFIavgdBA="
+      - key: APP_URL
+        # O Render vai preencher isso automaticamente
+        sync: false
+      - key: LOG_CHANNEL
+        value: stderr
