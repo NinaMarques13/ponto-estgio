@@ -11,7 +11,7 @@ services:
     plan: free
     healthCheckPath: /
     envVars:
-      - key: DATABASE_URL
+      - key: DB_URL
         fromDatabase:
           name: ponto-estagio-db
           property: connectionString
