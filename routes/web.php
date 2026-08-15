@@ -5,7 +5,16 @@ use App\Http\Controllers\EstagiariosController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\EventosController;
+use Illuminate\Support\Facades\Artisan;
 
+Route::get('/popular-banco-secreto', function () {
+    try {
+        Artisan::call('db:seed', ['--force' => true]);
+        return 'Banco populado com sucesso! Você já pode acessar /admin/login';
+    } catch (\Exception $e) {
+        return 'Erro ao popular o banco: ' . $e->getMessage();
+    }
+});
 Route::get('/', function () {
     return view('pages.inicio.inicio');
 })->name('home');
