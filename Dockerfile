@@ -1,10 +1,11 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Instala as dependências do sistema necessárias para o PHP e Node.js
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip \
     libpq-dev \
@@ -16,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instala as extensões do PHP necessárias para o Laravel e PostgreSQL
-RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Instala o Composer mais recente
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
