@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::get('/popular-banco-secreto', function () {
     try {
-        Artisan::call('db:seed', ['--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\AdminSeeder', '--force' => true]);
         return 'Banco populado com sucesso! Você já pode acessar /admin/login';
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         return 'Erro ao popular o banco: ' . $e->getMessage();
     }
 });
