@@ -15,6 +15,15 @@ Route::get('/popular-banco-secreto', function () {
         return 'Erro ao popular o banco: ' . $e->getMessage();
     }
 });
+Route::get('/popular-banco-estagiarios', function () {
+    try {
+        Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\DatabaseSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\PontoHojeSeeder', '--force' => true]);
+        return 'Banco populado com sucesso! Você já pode ver os estágiários';
+    } catch (\Throwable $e) {
+        return 'Erro ao popular o banco: ' . $e->getMessage();
+    }
+});
 Route::get('/', function () {
     return view('pages.inicio.inicio');
 })->name('home');
