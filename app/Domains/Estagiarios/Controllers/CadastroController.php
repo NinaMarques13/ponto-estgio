@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Domains\Estagiarios\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
-use App\Models\Turno;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
+use App\Domains\ControleDePonto\Models\Turno;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
@@ -54,23 +54,15 @@ class CadastroController extends Controller
     {
         try {
             $request->validate([
-                'nm_estagiarios' => 'required|string|max:100',
-                'nr_matricula' => 'required|string|max:14|' . Rule::unique('estagiarios')->where('ds_situacao', 1),
-                'nm_setor' => 'required|string|max:255',
-                'nr_telefone' => 'required|string|max:11|' . Rule::unique('estagiarios')->where('ds_situacao', 1),
-                'nm_email' => 'required|email|max:255|' . Rule::unique('estagiarios')->where('ds_situacao', 1),
+                'nome' => 'required|string|max:100',
+                'cpf' => 'required|string|max:14|' . Rule::unique('estagiarios', 'cpf')->where('ds_situacao', 1),
+                'setor' => 'required|string|max:255',
+                'telefone' => 'required|string|max:11|' . Rule::unique('estagiarios', 'nr_telefone')->where('ds_situacao', 1),
+                'email' => 'required|email|max:255|' . Rule::unique('estagiarios', 'nm_email')->where('ds_situacao', 1),
             ]);
 
-            $estagiario = Estagiario::updateOrCreate(
-                ['nr_matricula' => $request->nr_matricula],
-                [
-                    'nm_estagiarios' => $request->nm_estagiarios,
-                    'nm_setor' => $request->nm_setor,
-                    'nr_telefone' => $request->nr_telefone,
-                    'nm_email' => $request->nm_email,
-                    'ds_situacao' => 1
-                ]
-            );
+            $estagiarioService = new \App\Domains\Estagiarios\Services\EstagiarioService();
+            $estagiario = $estagiarioService->criarOuAtualizar($request->all());
             return response()->json([
                 'success' => true,
                 'message' => 'Estagiario cadastrado com sucesso!',
@@ -93,27 +85,16 @@ class CadastroController extends Controller
 
     public function updateCadastro(Request $request, $id)
     {
-        $estagiario = Estagiario::where('id', $id)->firstOrFail();
-
-        if (!$estagiario) {
-            return response()->json(['message' => 'Estagiário não encontrado'], 404);
-        }
-
         $request->validate([
-            'nome' => 'required|string|max:100,' . $estagiario->id,
-            'cpf' => 'required|string|max:14|unique:estagiarios,nr_matricula,' . $estagiario->id,
-            'setor' => 'required|string|max:255,' . $estagiario->id,
-            'telefone' => 'required|string|max:11|unique:estagiarios,nr_telefone,' . $estagiario->id,
-            'email' => 'required|email|max:255|unique:estagiarios,nm_email,' . $estagiario->id,
+            'nome' => 'required|string|max:100',
+            'cpf' => 'required|string|max:14|unique:estagiarios,cpf,' . $id,
+            'setor' => 'required|string|max:255',
+            'telefone' => 'required|string|max:11|unique:estagiarios,nr_telefone,' . $id,
+            'email' => 'required|email|max:255|unique:estagiarios,nm_email,' . $id,
         ]);
 
-        $estagiario->update([
-            'nm_estagiarios' => $request->nome,
-            'nr_matricula' => $request->cpf,
-            'nm_setor' => $request->setor,
-            'nr_telefone' => $request->telefone,
-            'nm_email' => $request->email
-        ]);
+        $estagiarioService = new \App\Domains\Estagiarios\Services\EstagiarioService();
+        $estagiarioService->atualizar($id, $request->all());
         return response()->json([
             'status' => 'success',
             'message' => 'Estagiario atualizado com sucesso!'
@@ -122,11 +103,8 @@ class CadastroController extends Controller
 
     public function desativarCadastro(Request $request, $id)
     {
-        $estagiario = Estagiario::findOrFail($id);
-
-        $estagiario->update([
-            'ds_situacao' => false
-        ]);
+        $estagiarioService = new \App\Domains\Estagiarios\Services\EstagiarioService();
+        $estagiarioService->desativar($id);
         return response()->json(['message' => 'Estagiário excluído com sucesso!']);
     }
 

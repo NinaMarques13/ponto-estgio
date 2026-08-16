@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Estagiario;
+use App\Domains\Estagiarios\Models\Estagiario;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -21,11 +21,11 @@ class EstagiarioFactory extends Factory
     public function definition(): array
     {
         return [
-            'nm_estagiarios' => fake()->name(),
-            'nr_matricula' => fake('pt_BR')->unique()->cpf(true),
-            'nm_setor' => fake()->word(),
-            'nr_telefone' => fake()->unique()->numerify('###########'),
-            'nm_email' => fake()->unique()->safeEmail(),
+            'nm_estagiarios' => $this->faker->name,
+            'cpf' => $this->faker->numerify('###.###.###-##'),
+            'nm_setor' => $this->faker->word,
+            'nr_telefone' => $this->faker->numerify('###########'),
+            'nm_email' => $this->faker->unique()->safeEmail,
             'ds_situacao' => true,
         ];
     }

@@ -1,12 +1,12 @@
 <?php
 // Admin controller
-namespace App\Http\Controllers\Admin;
+namespace App\Domains\Admins\Controllers;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Admin;
+use App\Domains\Admins\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller

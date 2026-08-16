@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Admin;
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
+use App\Domains\Admins\Models\Admin;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -23,11 +23,11 @@ class EstagiariosTest extends TestCase
     public function test_pode_criar_novo_estagiario()
     {
         $dados = [
-            'nm_estagiarios' => 'João Silva',
-            'nr_matricula' => '12345678901',
-            'nm_setor' => 'TI',
-            'nr_telefone' => '11987654321',
-            'nm_email' => 'joao@example.com',
+            'nome' => 'João Silva',
+            'cpf' => '12345678901',
+            'setor' => 'TI',
+            'telefone' => '11987654321',
+            'email' => 'joao@example.com',
         ];
 
         $response = $this->postJson('/cadastrar-estagiario', $dados);
@@ -39,7 +39,7 @@ class EstagiariosTest extends TestCase
                 'dados' => [
                     'id',
                     'nm_estagiarios',
-                    'nr_matricula',
+                    'cpf',
                     'nm_setor'
                 ]
             ])
@@ -50,7 +50,7 @@ class EstagiariosTest extends TestCase
 
         $this->assertDatabaseHas('estagiarios', [
             'nm_estagiarios' => 'João Silva',
-            'nr_matricula' => '12345678901',
+            'cpf' => '12345678901',
             'nm_setor' => 'TI',
         ]);
     }
@@ -59,11 +59,11 @@ class EstagiariosTest extends TestCase
     public function test_validacao_campos_obrigatorios_cadastro()
     {
         $dados = [
-            'nm_estagiarios' => '',
-            'nr_matricula' => '',
-            'nm_setor' => '',
-            'nr_telefone' => '',
-            'nm_email' => '',
+            'nome' => '',
+            'cpf' => '',
+            'setor' => '',
+            'telefone' => '',
+            'email' => '',
         ];
 
         $response = $this->postJson('/cadastrar-estagiario', $dados);
@@ -84,11 +84,11 @@ class EstagiariosTest extends TestCase
     public function test_validacao_email_invalido()
     {
         $dados = [
-            'nm_estagiarios' => 'João Silva',
-            'nr_matricula' => '12345678901',
-            'nm_setor' => 'TI',
-            'nr_telefone' => '11987654321',
-            'nm_email' => 'email-invalido',
+            'nome' => 'João Silva',
+            'cpf' => '12345678901',
+            'setor' => 'TI',
+            'telefone' => '11987654321',
+            'email' => 'email-invalido',
         ];
 
         $response = $this->postJson('/cadastrar-estagiario', $dados);
@@ -101,15 +101,15 @@ class EstagiariosTest extends TestCase
     public function test_validacao_matricula_duplicada()
     {
         $estagiario1 = Estagiario::factory()->create([
-            'nr_matricula' => '12345678901'
+            'cpf' => '12345678901'
         ]);
 
         $dados = [
-            'nm_estagiarios' => 'Maria Silva',
-            'nr_matricula' => '12345678901',
-            'nm_setor' => 'RH',
-            'nr_telefone' => '11987654322',
-            'nm_email' => 'maria@example.com',
+            'nome' => 'Maria Silva',
+            'cpf' => '12345678901',
+            'setor' => 'RH',
+            'telefone' => '11987654322',
+            'email' => 'maria@example.com',
         ];
 
         $response = $this->postJson('/cadastrar-estagiario', $dados);
@@ -126,11 +126,11 @@ class EstagiariosTest extends TestCase
         ]);
 
         $dados = [
-            'nm_estagiarios' => 'João Silva',
-            'nr_matricula' => '12345678901',
-            'nm_setor' => 'TI',
-            'nr_telefone' => '11987654321',
-            'nm_email' => 'joao@example.com',
+            'nome' => 'João Silva',
+            'cpf' => '12345678901',
+            'setor' => 'TI',
+            'telefone' => '11987654321',
+            'email' => 'joao@example.com',
         ];
 
         $response = $this->postJson('/cadastrar-estagiario', $dados);
@@ -147,11 +147,11 @@ class EstagiariosTest extends TestCase
         ]);
 
         $dados = [
-            'nm_estagiarios' => 'João Silva',
-            'nr_matricula' => '12345678901',
-            'nm_setor' => 'TI',
-            'nr_telefone' => '11987654321',
-            'nm_email' => 'joao@example.com',
+            'nome' => 'João Silva',
+            'cpf' => '12345678901',
+            'setor' => 'TI',
+            'telefone' => '11987654321',
+            'email' => 'joao@example.com',
         ];
 
         $response = $this->postJson('/cadastrar-estagiario', $dados);
@@ -167,7 +167,7 @@ class EstagiariosTest extends TestCase
 
         $dadosAtualizados = [
             'nome' => 'João Atualizado',
-            'cpf' => $estagiario->nr_matricula,
+            'cpf' => $estagiario->cpf,
             'setor' => 'RH',
             'telefone' => $estagiario->nr_telefone,
             'email' => $estagiario->nm_email,
@@ -362,7 +362,7 @@ class EstagiariosTest extends TestCase
     public function test_registrar_entrada_ponto()
     {
         $estagiario = Estagiario::factory()->create([
-            'nr_matricula' => '12345678901'
+            'cpf' => '12345678901'
         ]);
 
         $response = $this->postJson('/registrar-ponto', [
@@ -382,7 +382,7 @@ class EstagiariosTest extends TestCase
     public function test_registrar_saida_apos_entrada()
     {
         $estagiario = Estagiario::factory()->create([
-            'nr_matricula' => '12345678901'
+            'cpf' => '12345678901'
         ]);
 
         // Registra entrada
@@ -437,7 +437,7 @@ class EstagiariosTest extends TestCase
             'data' => $hoje->format('Y-m-d'),
             'entrada' => '09:00',
             'saida' => '',
-            'matricula' => $estagiario->nr_matricula,
+            'cpf' => $estagiario->cpf,
             'nome' => $estagiario->nm_estagiarios,
             'motivo' => 'entrada',
             'setor' => $estagiario->nm_setor,
@@ -471,7 +471,7 @@ class EstagiariosTest extends TestCase
             'data' => $hoje->format('Y-m-d'),
             'entrada' => '',
             'saida' => '',
-            'matricula' => $estagiario->nr_matricula,
+            'cpf' => $estagiario->cpf,
             'nome' => $estagiario->nm_estagiarios,
             'motivo' => 'falta',
             'setor' => $estagiario->nm_setor,
@@ -501,7 +501,7 @@ class EstagiariosTest extends TestCase
     public function test_processar_qrcode_valido()
     {
         $estagiario = Estagiario::factory()->create([
-            'nr_matricula' => '12345678901'
+            'cpf' => '12345678901'
         ]);
 
         $response = $this->postJson('/processar-qrcode', [
@@ -535,11 +535,11 @@ class EstagiariosTest extends TestCase
     {
         // 1. Cadastrar novo estagiário
         $dadosCadastro = [
-            'nm_estagiarios' => 'Carlos Silva',
-            'nr_matricula' => '98765432101',
-            'nm_setor' => 'Financeiro',
-            'nr_telefone' => '11987654321',
-            'nm_email' => 'carlos@example.com',
+            'nome' => 'Carlos Silva',
+            'cpf' => '98765432101',
+            'setor' => 'Financeiro',
+            'telefone' => '11987654321',
+            'email' => 'carlos@example.com',
         ];
 
         $responseCadastro = $this->postJson('/cadastrar-estagiario', $dadosCadastro);
@@ -547,7 +547,7 @@ class EstagiariosTest extends TestCase
 
         // 2. Verificar se o estagiário foi criado
         $this->assertDatabaseHas('estagiarios', [
-            'nr_matricula' => '98765432101'
+            'cpf' => '98765432101'
         ]);
 
         // 3. Registrar entrada
@@ -579,7 +579,7 @@ class EstagiariosTest extends TestCase
         // 1. Criar estagiário
         $estagiario = Estagiario::factory()->create([
             'nm_estagiarios' => 'Ana Costa',
-            'nr_matricula' => '55555555555',
+            'cpf' => '55555555555',
         ]);
 
         // 2. Registrar ponto
@@ -604,7 +604,7 @@ class EstagiariosTest extends TestCase
             'data' => Carbon::today()->format('Y-m-d'),
             'entrada' => '07:30',
             'saida' => '17:30',
-            'matricula' => '55555555555',
+            'cpf' => '55555555555',
             'nome' => 'Ana Costa Silva',
             'motivo' => 'entrada',
             'setor' => 'Gestão',
@@ -680,7 +680,7 @@ class EstagiariosTest extends TestCase
         $estagiario = Estagiario::factory()->create();
         
         // Cria um turno de 6 horas (08:00 a 14:00)
-        \App\Models\Turno::factory()->create([
+        \App\Domains\ControleDePonto\Models\Turno::factory()->create([
             'estagiario_id' => $estagiario->id,
             'hr_entrada' => '08:00',
             'hr_saida' => '14:00',

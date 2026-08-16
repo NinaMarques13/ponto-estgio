@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\RegistroPonto;
-use App\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
+use App\Domains\Estagiarios\Models\Estagiario;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 

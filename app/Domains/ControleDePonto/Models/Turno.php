@@ -1,13 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\ControleDePonto\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Domains\Estagiarios\Models\Estagiario;
 
 class Turno extends Model
 {
     use HasFactory;
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\TurnoFactory::new();
+    }
 
     protected $fillable = [
         'estagiario_id',

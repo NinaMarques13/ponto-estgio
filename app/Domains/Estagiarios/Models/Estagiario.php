@@ -1,19 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\Estagiarios\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\RegistroPonto;
-use App\Models\Turno;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
+use App\Domains\ControleDePonto\Models\Turno;
 
 class Estagiario extends Model
 {   
     use HasFactory;
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\EstagiarioFactory::new();
+    }
+
     protected $table = "estagiarios";
     protected $fillable = [
         'nm_estagiarios',
-        'nr_matricula',
+        'cpf',
         'nm_setor',
         'nr_telefone',
         'nm_email',

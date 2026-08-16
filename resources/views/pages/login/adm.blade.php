@@ -62,6 +62,10 @@
                     Credenciais padrão: <br>
                     Usuário: **admin@admin.com** | Senha: **adm123**
                 </p>
+
+                <div class="mt-3 mb-3">
+                    <a href="{{ route('admin.register') }}" class="text-success text-decoration-none fw-bold small">Não tem uma conta? Cadastre-se</a>
+                </div>
             </div>
         </div>
 

@@ -7,7 +7,7 @@ $(document).ready(function () {
             columns: [
                 { data: "id", name: "id", visible: false },
                 { data: "nm_estagiarios", name: "nm_estagiarios" },
-                { data: "nr_matricula", name: "nr_matricula" },
+                { data: "cpf", name: "cpf" },
                 { data: "nm_setor", name: "nm_setor" },
                 { data: "nr_telefone", name: "nr_telefone" },
                 { data: "nm_email", name: "nm_email" },
@@ -40,7 +40,7 @@ $(document).ready(function () {
             columns: [
                 { data: "id", name: "id", visible: false },
                 { data: "nm_estagiarios", name: "nm_estagiarios" },
-                { data: "nr_matricula", name: "nr_matricula" },
+                { data: "cpf", name: "cpf" },
                 { data: "nm_setor", name: "nm_setor" },
                 { data: "nr_telefone", name: "nr_telefone" },
                 { data: "nm_email", name: "nm_email" },
@@ -551,8 +551,8 @@ $(document).ready(function () {
                 searchable: false,
             },
             {
-                data: "matricula",
-                name: "estagiario.nr_matricula",
+                data: "cpf",
+                name: "estagiario.cpf",
                 orderable: false,
                 searchable: false,
             },
@@ -606,7 +606,7 @@ $(document).ready(function () {
         $("#edit-id").val(rowData.estagiario_id || "");
         $("#edit-data").val(dataFormatada || "");
         $("#edit-nome").val(rowData.nome || "");
-        $("#edit-matricula").val(rowData.matricula || "");
+        $("#edit-matricula").val(rowData.cpf || "");
         $("#edit-entrada").val(rowData.entrada.substring(0, 5) || "");
         $("#edit-saida").val(rowData.saida.substring(0, 5) || "");
         $("#edit-total-horas").val(rowData.total_horas || "");
@@ -629,7 +629,7 @@ $(document).ready(function () {
             fim: $("#edit-data-fim").val(),
             entrada: $("#edit-entrada").val(),
             saida: $("#edit-saida").val(),
-            matricula: $("#edit-matricula").val(),
+            cpf: $("#edit-matricula").val(),
             nome: $("#edit-nome").val(),
             motivo: $("#edit-motivo").val(),
             setor: $("#edit-setor").val(),
@@ -692,9 +692,9 @@ $(document).ready(function () {
             const tr = $(button).closest("tr");
             const data = table.row(tr).data();
 
-            if (data && data.nr_matricula) {
+            if (data && data.cpf) {
                 // Extrai apenas os números do CPF para um QR Code limpo
-                const cpfLimpo = data.nr_matricula.replace(/\D/g, "");
+                const cpfLimpo = data.cpf.replace(/\D/g, "");
                 
                 $("#qrcodeCadastro").html("");
                 new QRCode(document.getElementById("qrcodeCadastro"), {
@@ -725,7 +725,7 @@ $(document).ready(function () {
                 $("#id_estagiario_editar").val(idParaEditar);
 
                 $("#nome_editar").val(data.nm_estagiarios || "");
-                $("#cpf_editar").val(data.nr_matricula || "");
+                $("#cpf_editar").val(data.cpf || "");
                 $("#setor_editar").val(data.nm_setor || "");
                 $("#telefone_editar").val(data.nr_telefone || "");
                 $("#email_editar").val(data.nm_email || "");

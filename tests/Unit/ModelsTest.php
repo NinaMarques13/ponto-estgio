@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Models\Admin;
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
-use App\Models\Turno;
+use App\Domains\Admins\Models\Admin;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
+use App\Domains\ControleDePonto\Models\Turno;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase; // Usando Tests\TestCase para ter banco de dados no Laravel

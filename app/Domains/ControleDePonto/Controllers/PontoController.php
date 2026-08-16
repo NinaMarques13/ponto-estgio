@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Domains\ControleDePonto\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
-use App\Models\Turno;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
+use App\Domains\ControleDePonto\Models\Turno;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Log;
+use App\Domains\Estagiarios\Requests\AtualizarEstagiarioRequest;
+use App\Domains\ControleDePonto\Services\PontoService;
 
-
-class EstagiariosController extends Controller
+class PontoController extends Controller
 {
     public function index()
     {
@@ -26,7 +27,7 @@ class EstagiariosController extends Controller
     public function store(Request $request)
     {
         $cpf = $request->input('cpf');
-        $estagiario = Estagiario::where('nr_matricula', $cpf)->first();
+        $estagiario = Estagiario::where('cpf', $cpf)->first();
         if (!$estagiario) {
             session()->flash('erro', "Estagiário não encontrado com o CPF: {$cpf}");
             if ($request->wantsJson()) {
@@ -38,8 +39,8 @@ class EstagiariosController extends Controller
             return redirect()->back();
         }
         $agora = Carbon::now();
-        $inicioPermitido = Carbon::today()->setTime(5, 0, 0);
-        $fimPermitido = Carbon::today()->setTime(23, 59, 59);
+        $inicioPermitido = Carbon::today()->setTimeFromTimeString(config('app.ponto.inicio'));
+        $fimPermitido = Carbon::today()->setTimeFromTimeString(config('app.ponto.fim'));
         if (!$agora->between($inicioPermitido, $fimPermitido)) {
             session()->flash('erro', 'Ponto fechado');
             if ($request->wantsJson()) {
@@ -77,6 +78,7 @@ class EstagiariosController extends Controller
     public function listaEstagiariosDia(Request $request)
     {
         try {
+            $pontoService = new PontoService();
             // Extrai ano e mês do campo 'mes' se ele vier formatado como YYYY-MM
             $ano = $request->input('ano');
             $mes = $request->input('mes');
@@ -153,14 +155,14 @@ class EstagiariosController extends Controller
                     ->addColumn('nome', function ($row) {
                         return $row->estagiario ? $row->estagiario->nm_estagiarios : 'Sem nome';
                     })
-                    ->addColumn('matricula', function ($row) {
-                        return $row->estagiario ? $row->estagiario->nr_matricula : 'Sem matrícula';
+                    ->addColumn('cpf', function ($row) {
+                        return $row->estagiario ? $row->estagiario->cpf : 'Sem matrícula';
                     })
                     ->addColumn('setor', function ($row) {
                         return $row->estagiario ? $row->estagiario->nm_setor : 'Sem setor';
                     })
-                    ->addColumn('total_horas', function ($row) use ($inicio, $fim) {
-                        return $this->calculoHoras($inicio, $fim, $row->estagiario_id);
+                    ->addColumn('total_horas', function ($row) use ($inicio, $fim, $pontoService) {
+                        return $pontoService->calculoHoras($inicio, $fim, $row->estagiario_id);
                     })
                     ->addColumn('data', function ($row) {
                         return Carbon::parse($row->hr_registro)->format('d/m/Y');
@@ -210,78 +212,14 @@ class EstagiariosController extends Controller
         }
     }
 
-    private function calculoHoras($inicio, $fim, $id)
+    public function atualizarEstagiario(AtualizarEstagiarioRequest $request, $id)
     {
-        $pontos = RegistroPonto::where('estagiario_id', $id)
-            ->whereBetween('hr_registro', [$inicio, $fim])
-            ->orderBy('hr_registro', 'asc')
-            ->get()
-            ->groupBy(function ($item) {
-                return Carbon::parse($item->hr_registro)->format('Y-m-d');
-            });
-
-        // Obtém o turno do estagiário para saber a carga horária diária padrão (em minutos)
-        $turno = Turno::where('estagiario_id', $id)->first();
-        $minutosPadrao = 360; // 6 horas padrão se não houver turno
-        if ($turno) {
-            $entradaTurno = Carbon::parse($turno->hr_entrada);
-            $saidaTurno = Carbon::parse($turno->hr_saida);
-            if ($saidaTurno->gt($entradaTurno)) {
-                $minutosPadrao = $entradaTurno->diffInMinutes($saidaTurno);
-            }
-        }
-
-        $totalMinutos = 0;
-
-        foreach ($pontos as $dia => $registros) {
-            // Verifica se há alguma ocorrência que abone o dia inteiro
-            $ocorrenciaAbonada = $registros->first(function ($r) {
-                return in_array($r->ds_motivo, ['recesso', 'folga']) || 
-                       (in_array($r->ds_motivo, ['atestado', 'dispensa']) && $r->is_abonado);
-            });
-
-            if ($ocorrenciaAbonada) {
-                // Adiciona o tempo padrão do turno para esse dia
-                $totalMinutos += $minutosPadrao;
-            } else {
-                // Caso contrário, calcula com base nas marcações de entrada e saída normais
-                $entrada = $registros->firstWhere('ds_motivo', 'entrada');
-                $saida = $registros->firstWhere('ds_motivo', 'saida');
-
-                if ($entrada && $saida) {
-                    $inicioPonto = Carbon::parse($entrada->hr_registro);
-                    $fimPonto = Carbon::parse($saida->hr_registro);
-                    if ($fimPonto->gt($inicioPonto)) {
-                        $totalMinutos += $inicioPonto->diffInMinutes($fimPonto);
-                    }
-                }
-            }
-        }
-
-        $horas = floor($totalMinutos / 60);
-        $minutos = $totalMinutos % 60;
-
-        return sprintf('%02dh%02dm', $horas, $minutos);
-    }
-
-    public function atualizarEstagiario(Request $request, $id)
-    {
-        $request->validate([
-            'data' => 'required|date',
-            'entrada' => 'nullable',
-            'saida' => 'nullable',
-            'matricula' => 'required|max:14',
-            'nome' => 'required',
-            'motivo' => 'nullable|string',
-            'setor' => 'required',
-            'observacao' => 'nullable|string'
-        ]);
 
         $estagiario = Estagiario::findOrFail($id);
 
         $estagiario->update([
             'nm_estagiarios' => $request->nome,
-            'nr_matricula' => $request->matricula,
+            'cpf' => $request->cpf,
             'nm_setor' => $request->setor
         ]);
 
@@ -326,7 +264,7 @@ class EstagiariosController extends Controller
     public function processarQrcode(Request $request): JsonResponse
     {
         $cpf = $request->input('cpf');
-        $estagiario = Estagiario::where('nr_matricula', $cpf)->first();
+        $estagiario = Estagiario::where('cpf', $cpf)->first();
         if (!$estagiario) {
             return response()->json([
                 'status' => 'erro',

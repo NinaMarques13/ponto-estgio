@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Domains\Eventos\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class EventosController extends Controller
 {
@@ -66,74 +67,8 @@ class EventosController extends Controller
                 }
             }
 
-            $inicio = Carbon::parse($request->data_inicio);
-            $fim = Carbon::parse($request->data_fim);
-            $period = CarbonPeriod::create($inicio, $fim);
-
-            DB::transaction(function () use ($period, $request) {
-                foreach ($period as $date) {
-                    if ($request->motivo === 'correcao') {
-                        if ($request->filled('hora_entrada')) {
-                            // Deleta somente entrada existente no mesmo dia
-                            RegistroPonto::where('estagiario_id', $request->estagiario_id)
-                                ->whereDate('hr_registro', $date->format('Y-m-d'))
-                                ->where('ds_motivo', 'entrada')
-                                ->delete();
-
-                            $dataEntrada = Carbon::parse($date->format('Y-m-d') . ' ' . $request->hora_entrada);
-                            RegistroPonto::create([
-                                'estagiario_id' => $request->estagiario_id,
-                                'ds_motivo' => 'entrada',
-                                'hr_registro' => $dataEntrada,
-                                'ip_registro' => $request->ip(),
-                                'ds_observacao' => $request->observacao ? 'Correção: ' . $request->observacao : 'Correção de ponto (entrada)',
-                                'is_abonado' => false,
-                            ]);
-                        }
-
-                        if ($request->filled('hora_saida')) {
-                            // Deleta somente saída existente no mesmo dia
-                            RegistroPonto::where('estagiario_id', $request->estagiario_id)
-                                ->whereDate('hr_registro', $date->format('Y-m-d'))
-                                ->where('ds_motivo', 'saida')
-                                ->delete();
-
-                            $dataSaida = Carbon::parse($date->format('Y-m-d') . ' ' . $request->hora_saida);
-                            RegistroPonto::create([
-                                'estagiario_id' => $request->estagiario_id,
-                                'ds_motivo' => 'saida',
-                                'hr_registro' => $dataSaida,
-                                'ip_registro' => $request->ip(),
-                                'ds_observacao' => $request->observacao ? 'Correção: ' . $request->observacao : 'Correção de ponto (saída)',
-                                'is_abonado' => false,
-                            ]);
-                        }
-                    } else {
-                        // Deleta registros de ponto existentes no mesmo dia
-                        RegistroPonto::where('estagiario_id', $request->estagiario_id)
-                            ->whereDate('hr_registro', $date->format('Y-m-d'))
-                            ->delete();
-
-                        // Determina se a ocorrência é abonada
-                        $isAbonado = false;
-                        if (in_array($request->motivo, ['recesso', 'folga'])) {
-                            $isAbonado = true;
-                        } elseif (in_array($request->motivo, ['atestado', 'dispensa'])) {
-                            $isAbonado = $request->has('is_abonado') ? (bool) $request->is_abonado : false;
-                        }
-
-                        // Cria o registro da ocorrência
-                        RegistroPonto::create([
-                            'estagiario_id' => $request->estagiario_id,
-                            'ds_motivo' => $request->motivo,
-                            'hr_registro' => $date->startOfDay(),
-                            'ip_registro' => $request->ip(),
-                            'ds_observacao' => $request->observacao,
-                            'is_abonado' => $isAbonado,
-                        ]);
-                    }
-                }
-            });
+            $eventoService = new \App\Domains\Eventos\Services\EventoService();
+            $eventoService->gerarOcorrenciaEmMassa($request->all(), $request->ip());
 
             return response()->json([
                 'success' => true,
