@@ -27,13 +27,13 @@ class CadastroController extends Controller
                     return '
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-success btn-gerar-qr rounded-3" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#qrModalCadastro" title="Gerar QR Code">
-                            <img src="' . asset('icons/qr-code.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <img src="/icons/qr-code.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                         <button class="btn btn-sm btn-primary btn-editar-estagiario rounded-3" data-identificador="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#modalEditarEstagiario">
-                            <img src="' . asset('icons/square-pen.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <img src="/icons/square-pen.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                         <button class="btn btn-sm btn-danger btn-excluir-estagiario rounded-3" data-identificador="' . $row->id . '" title="Excluir">
-                            <img src="' . asset('icons/trash.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <img src="/icons/trash.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                     </div>';
                 })

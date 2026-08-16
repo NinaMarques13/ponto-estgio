@@ -39,14 +39,14 @@
                     @endif
                     <div class="mb-3">
                         <div class="icon-wrapper">
-                            <img src="{{ asset('icons/user.svg') }}" class="mx-2" alt="Ícone de Usuário">
+                            <img src="/icons/user.svg" class="mx-2" alt="Ícone de Usuário">
                             <label for="email" class="form-label fw-bold" title="Usuário">Usuário</label>
                             <input type="text" id="usuario" name="login" class="form-control"
                                 placeholder="Digite seu e-mail ou CPF" title="Digite seu e-mail">
                         </div>
 
                         <div class="mb-4 mt-4">
-                            <img src="{{ asset('icons/lock-keyhole.svg') }}" class="mx-2" alt="Ícone de Senha">
+                            <img src="/icons/lock-keyhole.svg" class="mx-2" alt="Ícone de Senha">
                             <label for="senha" class="form-label fw-bold" title="Senha">Senha</label>
                             <input type="password" id="senha" name="password" class="form-control"
                                 placeholder="Digite sua senha" title="Digite sua senha">

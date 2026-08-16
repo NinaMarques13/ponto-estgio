@@ -24,10 +24,10 @@ class EventosController extends Controller
                     return '
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-success btn-gerar-evento rounded-3" data-identificador="' . $row->id . '" data-nome="' . htmlspecialchars($row->nm_estagiarios) . '" title="Gerar Ocorrência">
-                            <img src="' . asset('icons/plus.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <img src="/icons/plus.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                         <button class="btn btn-sm btn-danger btn-listar-eventos rounded-3" data-identificador="' . $row->id . '" data-nome="' . htmlspecialchars($row->nm_estagiarios) . '" title="Visualizar / Excluir Ocorrências">
-                            <img src="' . asset('icons/trash.svg') . '" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <img src="/icons/trash.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
                         </button>
                     </div>';
                 })
