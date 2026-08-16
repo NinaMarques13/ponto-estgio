@@ -852,7 +852,8 @@ $(document).ready(function () {
     });
     $(document).ready(function () {
         // Inicializa o leitor apenas uma vez
-        const html5QrCode = new Html5Qrcode("reader");
+        if (typeof Html5Qrcode !== 'undefined' && document.getElementById("reader")) {
+            const html5QrCode = new Html5Qrcode("reader");
         $("#btn-abrir-camera").on("click", function () {
             html5QrCode
                 .start(

@@ -66,3 +66,13 @@ Route::get('estagiarios/{id}/listar-eventos', [EventosController::class, 'getEve
 Route::get('estagiarios/{id}/verificar-periodo', [EventosController::class, 'verificarPeriodo'])->name('eventos.verificar');
 Route::delete('excluir-evento/{id}', [EventosController::class, 'destroyEvento'])->name('eventos.destroy');
 Route::post('excluir-eventos-lote', [EventosController::class, 'destroyEventosLote'])->name('eventos.destroyLote');
+
+// Rota temporária para rodar migrações no servidor (útil para nuvem sem acesso a shell)
+Route::get('admin/run-migrations', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return '<pre>Migrações executadas com sucesso:\n' . Artisan::output() . '</pre>';
+    } catch (\Exception $e) {
+        return '<pre>Erro ao executar migrações:\n' . $e->getMessage() . '</pre>';
+    }
+});

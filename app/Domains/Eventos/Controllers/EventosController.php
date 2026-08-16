@@ -24,10 +24,10 @@ class EventosController extends Controller
                     return '
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-sm btn-success btn-gerar-evento rounded-3" data-identificador="' . $row->id . '" data-nome="' . htmlspecialchars($row->nm_estagiarios) . '" title="Gerar Ocorrência">
-                            <img src="/icons/plus.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                         </button>
                         <button class="btn btn-sm btn-danger btn-listar-eventos rounded-3" data-identificador="' . $row->id . '" data-nome="' . htmlspecialchars($row->nm_estagiarios) . '" title="Visualizar / Excluir Ocorrências">
-                            <img src="/icons/trash.svg" width="20" height="20" style="vertical-align: middle; filter: brightness(0) invert(1);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         </button>
                     </div>';
                 })
