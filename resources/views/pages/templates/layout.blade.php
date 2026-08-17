@@ -81,7 +81,7 @@
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 
-  <script src="{{ asset('js/script.js') }}?v=1.1"></script>
+  <script src="{{ asset('js/script.js') }}?v=1.2"></script>
 </body>
 
 </html>

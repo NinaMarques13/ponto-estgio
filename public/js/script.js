@@ -892,10 +892,14 @@ $(document).ready(function () {
                     },
                 )
                 .catch((err) => {
-                    // <--- O .catch correto fica aqui
                     console.error("Erro na câmera: ", err);
                     alert("A câmera não pôde ser iniciada. Verifique as permissões de segurança do navegador.");
                 });
         });
+
+        $("#cameraModal").on("hidden.bs.modal", function () {
+            html5QrCode.stop().catch((err) => console.log("Erro ao parar", err));
+        });
+        }
     });
 });
