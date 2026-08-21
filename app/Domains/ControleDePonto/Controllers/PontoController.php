@@ -26,7 +26,7 @@ class PontoController extends Controller
 
     public function store(Request $request)
     {
-        $cpf = $request->input('cpf');
+        $cpf = preg_replace('/\D/', '', $request->input('cpf'));
         $estagiario = Estagiario::where('cpf', $cpf)->first();
         if (!$estagiario) {
             session()->flash('erro', "Estagiário não encontrado com o CPF: {$cpf}");
@@ -263,7 +263,7 @@ class PontoController extends Controller
 
     public function processarQrcode(Request $request): JsonResponse
     {
-        $cpf = $request->input('cpf');
+        $cpf = preg_replace('/\D/', '', $request->input('cpf'));
         $estagiario = Estagiario::where('cpf', $cpf)->first();
         if (!$estagiario) {
             return response()->json([
