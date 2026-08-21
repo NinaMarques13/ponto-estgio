@@ -54,7 +54,6 @@
                     </div>
                     <form id="formAdicionarEstagiario">
                         @csrf
-                        @method('put')
                         <div class="modal-body">
                             <div class="row g-3">
                                 <input type="hidden" id="index_edicao" value="">

@@ -738,6 +738,53 @@ $(document).ready(function () {
         });
     }
 
+    $("#formAdicionarEstagiario").on("submit", function (e) {
+        e.preventDefault();
+
+        const payload = {
+            _token: $('input[name="_token"]').val(),
+            nome: $("#nome_cadastro").val(),
+            cpf: $("#cpf_cadastro").val(),
+            setor: $("#setor_cadastro").val(),
+            telefone: $("#telefone_cadastro").val(),
+            email: $("#email_cadastro").val(),
+        };
+
+        $.ajax({
+            url: "/cadastrar-estagiario",
+            type: "POST",
+            data: payload,
+            dataType: "json",
+            success: function (response) {
+                alert("Sucesso: Estagiário cadastrado com sucesso!");
+                location.reload();
+            },
+            error: function (xhr) {
+                let erroMsg = "Erro desconhecido no servidor.";
+
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    erroMsg = xhr.responseJSON.message;
+                    if (xhr.responseJSON.errors) {
+                        erroMsg = "Erros de validação:\n";
+                        for (let field in xhr.responseJSON.errors) {
+                            erroMsg += "- " + xhr.responseJSON.errors[field].join(", ") + "\n";
+                        }
+                    }
+                } else if (xhr.responseText) {
+                    try {
+                        const resp = JSON.parse(xhr.responseText);
+                        erroMsg = resp.message || erroMsg;
+                    } catch (e) {
+                        erroMsg = "Erro crítico (500) no servidor.";
+                    }
+                }
+
+                alert("Falha ao cadastrar: " + erroMsg);
+                console.error("Detalhes do erro:", xhr);
+            },
+        });
+    });
+
     $("#formEditarEstagiario").on("submit", function (e) {
         e.preventDefault();
 
