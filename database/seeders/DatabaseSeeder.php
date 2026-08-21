@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
         // 1. Cria o Admin (para você poder logar)
         $this->call(AdminSeeder::class);
 
-        // 2. Cria 5 Estagiários com seus Turnos
-        $estagiarios = Estagiario::factory(5)
+        // 2. Cria 1 Estagiários com seus Turnos
+        $estagiarios = Estagiario::factory(1)
             ->has(Turno::factory()->count(1)) // Garante que tenham um turno definido
             ->create();
 
