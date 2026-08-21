@@ -25,6 +25,16 @@ Route::get('/popular-banco-estagiarios', function () {
         return 'Erro ao popular o banco: ' . $e->getMessage();
     }
 });
+
+Route::get('/reduzir-banco-estagiarios', function () {
+    try {
+        Artisan::call('migrate:fresh', ['--force' => true]);
+        return 'Todos os dados foram apagados com sucesso! O banco está limpo.';
+    } catch (\Throwable $e) {
+        return 'Erro ao limpar o banco: ' . $e->getMessage();
+    }
+});
+
 Route::get('/', function () {
     return view('pages.inicio.inicio');
 })->name('home');
