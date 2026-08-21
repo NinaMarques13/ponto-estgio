@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Estagiario;
-use App\Models\RegistroPonto;
-use App\Models\Turno;
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
+use App\Domains\ControleDePonto\Models\Turno;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Faker\Factory as Faker;

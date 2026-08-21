@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Estagiario;
-use App\Models\RegistroPonto; // Confirme se o caminho da Model está certo
+use App\Domains\Estagiarios\Models\Estagiario;
+use App\Domains\ControleDePonto\Models\RegistroPonto;
 use Carbon\Carbon;
 
 class PontoHojeSeeder extends Seeder
