@@ -38,8 +38,8 @@ Um sistema web completo para gerenciar o registro de ponto, dados de estagiário
 ### 1. Clonar o Repositório
 
 ```bash
-git clone https://gitlab.pm.pr.gov.br/pm-est.nicolaspaiva/ponto-estagio.git
-cd ponto-estagio
+git clone https://github.com/NinaMarques13/ponto-estgio.git
+cd ponto-estgio
 ```
 
 ### 2. Instalar Dependências
@@ -129,19 +129,29 @@ A aplicação estará disponível em `http://localhost:8000`
 ```
 ponto-estagio/
 ├── app/
+│   ├── Domains/                  # Organização por domínio de negócio
+│   │   ├── Admins/
+│   │   │   ├── Controllers/      # Login e cadastro de administradores
+│   │   │   └── Models/           # Modelo Admin
+│   │   ├── ControleDePonto/
+│   │   │   ├── Controllers/      # Registro e consulta de ponto
+│   │   │   ├── Models/           # RegistroPonto e Turno
+│   │   │   └── Services/         # Regras do controle de ponto
+│   │   ├── Estagiarios/
+│   │   │   ├── Controllers/      # Cadastro e listagem
+│   │   │   ├── Models/           # Modelo Estagiario
+│   │   │   ├── Requests/         # Validação das requisições
+│   │   │   └── Services/         # Regras de estagiários
+│   │   └── Eventos/
+│   │       ├── Controllers/      # Operações de eventos
+│   │       └── Services/         # Regras de eventos
 │   ├── Http/
-│   │   ├── Controllers/          # Controladores principais
-│   │   │   ├── EstagiariosController.php
-│   │   │   ├── RelatorioController.php
-│   │   │   └── Admin/
-│   │   │       └── LoginController.php
-│   │   └── Middleware/           # Middlewares de autenticação
-│   └── Models/
-│       ├── Estagiario.php        # Modelo de Estagiário
-│       ├── RegistroPonto.php     # Modelo de Registro de Ponto
-│       ├── Turno.php             # Modelo de Turno
-│       ├── Admin.php             # Modelo de Admin
-│       └── User.php              # Modelo padrão (não utilizado)
+│   │   ├── Controllers/
+│   │   │   └── Controller.php    # Controller base compartilhado
+│   │   └── Middleware/           # Middlewares compartilhados
+│   ├── Models/
+│   │   └── User.php              # Modelo padrão do Laravel
+│   └── Providers/                # Provedores da aplicação
 ├── database/
 │   ├── migrations/               # Schema do banco de dados
 │   ├── seeders/                  # Seeds para popular dados
@@ -156,20 +166,24 @@ ponto-estagio/
 │   ├── css/                      # Estilos
 │   └── js/                       # Scripts frontend
 ├── routes/
-│   └── web.php                   # Rotas da aplicação
+│   ├── web.php                   # Rotas da aplicação
+│   └── console.php               # Comandos Artisan
 ├── public/
 │   ├── js/                       # JavaScript compilado
 │   ├── css/                      # CSS compilado
 │   ├── img/                      # Imagens
 │   └── index.php                 # Entry point
-└── tests/                        # Testes unitários e feature
+├── tests/
+│   ├── Feature/                  # Testes de funcionalidades
+│   └── Unit/                     # Testes unitários
+└── artisan                       # CLI do Laravel
 ```
 
 ## 🗄️ Modelos de Dados
 
 ### Estagiario
 - `nm_estagiarios` - Nome completo
-- `nr_matricula` - Número de matrícula
+- `cpf` - CPF do estagiário
 - `nm_setor` - Setor de atuação
 - `nr_telefone` - Telefone para contato
 - `nm_email` - Email
@@ -225,14 +239,14 @@ php artisan test --coverage
 
 ```bash
 # Via interface web
-GET /views/principal/export
+GET /admin/export
 ```
 
 ### Exportar Dados
 
 ```bash
 # Endpoint de exportação
-GET /views/principal/export
+GET /admin/export
 ```
 
 ## 🔧 Comandos Úteis
