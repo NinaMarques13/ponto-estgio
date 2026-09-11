@@ -51,8 +51,13 @@ OPTION="${1:-all}"
 
 case "$OPTION" in
     all)
-        print_section "Executando TODOS os testes..."
-        php artisan test tests/Feature/EstagiariosTest.php --verbose
+        print_section "Executando TODOS os testes da aplicação..."
+        php artisan test --verbose
+        ;;
+    
+    seguranca)
+        print_section "Executando testes de SEGURANÇA E ANONIMIZAÇÃO (LGPD)..."
+        php artisan test tests/Feature/SecurityAndAnonymizationTest.php --verbose
         ;;
     
     cadastro)

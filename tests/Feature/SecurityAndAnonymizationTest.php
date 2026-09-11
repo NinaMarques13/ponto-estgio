@@ -76,7 +76,7 @@ class SecurityAndAnonymizationTest extends TestCase
 
         // 3. Mascaramento visual
         $this->assertEquals('***.456.789-**', $service->maskCpf('12345678901'));
-        $this->assertEquals('j***o@pm.pr.gov.br', $service->maskEmail('joao@pm.pr.gov.br'));
+        $this->assertEquals('j**o@pm.pr.gov.br', $service->maskEmail('joao@pm.pr.gov.br'));
         $this->assertEquals('(41) 9****-**88', $service->maskPhone('41988887788'));
     }
 

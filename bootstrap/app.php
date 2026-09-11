@@ -11,9 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
         $middleware->trustProxies(at: '*');
         $middleware->alias([
-            'checklevel' => \App\Http\Middleware\CheckAdminLevel::class,]);
+            'checklevel' => \App\Http\Middleware\CheckAdminLevel::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
