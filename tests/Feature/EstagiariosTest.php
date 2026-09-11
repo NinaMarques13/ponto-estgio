@@ -13,6 +13,15 @@ class EstagiariosTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected $admin;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->admin = \App\Domains\Admins\Models\Admin::factory()->create(['level' => 1]);
+        $this->actingAs($this->admin, 'admin');
+    }
+
     /**
      * ====================================
      * TESTES DE CADASTRO DE ESTAGIÁRIOS
@@ -411,8 +420,11 @@ class EstagiariosTest extends TestCase
             'cpf' => '99999999999'
         ]);
 
-        $response->assertStatus(302)
-            ->assertSessionHas('erro', 'Estagiário não encontrado com o CPF: 99999999999');
+        $response->assertStatus(404)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Matrícula/CPF não encontrado no sistema.'
+            ]);
     }
 
     /**

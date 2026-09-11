@@ -75,11 +75,14 @@ class CadastroController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Throwable $th) {
+            Log::error("Erro interno ao processar cadastro de estagiário: " . $th->getMessage(), [
+                'trace' => $th->getTraceAsString()
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Erro',
-                'data' => $th
-            ]);
+                'message' => 'Ocorreu um erro interno no servidor ao processar o cadastro.'
+            ], 500);
         }
     }
 

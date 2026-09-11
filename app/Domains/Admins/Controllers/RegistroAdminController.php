@@ -38,12 +38,10 @@ class RegistroAdminController extends Controller
                 'cpf' => $cpfLimpo,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'level' => 2,
+                'level' => $request->input('level', 2),
             ]);
 
-            Auth::guard('admin')->login($admin);
-
-            return redirect()->route('cadastro')->with('success', 'Cadastro realizado com sucesso!');
+            return redirect()->route('cadastro')->with('success', 'Novo administrador cadastrado com sucesso!');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {

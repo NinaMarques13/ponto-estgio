@@ -29,12 +29,12 @@ class PontoController extends Controller
         $cpf = preg_replace('/\D/', '', $request->input('cpf'));
         $estagiario = Estagiario::where('cpf', $cpf)->first();
         if (!$estagiario) {
-            session()->flash('erro', "Estagiário não encontrado com o CPF: {$cpf}");
+            session()->flash('erro', 'Matrícula/CPF não encontrado no sistema.');
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => "Estagiário não encontrado com o CPF: {$cpf}"
-                ], 302);
+                    'message' => 'Matrícula/CPF não encontrado no sistema.'
+                ], 404);
             }
             return redirect()->back();
         }
@@ -268,7 +268,7 @@ class PontoController extends Controller
         if (!$estagiario) {
             return response()->json([
                 'status' => 'erro',
-                'mensagem' => 'Estagiário não encontrado com a matrícula: ' . $cpf
+                'mensagem' => 'Estagiário não encontrado com a matrícula informada.'
             ], 404);
         }
         return response()->json([

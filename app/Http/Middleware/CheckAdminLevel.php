@@ -15,11 +15,11 @@ class CheckAdminLevel
      */
     public function handle(Request $request, Closure $next, int $requiredLevel): Response
     {
-        if(!auth()->check()){
-            abort(401);
+        if (!auth('admin')->check()) {
+            abort(401, 'Não autenticado.');
         }
-        if (auth()->user()->level> $requiredLevel){
-            abort(403,'Acesso Negado.');
+        if (auth('admin')->user()->level > $requiredLevel) {
+            abort(403, 'Acesso Negado. Nível de permissão insuficiente.');
         }
 
         return $next($request);
