@@ -1,133 +1,133 @@
-# 🧪 Relatório Completo de Testes Automatizados
+# 🧪 Relatório Completo de Testes Automatizados (4 Frentes)
 ## Sistema de Ponto de Estagiários (PMPR / DGP)
 
-**Data da Execução:** 10/09/2026  
+**Data da Execução:** 13/09/2026  
 **Ambiente:** PHP 8.3 (Laravel 12 / Docker Laradock)  
-**Status Geral:** ✅ **100% APROVADO (54 testes, 208 asserções)**  
-**Tempo Total de Execução:** ~1.16 segundos  
+**Status Geral:** ✅ **100% APROVADO (84 testes, 389 asserções)**  
+**Tempo Total de Execução:** ~2.83 segundos  
 
 ---
 
-## 📊 Resumo Executivo
+## 📊 Resumo Executivo por Frente de Atuação
 
-A suíte de testes cobre a integridade funcional, controle de acesso e proteção de dados do sistema, distribuída em **8 classes de teste** (Unitários e de Funcionalidade):
+O sistema foi auditado e validado em **4 frentes fundamentais**, garantindo qualidade visual, ótima experiência do usuário no dia a dia, fidelidade das regras de negócio/cálculo de horas e segurança em conformidade com a LGPD:
 
-| Categoria / Suíte | Arquivo | Testes | Asserções | Status |
+| Frente | Suítes Principais | Testes | Asserções | Status |
 | :--- | :--- | :---: | :---: | :---: |
-| **Segurança & LGPD** | `tests/Feature/SecurityAndAnonymizationTest.php` | 5 | 18 | ✅ PASSOU |
-| **Autenticação Admin** | `tests/Feature/AuthAdminTest.php` | 3 | 7 | ✅ PASSOU |
-| **Gestão de Estagiários & Ponto** | `tests/Feature/EstagiariosTest.php` | 29 | 148 | ✅ PASSOU |
-| **Ocorrências & Eventos** | `tests/Feature/EventosTest.php` | 5 | 13 | ✅ PASSOU |
-| **Renderização de Telas / Views** | `tests/Feature/ViewsTest.php` | 6 | 15 | ✅ PASSOU |
-| **Modelos & Relacionamentos** | `tests/Unit/ModelsTest.php` | 4 | 5 | ✅ PASSOU |
-| **Exemplos & Baseline** | `tests/Unit/ExampleTest.php` & `Feature/ExampleTest.php` | 2 | 2 | ✅ PASSOU |
-| **TOTAL GERAL** | **8 arquivos de teste** | **54** | **208** | **✅ 100% SUCESSO** |
+| **1. Interface e Apresentação Visual (UI)** | `UITest.php`, `ViewsTest.php` | 14 | 113 | ✅ PASSOU |
+| **2. Usabilidade e Experiência do Usuário (UX)** | `UXTest.php` | 8 | 36 | ✅ PASSOU |
+| **3. Funcionalidades e Regras de Negócio** | `BusinessLogicTest.php`, `EstagiariosTest.php`, `EventosTest.php` | 43 | 181 | ✅ PASSOU |
+| **4. Segurança e Conformidade (LGPD)** | `SecurityAdvancedTest.php`, `SecurityAndAnonymizationTest.php`, `AuthAdminTest.php` | 13 | 52 | ✅ PASSOU |
+| **Modelos e Estrutura Básica** | `ModelsTest.php`, `ExampleTest.php` | 6 | 7 | ✅ PASSOU |
+| **TOTAL GERAL CONSOLIDADO** | **12 arquivos de teste** | **84** | **389** | **✅ 100% SUCESSO** |
 
 ---
 
-## 🛡️ Detalhamento dos Testes de Segurança & Anonimização (LGPD)
+## 🖥️ Frente 1: Interface e Apresentação Visual (UI)
 
-Suíte: [`tests/Feature/SecurityAndAnonymizationTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/SecurityAndAnonymizationTest.php)
+Suítes: [`tests/Feature/UITest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/UITest.php) e [`tests/Feature/ViewsTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/ViewsTest.php)
 
-| Teste | Objetivo | Resultado |
+Avalia a integridade visual, templates Blade, componentes Bootstrap, ícones e layouts da aplicação:
+
+| Teste | Elementos e Telas Validadas | Resultado |
 | :--- | :--- | :---: |
-| `test_rotas_administrativas_bloqueadas_para_usuarios_nao_autenticados` | Valida que requisições não autenticadas a `/estagiarios-cadastrados`, `/cadastrar-estagiario`, `/lista-estagiarios` e `/salvar-evento` são bloqueadas imediatamente (302/401). | ✅ PASSOU |
-| `test_apenas_superadmin_pode_acessar_registro_de_novos_admins` | Garante que visitantes recebem redirect para login, administradores nível 2 recebem **403 Forbidden** e apenas o **SuperAdmin (nível 1)** consegue acessar a rota de criação de novos administradores. | ✅ PASSOU |
-| `test_servico_de_anonimizacao_funcoes_basicas` | Valida o algoritmo de criptografia não reversível (**HMAC-SHA256** com salt), a geração determinística de CPF de 11 dígitos e o mascaramento visual de CPF, e-mail e telefone. | ✅ PASSOU |
-| `test_comando_artisan_ponto_anonymize_modo_hash_irreversivel` | Executa o comando `ponto:anonymize --mode=hash` e valida que nomes reais viram `Estagiário Anônimo #[Hash]`, CPFs e e-mails são anonimizados irreversivelmente, IPs viram `127.0.0.1` e observações médicas são sanitizadas. | ✅ PASSOU |
-| `test_comando_artisan_ponto_anonymize_modo_faker` | Executa o comando `ponto:anonymize --mode=faker` e confirma que dados reais são substituídos por nomes e CPFs simulados pelo Faker pt_BR. | ✅ PASSOU |
+| `test_tela_inicio_quiosque_elementos_visuais_completos` | Brasão institucional DGP, título em destaque, input de CPF com placeholder, leitor QR Code com câmera SVG e container `#reader`, seletores visuais Entrada/Saída e botão de acesso administrativo. | ✅ PASSOU |
+| `test_tela_login_admin_elementos_visuais_e_estilos` | Card centralizado, brasão DGP, títulos ("ÁREA ADMINISTRATIVA", "Sistema de Estagiários"), form login/senha e botão ENTRAR. | ✅ PASSOU |
+| `test_tela_registro_admin_elementos_visuais_para_superadmin` | Tela restrita do SuperAdmin com campos de nome, CPF, email, senha com confirmação e botão CADASTRAR. | ✅ PASSOU |
+| `test_painel_cadastro_tabela_e_modais_de_estagiarios` | Tabela DataTables `#tabela-estagiarios-cadastrados`, modais `#modalAdicionarEstagiario`, `#modalEditarEstagiario` e `#qrModalCadastro` com botão de impressão de crachá/QR Code. | ✅ PASSOU |
+| `test_painel_eventos_tabela_e_modais_de_ocorrencias` | Tabela `#tabela-estagiarios-eventos`, modal de adicionar ocorrência com seção de detecção visual de conflitos (`#add-evento-secao-conflitos`). | ✅ PASSOU |
+| `test_painel_export_cards_kpis_filtros_e_tabela_relatorio` | Tela `/admin/export`, cards de métricas (Presentes, Registros, Recessos, Atestados, Folgas, Dispensas, Faltas), seletores de filtro (Data, Mês, Semana, Ano, Motivo) e tabela `#myTable`. | ✅ PASSOU |
+| `test_layout_menu_superior_e_links_de_navegacao` | Barra de navegação superior (`navbar-top-menu`), links ativos com marcação de rota atual e botão de logout seguro ("Sair"). | ✅ PASSOU |
+| `test_paginas_de_erro_customizadas` | Renderização visual estilizada para erros **403 (Acesso Negado)**, **404 (Página Não Encontrada)** e **500 (Erro do Servidor)** com links de retorno amigáveis. | ✅ PASSOU |
 
 ---
 
-## 📋 Detalhamento das Demais Suítes
+## 👥 Frente 2: Usabilidade e Experiência do Usuário (UX)
 
-### 1. Autenticação de Administradores
-Suíte: [`tests/Feature/AuthAdminTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/AuthAdminTest.php)
-- `admin_pode_fazer_login_com_credenciais_validas`: Valida login no guard `admin` e redirecionamento.
-- `admin_nao_pode_fazer_login_com_senha_invalida`: Valida rejeição e erros de sessão.
-- `admin_pode_fazer_logout`: Valida encerramento seguro e invalidação da sessão.
+Suíte: [`tests/Feature/UXTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/UXTest.php)
 
-### 2. Gestão de Estagiários, Registro de Ponto & QR Code
-Suíte: [`tests/Feature/EstagiariosTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/EstagiariosTest.php)
-- **Cadastro e Validações:**
-  - `pode_criar_novo_estagiario`: Cadastro completo com sucesso (200).
-  - `validacao_campos_obrigatorios_cadastro`: Rejeita campos em branco (422).
-  - `validacao_email_invalido`: Rejeita formatos incorretos (422).
-  - `validacao_matricula_duplicada`: Impede CPFs repetidos para estagiários ativos.
-  - `validacao_telefone_duplicado`: Impede telefones duplicados.
-  - `validacao_email_duplicado`: Impede e-mails duplicados.
-  - `atualizar_cadastro_existente`: Atualiza dados cadastrais.
-  - `desativar_estagiario`: Realiza exclusão lógica (`ds_situacao = false`).
-- **Listagem e Exportação:**
-  - `listar_estagiarios_cadastrados`: Resposta formatada para DataTables.
-  - `listar_registros_por_data`, `por_mes`, `por_ano`: Filtros temporais.
-  - `filtrar_por_estagiario_especifico`: Filtro por ID do estagiário.
-  - `filtrar_por_motivo_presente`, `por_motivo_falta`: Filtros de status de ponto.
-- **Registro de Ponto & Proteção contra Enumeração:**
-  - `registrar_entrada_ponto`: Registra primeiro ponto do dia.
-  - `registrar_saida_apos_entrada`: Registra ponto subsequente como saída.
-  - `erro_estagiario_nao_encontrado`: Retorna resposta neutra protegida (404) sem vazar o CPF testado.
-  - `atualizar_horario_entrada`: Ajuste manual de horário.
-  - `atualizar_motivo_registro`: Alteração de justificativa.
-  - `processar_qrcode_valido`: Reconhecimento de matrícula via QR Code.
-  - `processar_qrcode_invalido`: Resposta 404 neutra para QR Code desconhecido.
-- **Fluxos Avançados & Cálculos de Carga Horária:**
-  - `fluxo_completo_cadastro_e_registro`: Ciclo de vida completo (cadastro -> entrada -> saída -> listagem).
-  - `fluxo_completo_com_atualizacoes`: Fluxo de edição de registros.
-  - `fluxo_gerar_evento_atestado_abonado`: Lançamento de atestado com abono.
-  - `fluxo_gerar_evento_correcao_dia`: Correção automática de entrada e saída.
-  - `calculo_horas_com_recesso_e_atestado_abonado`: Computação de horas padrão com abono.
-  - `correcao_dia_apenas_entrada_preserva_saida`: Soft delete da entrada anterior preservando a saída.
-  - `exclusao_eventos_lote`: Exclusão múltipla de ocorrências em lote.
+Avalia como os usuários humanos interagem com a aplicação no ambiente de trabalho:
 
-### 3. Ocorrências e Eventos
-Suíte: [`tests/Feature/EventosTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/EventosTest.php)
-- `pode_recuperar_eventos_de_um_estagiario_especifico`: Busca histórico de faltas/atestados.
-- `pode_verificar_registros_em_um_determinado_periodo`: Checa conflitos de ponto em intervalo de datas.
-- `falha_ao_criar_evento_correcao_sem_informar_hora`: Valida obrigatoriedade de horários na correção.
-- `pode_excluir_evento_isolado`: Exclusão lógica de registro individual.
-- `datatable_lista_estagiarios_eventos_funciona`: Resposta AJAX para a tabela de eventos.
+| Teste | Experiência Validada | Resultado |
+| :--- | :--- | :---: |
+| `test_quiosque_aceita_cpf_com_mascara_ou_sem_mascara` | O estagiário pode digitar o CPF pontuado (`123.456.789-01`) ou apenas números (`12345678901`) que o sistema reconhece com a mesma tolerância e facilidade. | ✅ PASSOU |
+| `test_quiosque_feedback_ao_registrar_entrada_e_saida` | O sistema informa claramente o registro com mensagem de sucesso na sessão, alternando perfeitamente do primeiro registro (Entrada) para o segundo (Saída). | ✅ PASSOU |
+| `test_quiosque_feedback_neutro_quando_cpf_nao_encontrado` | Mensagem de feedback clara ("Matrícula/CPF não encontrado no sistema.") sem causar frustração, travamentos ou exposição indevida de dados. | ✅ PASSOU |
+| `test_bloqueio_por_rate_limiting_retorna_429_apos_limite_excedido` | Cliques excessivos/repetitivos no quiosque são bloqueados com código 429 Too Many Requests, evitando travamentos no totem de ponto. | ✅ PASSOU |
+| `test_rate_limiting_login_admin_bloqueia_forca_bruta` | Bloqueio imediato após 5 tentativas de login consecutivas, informando tempo de espera ao usuário. | ✅ PASSOU |
+| `test_login_com_credenciais_invalidas_preserva_input_usuario` | Em caso de erro na senha, o e-mail/CPF digitado é mantido preenchido via `old('login')` para evitar que o administrador precise digitar tudo novamente. | ✅ PASSOU |
+| `test_logout_invalida_sessao_e_redireciona_com_sucesso` | Encerramento seguro e transparente da sessão administrativa com redirecionamento para o quiosque principal. | ✅ PASSOU |
+| `test_processamento_qrcode_com_cpf_formatado_e_nao_formatado` | Scanner de câmera aceita leitura de QR Codes pontuados ou numéricos limpos, retornando confirmação instantânea do estagiário. | ✅ PASSOU |
 
-### 4. Renderização de Telas & Views
-Suíte: [`tests/Feature/ViewsTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/ViewsTest.php)
-- `pagina_inicial_renderiza_corretamente_para_convidado`: Renderiza quiosque com botão de Área Admin.
-- `pagina_inicial_renderiza_corretamente_para_admin_logado`: Renderiza quiosque com link direto para o Painel.
-- `pagina_de_login_admin_renderiza_corretamente`: Renderiza campos de login.
-- `login_admin_redireciona_se_logado`: Evita tela de login para usuário já autenticado.
-- `painel_admin_cadastro_renderiza_corretamente`: Renderiza tabela e modais de estagiários.
-- `painel_admin_eventos_renderiza_corretamente`: Renderiza tela de controle de ocorrências.
+---
 
-### 5. Testes Unitários de Modelos
-Suíte: [`tests/Unit/ModelsTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Unit/ModelsTest.php)
-- `pode_criar_admin`: Instanciação e persistência do modelo `Admin`.
-- `pode_criar_usuario`: Instanciação do modelo `User`.
-- `relacionamento_estagiario_possui_registros`: Integridade do relacionamento `hasMany` entre `Estagiario` e `RegistroPonto`.
-- `pode_criar_turno`: Instanciação e persistência do modelo `Turno`.
+## ⚙️ Frente 3: Funcionalidades e Regras de Negócio
+
+Suítes: [`tests/Feature/BusinessLogicTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/BusinessLogicTest.php), [`tests/Feature/EstagiariosTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/EstagiariosTest.php) e [`tests/Feature/EventosTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/EventosTest.php)
+
+Avalia a precisão dos cálculos matemáticos de horas, ciclo de vida do estagiário, ocorrências em lote e filtros:
+
+| Teste / Funcionalidade | Regra de Negócio Validada | Resultado |
+| :--- | :--- | :---: |
+| `test_calculo_horas_com_turno_personalizado` | Quando o estagiário possui turno de 4 horas (13:00 às 17:00), o sistema calcula exatamente `04h00m`. | ✅ PASSOU |
+| `test_calculo_horas_com_turno_padrao_6h_quando_sem_turno` | Quando o estagiário não possui turno cadastrado, o sistema adota automaticamente a carga horária padrão de 6 horas (`06h00m` / 360 min) em abonos de folga/recesso. | ✅ PASSOU |
+| `test_calculo_horas_ignora_dias_incompletos_somente_entrada` | Dia em que o estagiário registrou Entrada mas esqueceu a Saída contabiliza `00h00m`, aguardando acerto manual do RH via evento de correção. | ✅ PASSOU |
+| `test_calculo_horas_abono_dia_inteiro_com_dispensa_abonada_vs_descontada` | Dispensa ou atestado com `is_abonado = true` soma horas integrais; quando `is_abonado = false`, não soma horas no total do período. | ✅ PASSOU |
+| `test_registro_ponto_fora_do_horario_permitido_retorna_ponto_fechado` | Tentativas de registro na madrugada (ex: 03:00) são bloqueadas com status 403 e mensagem `"Ponto fechado"`. | ✅ PASSOU |
+| `test_reativacao_de_estagiario_previamente_desativado_com_mesmo_cpf` | O método `criarOuAtualizar` reativa estagiários inativos com o mesmo CPF (`ds_situacao = true`) sem duplicar registros na base. | ✅ PASSOU |
+| `test_ocorrencia_em_massa_para_multiplos_dias_consecutivos` | Lançamento de atestado/recesso para intervalo de 5 dias cria 5 registros correspondentes e limpa batidas antigas daquele período. | ✅ PASSOU |
+| `test_validacao_evento_com_data_fim_anterior_a_data_inicio` | Rejeição com erro 422 caso a data final seja anterior à data inicial. | ✅ PASSOU |
+| `test_filtro_lista_estagiarios_por_semana_e_por_status_andamento` | Filtro `andamento` lista quem tem só Entrada no dia; filtro `presente` lista apenas quem concluiu Entrada e Saída. | ✅ PASSOU |
+| `test_exclusao_eventos_lote` | Exclusão múltipla de ocorrências via soft delete em uma única operação atômica. | ✅ PASSOU |
+
+---
+
+## 🔒 Frente 4: Segurança e Conformidade (LGPD)
+
+Suítes: [`tests/Feature/SecurityAdvancedTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/SecurityAdvancedTest.php), [`tests/Feature/SecurityAndAnonymizationTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/SecurityAndAnonymizationTest.php) e [`tests/Feature/AuthAdminTest.php`](file:///home/nicolas/Projetos/ponto-estagio/tests/Feature/AuthAdminTest.php)
+
+Avalia a proteção de dados pessoais (PII), controle de acesso (RBAC) e anonimização irreversível:
+
+| Teste / Mecanismo de Segurança | Validação de Segurança | Resultado |
+| :--- | :--- | :---: |
+| `test_comando_anonimizacao_apenas_inativos_preserva_estagiarios_ativos` | **Art. 16 da LGPD (Direito ao Descarte)**: O comando `php artisan ponto:anonymize --inactive-only` descaracteriza dados de ex-estagiários e **mantém intactos** os dados de estagiários ativos. | ✅ PASSOU |
+| `test_comando_artisan_ponto_anonymize_modo_hash_irreversivel` | Aplica **hashing irreversível HMAC-SHA256** sobre CPFs e e-mails, converte nomes em `Estagiário Anônimo #[Hash]`, zera IPs (`127.0.0.1`) e sanitiza anotações médicas de saúde (Art. 5º, II). | ✅ PASSOU |
+| `test_servico_de_anonimizacao_funcoes_basicas` | Valida algoritmo determinístico de hash com salt da aplicação e mascaramento visual (`***.456.789-**`, `j**o@pm.pr.gov.br`, `(41) 9****-**88`). | ✅ PASSOU |
+| `test_apenas_superadmin_pode_acessar_registro_de_novos_admins` | Visitantes são redirecionados, Admins comuns (nível 2) recebem **403 Forbidden** e somente SuperAdmin (nível 1) pode cadastrar novos administradores. | ✅ PASSOU |
+| `test_todas_as_rotas_ajax_rejeitam_requisicoes_nao_autenticadas` | Varredura em 12 rotas internas de manipulação de dados (`/estagiarios-cadastrados`, `/salvar-evento`, etc.) confirmando bloqueio (302/401) sem login. | ✅ PASSOU |
+| `test_sanitizacao_de_inputs_contra_xss_em_nomes_e_setores` | Payloads com tags `<script>` ou eventos HTML são neutralizados e escapados com segurança. | ✅ PASSOU |
+| `test_protecao_contra_sql_injection_nos_filtros_de_data` | Payloads SQL injection são tratados via prepared statements do PDO sem quebra de banco. | ✅ PASSOU |
+| `test_logout_regenera_token_csrf` | Invalidação de sessão com regeneração do token CSRF prevenindo ataques de Session Fixation. | ✅ PASSOU |
 
 ---
 
 ## 🚀 Como Executar os Testes
 
-No ambiente com Laradock (ou no terminal onde o PHP estiver configurado):
+Com a atualização do script [`run-tests.sh`](file:///home/nicolas/Projetos/ponto-estagio/run-tests.sh), você pode executar a suíte completa ou focar em qualquer uma das 4 frentes:
 
 ```bash
-# Executar todos os 54 testes com detalhes
+# Executar TODOS os 84 testes (padrão)
 ./run-tests.sh all
-# ou diretamente via artisan no container:
-php artisan test --verbose
 
-# Executar especificamente os testes de segurança e anonimização (LGPD)
+# Executar apenas testes de Interface e Apresentação Visual (UI)
+./run-tests.sh ui
+
+# Executar apenas testes de Usabilidade e Experiência do Usuário (UX)
+./run-tests.sh ux
+
+# Executar apenas testes de Funcionalidades e Regras de Negócio
+./run-tests.sh negocio
+
+# Executar apenas testes de Segurança e Conformidade LGPD
 ./run-tests.sh seguranca
-# ou:
-php artisan test tests/Feature/SecurityAndAnonymizationTest.php
-
-# Executar testes com filtro
-./run-tests.sh cadastro
-./run-tests.sh ponto
 ```
 
 ---
 
-## 🏁 Conclusão
+## 🏁 Conclusão da Revisão
 
-Todos os **54 testes automatizados** foram executados e passaram com **100% de sucesso**. O sistema encontra-se devidamente protegido contra quebras de controle de acesso (RBAC), enumeração de dados pessoais e vazamento de informações sensíveis, em conformidade com as diretrizes da **LGPD**.
+O projeto foi submetido a uma revisão completa e detalhada. Com a inclusão das novas suítes de teste especializadas, o sistema totaliza **84 testes automatizados e 389 asserções com 100% de taxa de aprovação**, cobrindo com excelência:
+1. Apresentação visual e responsividade das telas.
+2. Usabilidade real, feedbacks visuais e tolerância a entradas.
+3. Precisão matemática no cálculo de horas e regras de ponto.
+4. Conformidade estrita com a LGPD e defesa contra ataques cibernéticos.

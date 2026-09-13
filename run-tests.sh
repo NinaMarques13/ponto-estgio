@@ -51,13 +51,28 @@ OPTION="${1:-all}"
 
 case "$OPTION" in
     all)
-        print_section "Executando TODOS os testes da aplicação..."
+        print_section "Executando TODOS os testes da aplicação (84 testes)..."
         php artisan test --verbose
         ;;
     
+    ui)
+        print_section "Executando testes de INTERFACE E APRESENTAÇÃO VISUAL (UI)..."
+        php artisan test tests/Feature/UITest.php --verbose
+        ;;
+
+    ux)
+        print_section "Executando testes de USABILIDADE E EXPERIÊNCIA DO USUÁRIO (UX)..."
+        php artisan test tests/Feature/UXTest.php --verbose
+        ;;
+
+    negocio)
+        print_section "Executando testes de FUNCIONALIDADES E REGRAS DE NEGÓCIO..."
+        php artisan test tests/Feature/BusinessLogicTest.php --verbose
+        ;;
+
     seguranca)
         print_section "Executando testes de SEGURANÇA E ANONIMIZAÇÃO (LGPD)..."
-        php artisan test tests/Feature/SecurityAndAnonymizationTest.php --verbose
+        php artisan test tests/Feature/SecurityAdvancedTest.php tests/Feature/SecurityAndAnonymizationTest.php --verbose
         ;;
     
     cadastro)
@@ -115,7 +130,11 @@ case "$OPTION" in
     help|--help|-h)
         echo "Opções disponíveis:"
         echo ""
-        echo "  all           - Executar todos os 30 testes (padrão)"
+        echo "  all           - Executar todos os 84 testes (padrão)"
+        echo "  ui            - Executar testes de Interface e Apresentação Visual"
+        echo "  ux            - Executar testes de Usabilidade e Experiência do Usuário"
+        echo "  negocio       - Executar testes de Funcionalidades e Regras de Negócio"
+        echo "  seguranca     - Executar testes de Segurança e Anonimização (LGPD)"
         echo "  cadastro      - Executar apenas testes de cadastro"
         echo "  validacao     - Executar apenas testes de validação"
         echo "  listagem      - Executar apenas testes de listagem/exportação"
@@ -129,9 +148,11 @@ case "$OPTION" in
         echo "  help          - Mostrar esta mensagem de ajuda"
         echo ""
         echo "Exemplos:"
-        echo "  ./run-tests.sh                 # Rodar todos os testes"
-        echo "  ./run-tests.sh cadastro        # Rodar testes de cadastro"
-        echo "  ./run-tests.sh coverage-html   # Gerar relatório HTML"
+        echo "  ./run-tests.sh                 # Rodar todos os 84 testes"
+        echo "  ./run-tests.sh ui              # Rodar testes de interface visual"
+        echo "  ./run-tests.sh ux              # Rodar testes de usabilidade"
+        echo "  ./run-tests.sh negocio         # Rodar testes de regras de negócio"
+        echo "  ./run-tests.sh seguranca       # Rodar testes de segurança e LGPD"
         ;;
     
     *)
